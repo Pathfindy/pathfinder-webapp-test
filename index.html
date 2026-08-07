@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Das azlantische Helferlein der Boni</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/charakterwerte.css?v=24">
+    <link rel="stylesheet" href="css/commit21.css?v=21">
+    <link rel="stylesheet" href="css/commit22.css?v=22">
+    <link rel="stylesheet" href="css/commit24.css?v=24">
+    <link rel="stylesheet" href="css/commit25.css?v=25">
+    <link rel="stylesheet" href="css/commit26.css?v=26">
+    <link rel="stylesheet" href="css/commit27.css?v=27">
+    <link rel="stylesheet" href="css/commit28.css?v=28">
+    <link rel="stylesheet" href="css/commit29.css?v=29.1">
+    
+    <meta name="theme-color" content="#1e3a5f">
+</head>
+
+<body>
+
+<header>
+
+    <h1>Das azlantische Helferlein der Boni</h1>
+
+</header>
+
+<nav>
+
+    <button id="btnDashboard">Dashboard</button>
+    <button id="btnEffekte">Effekte</button>
+    <button id="btnCharakterwerte">Werte</button>
+    <button id="btnCharaktere">Charaktere</button>
+    <button id="btnAdmin">Admin</button>
+
+</nav>
+
+<main>
+
+    <!-- ========================= -->
+    <!-- Dashboard                 -->
+    <!-- ========================= -->
+
+    <section id="dashboard" class="page active">
+
+        <h2>Aktuelle Werte</h2>
+        
+
+        <div class="werte">
+
+            <div class="karte">
+                <h3>Angriff Nah</h3>
+                <span id="angriffNah">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>Angriff Fern</h3>
+                <span id="angriffFern">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>Schaden Nah</h3>
+                <span id="schadenNah">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>Schaden Fern</h3>
+                <span id="schadenFern">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>Rüstungsklasse</h3>
+                <span id="rk">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>RW-Reflex</h3>
+                <span id="reflex">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>RW-Wille</h3>
+                <span id="wille">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>RW-Zähigkeit</h3>
+                <span id="zaehigkeit">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>RW-Furcht</h3>
+                <span id="furcht">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>RW-Gift</h3>
+                <span id="gift">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>RW-Bezauberung</h3>
+                <span id="bezauberung">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>RW-Verzauberung</h3>
+                <span id="verzauberung">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>KMB</h3>
+                <span id="kmb">0</span>
+            </div>
+
+            <div class="karte">
+                <h3>KMV</h3>
+                <span id="kmv">0</span>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ========================= -->
+    <!-- Effekte                   -->
+    <!-- ========================= -->
+
+    <section id="effekte" class="page">
+
+        <h2>Effekte</h2>
+
+        <button id="btnNeuerEffekt">+ Neuer Effekt</button>
+
+        <input
+            type="text"
+            id="suche"
+            placeholder="Effekt suchen...">
+
+        <div class="effekt-filter" aria-label="Effektfilter">
+            <label for="filterKategorie">
+                Kategorie
+                <select id="filterKategorie">
+                    <option value="">Alle Kategorien</option>
+                </select>
+            </label>
+
+            <label class="filter-schalter">
+                <input type="checkbox" id="filterNurAktiv">
+                Nur aktive
+            </label>
+
+            <label class="filter-schalter">
+                <input type="checkbox" id="filterNurFavoriten">
+                Nur Favoriten
+            </label>
+        </div>
+
+        <p id="filterErgebnis" class="filter-ergebnis" aria-live="polite"></p>
+        <div id="boniListe">
+
+            <p>Noch keine Effekte geladen.</p>
+
+        </div>
+
+    </section>
+
+    <!-- ========================= -->
+    <!-- Charakterwerte            -->
+    <!-- ========================= -->
+
+    <section id="charakterwerte" class="page">
+        <div class="seitenkopf">
+            <div>
+                <h2>Charakterwerte</h2>
+                
+            </div>
+        </div>
+
+        <div class="tp-bereich" aria-labelledby="tp-ueberschrift">
+            <h3 id="tp-ueberschrift">Trefferpunkte</h3>
+
+            <div class="tp-werte">
+                <label class="tp-feld" for="maxTp">
+                    <span>Max TP</span>
+                    <input id="maxTp" type="number" min="0" max="9999" step="1" inputmode="numeric">
+                </label>
+
+                <div class="tp-feld tp-aktuell">
+                    <span>Aktuelle TP</span>
+                    <output id="aktuelleTp" aria-live="polite">0</output>
+                </div>
+
+                <label class="tp-feld" for="temporaereTp">
+                    <span>Temp TP</span>
+                    <input id="temporaereTp" type="number" min="0" max="9999" step="1" inputmode="numeric">
+                </label>
+            </div>
+
+            <div class="tp-aktionen tp-aktionen-kompakt">
+                <div class="tp-aktion">
+                    <label for="schadenEingabe">Schaden</label>
+                    <div class="tp-aktionszeile">
+                        <input id="schadenEingabe" type="number" min="1" max="9999" step="1" inputmode="numeric" placeholder="0">
+                        <button type="button" id="btnSchadenAnwenden" aria-label="Schaden anwenden">✓</button>
+                    </div>
+                </div>
+
+                <div class="tp-aktion">
+                    <label for="heilungEingabe">Heilung</label>
+                    <div class="tp-aktionszeile">
+                        <input id="heilungEingabe" type="number" min="1" max="9999" step="1" inputmode="numeric" placeholder="0">
+                        <button type="button" id="btnHeilungAnwenden" aria-label="Heilung anwenden">✓</button>
+                    </div>
+                </div>
+            </div>
+
+            <p id="tpMeldung" class="tp-meldung" aria-live="polite"></p>
+        </div>
+
+
+        <div class="angriffe-bereich" aria-labelledby="angriffe-ueberschrift">
+            <div class="angriffe-kopf">
+                <div>
+                    <h3 id="angriffe-ueberschrift">Angriffe</h3>
+                </div>
+                <button type="button" id="btnAngriffHinzufuegen">+ Angriff</button>
+            </div>
+
+            <div id="angriffeListe" class="angriffe-liste" aria-live="polite"></div>
+            <p id="angriffeMeldung" class="angriffe-meldung" aria-live="polite"></p>
+        </div>
+    </section>
+
+    <!-- ========================= -->
+    <!-- Charaktere                -->
+    <!-- ========================= -->
+
+    <section id="charaktere" class="page">
+
+        <div class="seitenkopf">
+            <div>
+                <h2>Charaktere</h2>
+                
+            </div>
+            <button type="button" id="btnNeuerCharakter">+ Neuer Charakter</button>
+        </div>
+
+        <div id="charakterListe" aria-live="polite"></div>
+
+    </section>
+
+    <!-- ========================= -->
+    <!-- Admin                     -->
+    <!-- ========================= -->
+
+    <section id="admin" class="page">
+        <div class="seitenkopf">
+            <div>
+                <h2>Admin-Modus</h2>
+                <p id="adminStatus" class="admin-status">Gesperrt</p>
+            </div>
+            <button type="button" id="btnAdminSperren" hidden>Admin-Modus sperren</button>
+        </div>
+
+        <div id="adminGesperrt" class="admin-karte">
+            <h3>Standard-Effektliste verwalten</h3>
+            <p>Der Admin-Bereich ist durch ein festes vierstelliges Passwort geschützt.</p>
+            <button type="button" id="btnAdminEntsperren">Admin-Modus öffnen</button>
+        </div>
+
+        <div id="adminWerkzeuge" class="admin-karte" hidden>
+            <h3>Standard-Effektliste</h3>
+            <p>Öffne die Seite „Effekte“ und tippe bei einem Standardeffekt auf ✏️. Änderungen werden als lokaler Admin-Arbeitsstand gespeichert.</p>
+            <dl class="admin-statistik">
+                <div><dt>Standardeffekte</dt><dd id="adminStandardAnzahl">0</dd></div>
+                <div><dt>Geänderte Effekte</dt><dd id="adminGeaendertAnzahl">0</dd></div>
+            </dl>
+        </div>
+    </section>
+
+</main>
+
+<script src="js/app.js"></script>
+<script src="js/charakterwerte.js?v=24"></script>
+<script src="js/filter.js"></script>
+<script src="js/berechnung.js?v=24"></script>
+<script src="js/makros.js"></script>
+<script src="js/speicher.js"></script>
+<script src="js/commit21.js?v=21.1"></script>
+<script src="js/commit22.js?v=28"></script>
+<script src="js/commit23.js?v=23"></script>
+<script src="js/commit24.js?v=24"></script>
+<script src="js/commit25.js?v=25"></script>
+<script src="js/commit26.js?v=28"></script>
+<script src="js/commit29.js?v=29.1"></script>    
+
+<dialog id="effektDialog">
+<h3>Neuen Effekt anlegen</h3>
+<label>Name<br><input id="effektName"></label><br><br>
+<label>Kategorie<br>
+<select id="effektKategorie">
+<option>Ausrüstung</option>
+<option>Kampf</option>
+<option>Klassenmerkmale</option>
+<option>Sonstige</option>
+<option>Talente</option>
+<option>Volksmerkmale</option>
+<option>Zauber</option>
+<option>Zustände</option>
+</select></label><br><br>
+<div id="bonusEditor">
+<h4>Boni</h4>
+<div id="bonusContainer"></div>
+<button type="button" id="btnBonusHinzufuegen">+ Bonus hinzufügen</button>
+</div><br>
+<label>Beschreibung<br><textarea id="effektBeschreibung"></textarea></label><br><br>
+<label>Quelle<br><input id="effektQuelle"></label><br><br>
+<button id="btnSpeichernEffekt">Speichern</button>
+<button id="btnSchliessenDialog">Abbrechen</button>
+</dialog>
+
+<dialog id="adminPinDialog" class="admin-pin-dialog">
+    <form id="adminPinForm">
+        <h3 id="adminPinTitel">Admin-Modus öffnen</h3>
+        <p id="adminPinHinweis">Bitte vierstellige PIN eingeben.</p>
+        <label for="adminPin">PIN</label>
+        <input id="adminPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="one-time-code" required>
+        <label id="adminPinBestaetigenLabel" for="adminPinBestaetigen" hidden>PIN wiederholen</label>
+        <input id="adminPinBestaetigen" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="new-password" hidden>
+        <p id="adminPinFehler" class="admin-fehler" aria-live="polite"></p>
+        <div class="dialog-aktionen">
+            <button type="submit" id="btnAdminPinSpeichern">Bestätigen</button>
+            <button type="button" id="btnAdminPinAbbrechen">Abbrechen</button>
+        </div>
+    </form>
+</dialog>
+
+</body>
+
+</html>
