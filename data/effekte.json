@@ -1080,7 +1080,7 @@
       {
         "ziel": "RW-Wille",
         "bonusart": "Moral",
-        "wert": 1
+        "wert": 4
       },
       {
         "ziel": "RW-Zähigkeit",
@@ -2006,6 +2006,29 @@
     ],
     "gebiet": "",
     "dauer": "1 Std./Stufe"
+  },
+  {
+    "id": "standard-admin-960d5448-ca3e-468d-8d9e-a04eccf31d4c",
+    "name": "Magische Fänge",
+    "kategorie": "Zauber",
+    "aktiv": false,
+    "beschreibung": "MAGISCHE FÄNGE\nSchule: Verwandlung; Grad: DRU 1, WAL 1\nZeitaufwand: 1 Standard-Aktion\nKomponenten: V, G, GF\nReichweite: Berührung\nZiel: Lebende, berührte Kreatur\nWirkungsdauer: 1 Min./Stufe\nRettungswurf: Willen, keine Wirkung (harmlos);  \nZauberresistenz: Ja (harmlos)\nMagische Fänge verleiht der natürlichen Waffe oder dem \nwaffenlosen Schlag des Ziels einen Verbesserungsbonus von +1 auf \nAngriffs- und Schadenswürfe. Der Zauber wirkt auf einen Hieb, \neine Faust, einen Biss oder irgendeine andere natürliche Waffe. \nEr verwandelt jedoch nicht den nichttödlichen Schaden eines \nwaffenlosen Angriffs in tödlichen Schaden.\nMagische Fänge kann mit Dauerhaftigkeit permanent gemacht \nwerden.",
+    "quelle": "GRW S. 301",
+    "angriffZuweisbar": true,
+    "boni": [
+      {
+        "ziel": "Angriff Nah",
+        "bonusart": "Verbesserung",
+        "wert": 1
+      },
+      {
+        "ziel": "Schaden Nah",
+        "bonusart": "Verbesserung",
+        "wert": 1
+      }
+    ],
+    "gebiet": "Berührung",
+    "dauer": "1 Min./Stufe"
   },
   {
     "id": "standard-admin-1d59b687-8648-4dfd-aa13-4259ff925874",
