@@ -14,7 +14,7 @@
 
 .tp-werte {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 10px;
     margin-bottom: 18px;
 }
@@ -36,7 +36,8 @@
     font: inherit;
 }
 
-.tp-aktuell output {
+.tp-aktuell output,
+.tp-schaden output {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -113,7 +114,21 @@
 
 @media (max-width: 600px) {
     .tp-werte {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    .tp-feld {
+        gap: 4px;
+        font-size: .76rem;
+    }
+
+    .tp-feld input,
+    .tp-aktuell output,
+    .tp-schaden output {
+        min-height: 38px;
+        padding: 6px 4px;
+        font-size: 1rem;
     }
 
     .tp-aktionen {

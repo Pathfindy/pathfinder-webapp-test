@@ -253,3 +253,43 @@
         grid-column: 1 / -1;
     }
 }
+
+
+/* Commit 38: Kampagnenfilter */
+.globale-charakterleiste {
+    flex-wrap: wrap;
+}
+.globale-charakterleiste #globaleKampagnenAuswahl {
+    width: min(220px, 55vw);
+}
+.charakter-kampagne-feld {
+    display: grid;
+    gap: 4px;
+    min-width: 150px;
+    flex: 1 1 180px;
+}
+.charakter-kampagne-feld span {
+    font-size: .78rem;
+    font-weight: 700;
+    color: #5c6673;
+}
+.charakter-kampagne-feld input {
+    width: 100%;
+    min-height: 36px;
+    padding: 6px 8px;
+    border: 1px solid #aeb9c7;
+    border-radius: 8px;
+    font: inherit;
+}
+@media (max-width: 480px) {
+    .globale-charakterleiste {
+        gap: 5px;
+        padding: 6px 8px;
+        font-size: .8rem;
+    }
+    .globale-charakterleiste select,
+    .globale-charakterleiste #globaleKampagnenAuswahl {
+        width: min(150px, 42vw);
+        min-height: 32px;
+    }
+}
