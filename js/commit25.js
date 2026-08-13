@@ -228,12 +228,19 @@
     leiste.id = "globaleCharakterleiste";
     leiste.className = "globale-charakterleiste";
     leiste.innerHTML = `
+      <label for="globaleKampagnenAuswahl">Kampagne:</label>
+      <select id="globaleKampagnenAuswahl" aria-label="Aktive Kampagne wechseln"></select>
       <label for="globaleCharakterAuswahl">Aktiv:</label>
       <select id="globaleCharakterAuswahl" aria-label="Aktiven Charakter wechseln"></select>
     `;
     nav.after(leiste);
 
-    leiste.querySelector("select").addEventListener("change", event => {
+    leiste.querySelector("#globaleKampagnenAuswahl").addEventListener("change", event => {
+      if (typeof setzeAktiveKampagne === "function") setzeAktiveKampagne(event.target.value);
+      aktualisiereCharakterauswahl();
+    });
+
+    leiste.querySelector("#globaleCharakterAuswahl").addEventListener("change", event => {
       if (typeof waehleCharakter === "function") waehleCharakter(event.target.value);
       aktualisiereCharakterauswahl();
       setTimeout(aktualisiereErweiterungen, 0);
@@ -243,22 +250,39 @@
 
   function aktualisiereCharakterauswahl() {
     const select = document.getElementById("globaleCharakterAuswahl");
-    if (!select || typeof charaktere === "undefined") return;
-    const bisher = select.value;
-    select.innerHTML = "";
-    charaktere.forEach(charakter => {
+    const kampagnenSelect = document.getElementById("globaleKampagnenAuswahl");
+    if (!select || !kampagnenSelect || typeof charaktere === "undefined") return;
+
+    const kampagnen = typeof kampagnenListe === "function" ? kampagnenListe() : ["Standard"];
+    const aktive = typeof aktiveKampagne === "function" ? aktiveKampagne() : "Standard";
+
+    kampagnenSelect.innerHTML = "";
+    kampagnen.forEach(name => {
       const option = document.createElement("option");
-      option.value = charakter.id;
-      option.textContent = charakter.name;
-      option.selected = charakter.id === aktiverCharakterId;
-      select.appendChild(option);
+      option.value = name;
+      option.textContent = name;
+      option.selected = name === aktive;
+      kampagnenSelect.appendChild(option);
     });
+    kampagnenSelect.value = aktive;
+
+    select.innerHTML = "";
+    charaktere
+      .filter(charakter => (charakter.kampagne || "Standard") === aktive)
+      .forEach(charakter => {
+        const option = document.createElement("option");
+        option.value = charakter.id;
+        option.textContent = charakter.name;
+        option.selected = charakter.id === aktiverCharakterId;
+        select.appendChild(option);
+      });
+
     if ([...select.options].some(option => option.value === aktiverCharakterId)) {
       select.value = aktiverCharakterId;
-    } else if (bisher) {
-      select.value = bisher;
     }
   }
+
+  window.aktualisiereGlobaleCharakterauswahl = aktualisiereCharakterauswahl;
 
   function erstelleFixierteFilterleiste() {
     const seite = document.getElementById("effekte");

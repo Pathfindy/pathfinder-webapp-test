@@ -30,6 +30,7 @@ const STORAGE_KEYS={
  aktiverCharakter:"pf-aktiver-charakter",
  charakterEffekte:"pf-charakter-effekte",
  charakterEffektAngriffe:"pf-charakter-effekt-angriffe",
+ aktiveKampagne:"pf-aktive-kampagne",
  adminPinHash:"pf-admin-pin-hash",
  adminStandardAenderungen:"pf-admin-standard-aenderungen",
  adminStandardNeu:"pf-admin-standard-neu"
@@ -64,7 +65,10 @@ function normalisiereCharakter(charakter={}){
    id:charakter.id||neueCharakterId(),
    name:typeof charakter.name==="string" && charakter.name.trim()
      ?charakter.name.trim()
-     :"Unbenannter Charakter"
+     :"Unbenannter Charakter",
+   kampagne:typeof charakter.kampagne==="string" && charakter.kampagne.trim()
+     ?charakter.kampagne.trim()
+     :"Standard"
  };
 }
 
@@ -82,6 +86,63 @@ function findeCharakter(id){
 function aktiverCharakter(){
  return findeCharakter(aktiverCharakterId);
 }
+
+function kampagnenListe(){
+ const namen=new Set(
+   charaktere
+     .map(charakter=>String(charakter.kampagne||"Standard").trim()||"Standard")
+ );
+ return [...namen].sort((a,b)=>a.localeCompare(b,"de"));
+}
+
+function aktiveKampagne(){
+ const gespeichert=localStorage.getItem(STORAGE_KEYS.aktiveKampagne);
+ const kampagnen=kampagnenListe();
+ if(gespeichert && kampagnen.includes(gespeichert)) return gespeichert;
+ return aktiverCharakter()?.kampagne || kampagnen[0] || "Standard";
+}
+
+function setzeAktiveKampagne(name){
+ const kampagne=String(name||"").trim()||"Standard";
+ localStorage.setItem(STORAGE_KEYS.aktiveKampagne,kampagne);
+ const kandidaten=charaktere.filter(charakter=>charakter.kampagne===kampagne);
+ if(kandidaten.length && !kandidaten.some(charakter=>charakter.id===aktiverCharakterId)){
+   aktiverCharakterId=kandidaten[0].id;
+   speichereCharaktere();
+   ladeStatusFuerCharakter(aktiverCharakterId);
+   baueEffektliste();
+ }
+ rendereCharaktere();
+ aktualisiereAktivenCharakterHinweis();
+ if(typeof window.aktualisiereGlobaleCharakterauswahl==="function") {
+   window.aktualisiereGlobaleCharakterauswahl();
+ }
+ if(typeof window.aktualisiereAlleAnsichten==="function") {
+   window.aktualisiereAlleAnsichten();
+ }
+ return kampagne;
+}
+
+function setzeCharakterKampagne(id,name){
+ const charakter=findeCharakter(id);
+ if(!charakter) return false;
+ charakter.kampagne=String(name||"").trim()||"Standard";
+ speichereCharaktere();
+ rendereCharaktere();
+ if(typeof window.aktualisiereGlobaleCharakterauswahl==="function") {
+   window.aktualisiereGlobaleCharakterauswahl();
+ }
+ return true;
+}
+
+function aktualisiereAlleAnsichten(){
+ if(typeof berechneWerte==="function") berechneWerte();
+ if(typeof window.aktualisiereTrefferpunkteAnsicht==="function") window.aktualisiereTrefferpunkteAnsicht();
+ if(typeof window.aktualisiereAngriffeAnsicht==="function") window.aktualisiereAngriffeAnsicht();
+ if(typeof window.rendereEnergieAnsicht==="function") window.rendereEnergieAnsicht();
+ if(typeof window.aktualisiereGlobaleCharakterauswahl==="function") window.aktualisiereGlobaleCharakterauswahl();
+}
+window.aktualisiereAlleAnsichten=aktualisiereAlleAnsichten;
 
 function ladeCharaktere(){
  const gespeichert=ladeJson(STORAGE_KEYS.charaktere,[]);
@@ -108,7 +169,7 @@ function erstelleCharakter(name){
  const bereinigterName=String(name||"").trim();
  if(!bereinigterName) return null;
 
- const charakter=normalisiereCharakter({name:bereinigterName});
+ const charakter=normalisiereCharakter({name:bereinigterName,kampagne:aktiveKampagne()});
  charaktere.push(charakter);
  aktiverCharakterId=charakter.id;
  speichereCharaktere();
@@ -124,7 +185,7 @@ function waehleCharakter(id){
  rendereCharaktere();
  aktualisiereAktivenCharakterHinweis();
  baueEffektliste();
- if(typeof berechneWerte==="function") berechneWerte();
+ aktualisiereAlleAnsichten();
  return true;
 }
 
@@ -184,6 +245,24 @@ function rendereCharaktere(){
    auswahl.innerHTML=`<strong>${charakter.name}</strong><span>${charakter.id===aktiverCharakterId?"Aktiv":"Auswählen"}</span>`;
    auswahl.addEventListener("click",()=>waehleCharakter(charakter.id));
 
+   const kampagnenFeld=document.createElement("label");
+   kampagnenFeld.className="charakter-kampagne-feld";
+   kampagnenFeld.innerHTML="<span>Kampagne</span>";
+   const kampagnenInput=document.createElement("input");
+   kampagnenInput.type="text";
+   kampagnenInput.value=charakter.kampagne||"Standard";
+   kampagnenInput.maxLength=60;
+   kampagnenInput.setAttribute("list","kampagnenVorschlaege");
+   kampagnenInput.setAttribute("aria-label",`Kampagne für ${charakter.name}`);
+   kampagnenInput.addEventListener("change",()=>{
+     const alt=charakter.kampagne;
+     setzeCharakterKampagne(charakter.id,kampagnenInput.value);
+     if(charakter.id===aktiverCharakterId && alt!==charakter.kampagne){
+       setzeAktiveKampagne(charakter.kampagne);
+     }
+   });
+   kampagnenFeld.appendChild(kampagnenInput);
+
    const aktionen=document.createElement("div");
    aktionen.className="charakter-aktionen";
 
@@ -240,8 +319,21 @@ function rendereCharaktere(){
    });
 
    aktionen.append(umbenennen,kopieren,loeschen);
-   eintrag.append(auswahl,aktionen);
+   eintrag.append(auswahl,kampagnenFeld,aktionen);
    liste.appendChild(eintrag);
+ });
+
+ let datalist=document.getElementById("kampagnenVorschlaege");
+ if(!datalist){
+   datalist=document.createElement("datalist");
+   datalist.id="kampagnenVorschlaege";
+   document.body.appendChild(datalist);
+ }
+ datalist.innerHTML="";
+ kampagnenListe().forEach(name=>{
+   const option=document.createElement("option");
+   option.value=name;
+   datalist.appendChild(option);
  });
 }
 
@@ -1382,6 +1474,7 @@ function initialisiereApp(){
 
   ladeCharaktere();
   initialisiereAdminModus();
+  requestAnimationFrame(()=>aktualisiereAlleAnsichten());
 }
 
 if(document.readyState==="loading"){
@@ -1390,4 +1483,6 @@ if(document.readyState==="loading"){
   initialisiereApp();
 }
 
-ladeEffekte();
+ladeEffekte().then(()=>{
+  requestAnimationFrame(()=>aktualisiereAlleAnsichten());
+});

@@ -3,7 +3,7 @@
   "use strict";
 
   const ENERGIEN = ["Elektro", "Feuer", "Kälte", "Säure", "Schall"];
-  const WIDERSTAND_WERTE = [10, 20, 30];
+  const WIDERSTAND_WERTE = [0, 10, 20, 30];
   const SCHUTZ_WERTE = Array.from({ length: 10 }, (_, i) => (i + 1) * 12);
   const STEINHAUT_WERTE = Array.from({ length: 15 }, (_, i) => (i + 1) * 10);
 
@@ -30,7 +30,7 @@
   function standardWiderstand() {
     return Object.fromEntries(ENERGIEN.map(typ => [typ, {
       aktiv: false,
-      reduktion: 10,
+      reduktion: 0,
       reduktionFrei: "",
       schaden: "",
       notiz: ""
@@ -61,7 +61,7 @@
     const basis = standardWiderstand();
     ENERGIEN.forEach(typ => {
       const eintrag = daten?.[typ] || {};
-      const reduktion = WIDERSTAND_WERTE.includes(Number(eintrag.reduktion)) ? Number(eintrag.reduktion) : 10;
+      const reduktion = WIDERSTAND_WERTE.includes(Number(eintrag.reduktion)) ? Number(eintrag.reduktion) : 0;
       const reduktionFrei =
         eintrag.reduktionFrei === "" ||
         eintrag.reduktionFrei === null ||
@@ -153,6 +153,17 @@
     return ganzeZahl(daten.reduktion, 0, 9999);
   }
 
+  function aktualisiereReduktionsMarkierung(select, freiFeld, daten) {
+    const freiAktiv =
+      daten.reduktionFrei !== "" &&
+      daten.reduktionFrei !== null &&
+      typeof daten.reduktionFrei !== "undefined";
+    const aktiv = !!daten.aktiv;
+
+    select.classList.toggle("energie-wert-aktiv", aktiv && !freiAktiv);
+    freiFeld.classList.toggle("energie-wert-aktiv", aktiv && freiAktiv);
+  }
+
   function applyTrefferpunktSchaden(charakter, schaden) {
     const rest = ganzeZahl(schaden, 0, 9999);
     if (rest <= 0) return { temp: 0, tp: 0 };
@@ -232,11 +243,13 @@
   window.verarbeiteLebensSchaden = verarbeiteNormalenSchaden;
 
   function speichereUndAktualisiere() {
+    const scrollY = window.scrollY;
     speichereCharaktere();
     if (typeof window.aktualisiereTrefferpunkteAnsicht === "function") {
       window.aktualisiereTrefferpunkteAnsicht();
     }
     rendereEnergieAnsicht();
+    requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
   }
 
   function erstelleKopf(texte, klasse) {
@@ -302,6 +315,7 @@
       aktiv.setAttribute("aria-label", `${typ}: Energiewiderstand aktiv`);
       aktiv.addEventListener("change", () => {
         daten.aktiv = aktiv.checked;
+        aktualisiereReduktionsMarkierung(reduktion, reduktionFrei, daten);
         speichereCharaktere();
       });
 
@@ -318,6 +332,7 @@
       );
       reduktion.addEventListener("change", () => {
         daten.reduktion = Number(reduktion.value);
+        aktualisiereReduktionsMarkierung(reduktion, reduktionFrei, daten);
         speichereCharaktere();
       });
 
@@ -331,9 +346,11 @@
           reduktionFrei.value === ""
             ? ""
             : ganzeZahl(reduktionFrei.value, 0, 9999);
+        aktualisiereReduktionsMarkierung(reduktion, reduktionFrei, daten);
         speichereCharaktere();
       });
 
+      aktualisiereReduktionsMarkierung(reduktion, reduktionFrei, daten);
       reduktionFeld.append(reduktion, reduktionFrei);
 
       const notiz = notizfeld(daten.notiz, `${typ}: Notiz`, wert => {
@@ -363,6 +380,7 @@
       aktiv.setAttribute("aria-label", `${typ}: Schutz vor Energien aktiv`);
       aktiv.addEventListener("change", () => {
         daten.aktiv = aktiv.checked;
+        aktualisiereRestMarkierung();
         speichereCharaktere();
       });
 
@@ -387,6 +405,11 @@
         "aria-label",
         `${typ}: verbleibender absorbierbarer Energieschaden`
       );
+
+      const aktualisiereRestMarkierung = () => {
+        rest.classList.toggle("energie-rest-aktiv", !!daten.aktiv);
+      };
+      aktualisiereRestMarkierung();
 
       const notiz = notizfeld(daten.notiz, `${typ}: Notiz`, wert => {
         daten.notiz = wert;
