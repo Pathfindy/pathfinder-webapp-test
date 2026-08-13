@@ -31,6 +31,7 @@ const STORAGE_KEYS={
  charakterEffekte:"pf-charakter-effekte",
  charakterEffektAngriffe:"pf-charakter-effekt-angriffe",
  aktiveKampagne:"pf-aktive-kampagne",
+ kampagnen:"pf-kampagnen",
  adminPinHash:"pf-admin-pin-hash",
  adminStandardAenderungen:"pf-admin-standard-aenderungen",
  adminStandardNeu:"pf-admin-standard-neu"
@@ -88,11 +89,34 @@ function aktiverCharakter(){
 }
 
 function kampagnenListe(){
+ const gespeichert=ladeJson(STORAGE_KEYS.kampagnen,[]);
  const namen=new Set(
-   charaktere
-     .map(charakter=>String(charakter.kampagne||"Standard").trim()||"Standard")
+   (Array.isArray(gespeichert)?gespeichert:[])
+     .map(name=>String(name||"").trim())
+     .filter(Boolean)
  );
+ charaktere.forEach(charakter=>{
+   namen.add(String(charakter.kampagne||"Standard").trim()||"Standard");
+ });
+ if(namen.size===0) namen.add("Standard");
  return [...namen].sort((a,b)=>a.localeCompare(b,"de"));
+}
+
+function speichereKampagnen(namen){
+ const liste=[...new Set((namen||[]).map(name=>String(name||"").trim()).filter(Boolean))];
+ speichereJson(STORAGE_KEYS.kampagnen,liste);
+}
+
+function erstelleKampagne(name){
+ const neu=String(name||"").trim();
+ if(!neu) return false;
+ const kampagnen=kampagnenListe();
+ if(!kampagnen.includes(neu)){
+   kampagnen.push(neu);
+   speichereKampagnen(kampagnen);
+ }
+ if(typeof window.rendereKampagnenBaum==="function") window.rendereKampagnenBaum();
+ return true;
 }
 
 function aktiveKampagne(){
@@ -126,12 +150,15 @@ function setzeAktiveKampagne(name){
 function setzeCharakterKampagne(id,name){
  const charakter=findeCharakter(id);
  if(!charakter) return false;
- charakter.kampagne=String(name||"").trim()||"Standard";
+ const kampagne=String(name||"").trim()||"Standard";
+ charakter.kampagne=kampagne;
+ erstelleKampagne(kampagne);
  speichereCharaktere();
  rendereCharaktere();
  if(typeof window.aktualisiereGlobaleCharakterauswahl==="function") {
    window.aktualisiereGlobaleCharakterauswahl();
  }
+ if(typeof window.rendereKampagnenBaum==="function") window.rendereKampagnenBaum();
  return true;
 }
 
@@ -245,24 +272,6 @@ function rendereCharaktere(){
    auswahl.innerHTML=`<strong>${charakter.name}</strong><span>${charakter.id===aktiverCharakterId?"Aktiv":"Auswählen"}</span>`;
    auswahl.addEventListener("click",()=>waehleCharakter(charakter.id));
 
-   const kampagnenFeld=document.createElement("label");
-   kampagnenFeld.className="charakter-kampagne-feld";
-   kampagnenFeld.innerHTML="<span>Kampagne</span>";
-   const kampagnenInput=document.createElement("input");
-   kampagnenInput.type="text";
-   kampagnenInput.value=charakter.kampagne||"Standard";
-   kampagnenInput.maxLength=60;
-   kampagnenInput.setAttribute("list","kampagnenVorschlaege");
-   kampagnenInput.setAttribute("aria-label",`Kampagne für ${charakter.name}`);
-   kampagnenInput.addEventListener("change",()=>{
-     const alt=charakter.kampagne;
-     setzeCharakterKampagne(charakter.id,kampagnenInput.value);
-     if(charakter.id===aktiverCharakterId && alt!==charakter.kampagne){
-       setzeAktiveKampagne(charakter.kampagne);
-     }
-   });
-   kampagnenFeld.appendChild(kampagnenInput);
-
    const aktionen=document.createElement("div");
    aktionen.className="charakter-aktionen";
 
@@ -319,7 +328,7 @@ function rendereCharaktere(){
    });
 
    aktionen.append(umbenennen,kopieren,loeschen);
-   eintrag.append(auswahl,kampagnenFeld,aktionen);
+   eintrag.append(auswahl,aktionen);
    liste.appendChild(eintrag);
  });
 
