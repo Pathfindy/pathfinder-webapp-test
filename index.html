@@ -28,7 +28,7 @@
 
 <header>
 
-    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.39.3</span></h1>
+    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.39.4</span></h1>
 
 </header>
 
@@ -342,11 +342,11 @@
 
 </main>
 
-<script src="js/app.js?v=39.3"></script>
+<script src="js/app.js?v=39.4"></script>
 <script src="js/charakterwerte.js?v=38"></script>
 <script src="js/leben.js?v=38"></script>
 <script src="js/filter.js"></script>
-<script src="js/berechnung.js?v=39.3"></script>
+<script src="js/berechnung.js?v=39.4"></script>
 <script src="js/makros.js"></script>
 <script src="js/speicher.js"></script>
 <script src="js/commit21.js?v=21.1"></script>
@@ -374,6 +374,12 @@
 <label class="effekt-zuweisbar-editor-30">
 <input type="checkbox" id="effektAngriffZuweisbar">
 Angriff zuweisbar
+</label>
+<label class="effekt-angriffsmodus-editor">Anwendung
+<select id="effektAngriffsModus">
+<option value="alle">Auf alle Angriffe</option>
+<option value="einer">Auf einen ausgewählten Angriff</option>
+</select>
 </label><br><br>
 
 <section id="stufenEditor" class="stufen-editor">
@@ -389,6 +395,7 @@ Stufenabhängigen Wert verwenden
 <option value="klasse">Klassenstufe</option>
 <option value="zauberstufe">Zauberstufe im Effekt</option>
 <option value="manuell">Manuelle Stufe im Effekt</option>
+<option value="gab">GAB</option>
 </select>
 </label>
 <label>Klasse
