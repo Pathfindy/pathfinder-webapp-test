@@ -35,7 +35,8 @@ const STORAGE_KEYS={
  kampagnen:"pf-kampagnen",
  adminPinHash:"pf-admin-pin-hash",
  adminStandardAenderungen:"pf-admin-standard-aenderungen",
- adminStandardNeu:"pf-admin-standard-neu"
+ adminStandardNeu:"pf-admin-standard-neu",
+ adminStandardGeloescht:"pf-admin-standard-geloescht"
 };
 
 function ladeJson(key,standardwert){
@@ -107,6 +108,7 @@ function setzeCharakterKlassen(id,klassen){
  charakter.klassen=normalisiereKlassen(klassen);
  speichereCharaktere();
  if(typeof window.rendereKampagnenBaum==="function") window.rendereKampagnenBaum();
+ if(id===aktiverCharakterId && typeof baueEffektliste==="function") baueEffektliste();
  if(typeof window.aktualisiereAlleAnsichten==="function") window.aktualisiereAlleAnsichten();
  return true;
 }
@@ -654,6 +656,14 @@ function normalisiereStufenlogik(logik={}){
 
 function normalisiereEffekt(effekt={}){
  const standard=!!effekt.standard;
+ const stufenlogik=normalisiereStufenlogik(effekt.stufenlogik);
+ const roheBoni=Array.isArray(effekt.boni)?effekt.boni:[];
+ const hatExpliziteWertQuelle=roheBoni.some(bonus=>bonus && Object.prototype.hasOwnProperty.call(bonus,"wertQuelle"));
+ const boni=roheBoni.map(bonus=>{
+   const normalisiert=normalisiereBonus(bonus);
+   if(stufenlogik.aktiv && !hatExpliziteWertQuelle) normalisiert.wertQuelle="stufenwert";
+   return normalisiert;
+ });
  return {
    id:effekt.id||(standard?standardEffektId(effekt):neueEffektId()),
    standard,
@@ -663,8 +673,8 @@ function normalisiereEffekt(effekt={}){
    beschreibung:effekt.beschreibung||"",
    quelle:effekt.quelle||"",
    angriffZuweisbar:!!effekt.angriffZuweisbar,
-   stufenlogik:normalisiereStufenlogik(effekt.stufenlogik),
-   boni:Array.isArray(effekt.boni)?effekt.boni.map(normalisiereBonus):[]
+   stufenlogik,
+   boni
  };
 }
 
@@ -824,6 +834,38 @@ function loescheNeuenStandardEffekt(id){
 }
 
 
+function ladeAdminStandardGeloescht(){
+ const daten=ladeJson(STORAGE_KEYS.adminStandardGeloescht,[]);
+ return Array.isArray(daten)?daten.map(String):[];
+}
+
+function speichereAdminStandardGeloescht(ids){
+ speichereJson(STORAGE_KEYS.adminStandardGeloescht,[...new Set((ids||[]).map(String))]);
+}
+
+function loescheStandardEffektAlsAdmin(id){
+ if(!istAdminEntsperrt()) return false;
+ const effekt=findeEffekt(id);
+ if(!effekt || !effekt.standard) return false;
+
+ if(istNeuerStandardEffekt(id)){
+   speichereAdminStandardNeu(ladeAdminStandardNeu().filter(e=>e.id!==id));
+ }else{
+   const geloescht=ladeAdminStandardGeloescht();
+   if(!geloescht.includes(String(id))) geloescht.push(String(id));
+   speichereAdminStandardGeloescht(geloescht);
+
+   const aenderungen=ladeAdminStandardAenderungen();
+   if(Object.prototype.hasOwnProperty.call(aenderungen,id)){
+     delete aenderungen[id];
+     speichereAdminStandardAenderungen(aenderungen);
+   }
+ }
+ effekte=effekte.filter(e=>e.id!==id);
+ aktualisiereAdminStatistik();
+ return true;
+}
+
 // Commit 31: Effekt-Duplikate dauerhaft verhindern.
 function normalisiereEffektVergleichstext31(wert){
  return String(wert||"")
@@ -907,12 +949,12 @@ async function ladeEffekte(){
    // 1. Repository-Standardeffekte, 2. neue Admin-Standardeffekte,
    // 3. Benutzereffekte. Bei gleicher ID ODER gleicher Effekt-Signatur
    // bleibt der zuerst vorhandene Eintrag erhalten.
+   const geloeschteStandardIds=new Set(ladeAdminStandardGeloescht());
    const standardBasis=dedupliziereEffekte31(
-     standardEffekte.map(effekt=>
-       angewendeterStandardEffekt(
-         normalisiereEffekt({...effekt,standard:true})
-       )
-     )
+     standardEffekte
+       .map(effekt=>normalisiereEffekt({...effekt,standard:true}))
+       .filter(effekt=>!geloeschteStandardIds.has(String(effekt.id)))
+       .map(effekt=>angewendeterStandardEffekt(effekt))
    );
 
    const neueStandardEffekte=entferneDuplikateGegenBasis31(
@@ -1082,6 +1124,42 @@ function baueEffektliste(){
    info.className="effekt-info";
    info.innerHTML=`<div class="effekt-name">${effekt.name}</div><div class="effekt-kategorie">${effekt.kategorie}</div>`;
 
+   if(effekt.stufenlogik?.aktiv){
+     const stufenBox=document.createElement("div");
+     stufenBox.className="effekt-stufenbox";
+     let bezugText="Charakterstufe";
+     if(effekt.stufenlogik.bezug==="klasse"){
+       bezugText=`Klassenstufe${effekt.stufenlogik.klasse?` (${effekt.stufenlogik.klasse})`:""}`;
+     }else if(effekt.stufenlogik.bezug==="zauberstufe"){
+       bezugText="Zauberstufe";
+     }else if(effekt.stufenlogik.bezug==="manuell"){
+       bezugText="Manuelle Stufe";
+     }
+     const labelStufe=document.createElement("span");
+     labelStufe.textContent=bezugText;
+     stufenBox.appendChild(labelStufe);
+
+     if(["zauberstufe","manuell"].includes(effekt.stufenlogik.bezug)){
+       const eingabe=document.createElement("input");
+       eingabe.type="number"; eingabe.min="0"; eingabe.max="99"; eingabe.step="1";
+       const gespeichert=effektStufeFuerCharakter(effekt.id);
+       eingabe.value=gespeichert===""?"":String(gespeichert);
+       eingabe.addEventListener("click",event=>event.stopPropagation());
+       eingabe.addEventListener("input",event=>{
+         event.stopPropagation();
+         setzeEffektStufeFuerCharakter(effekt.id,eingabe.value);
+         if(typeof berechneWerte==="function") berechneWerte();
+         aktualisiereEffektStufenAnzeige(effekt,stufenBox);
+       });
+       stufenBox.appendChild(eingabe);
+     }
+     const aktuell=document.createElement("strong");
+     aktuell.className="effekt-stufenwert-aktuell";
+     stufenBox.appendChild(aktuell);
+     info.appendChild(stufenBox);
+     aktualisiereEffektStufenAnzeige(effekt,stufenBox);
+   }
+
    let angriffsAuswahl=null;
    if(effekt.angriffZuweisbar){
      const zuweisung=document.createElement("label");
@@ -1120,7 +1198,7 @@ function baueEffektliste(){
       bearbeiten.onclick=()=>oeffneEffektEditor(effekt.id);
       aktionen.appendChild(bearbeiten);
 
-      if(!effekt.standard || (effekt.standard && istNeuerStandardEffekt(effekt.id))){
+      if(!effekt.standard || (effekt.standard && istAdminEntsperrt())){
         const del=document.createElement("button");
         del.type="button";
         del.className="icon-button";
@@ -1129,7 +1207,7 @@ function baueEffektliste(){
         del.onclick=()=>{
           if(confirm("Effekt wirklich löschen?")){
             const geloescht=effekt.standard
-              ?loescheNeuenStandardEffekt(effekt.id)
+              ?loescheStandardEffektAlsAdmin(effekt.id)
               :loescheBenutzerEffekt(effekt.id);
             if(geloescht){
               baueEffektliste();
@@ -1440,10 +1518,34 @@ function rendereBonusEditor(){
    bonusart.append(...erzeugeOptionen(PF_BONUSARTEN,bonus.bonusart));
    bonusart.addEventListener("change",event=>aktualisiereBonus(index,"bonusart",event.target.value));
 
+   const wertQuelle=document.createElement("select");
+   wertQuelle.className="bonus-wertquelle";
+   wertQuelle.setAttribute("aria-label",`Wertquelle der Bonuszeile ${index+1}`);
+   [["fest","Fest"],["stufenwert","Stufenwert"]].forEach(([value,text])=>{
+     const option=document.createElement("option");
+     option.value=value;
+     option.textContent=text;
+     option.selected=(bonus.wertQuelle||"fest")===value;
+     if(value==="stufenwert" && !editorState.entwurf.stufenlogik?.aktiv) option.disabled=true;
+     wertQuelle.appendChild(option);
+   });
+   wertQuelle.addEventListener("change",event=>{
+     aktualisiereBonus(index,"wertQuelle",event.target.value);
+     rendereBonusEditor();
+   });
+
    const wert=document.createElement("select");
    wert.setAttribute("aria-label",`Wert der Bonuszeile ${index+1}`);
-   wert.append(...erzeugeOptionen(PF_BONUSWERTE,bonus.wert));
-   wert.addEventListener("change",event=>aktualisiereBonus(index,"wert",event.target.value));
+   if(bonus.wertQuelle==="stufenwert"){
+     const option=document.createElement("option");
+     option.value="0";
+     option.textContent="Stufenwert";
+     wert.appendChild(option);
+     wert.disabled=true;
+   }else{
+     wert.append(...erzeugeOptionen(PF_BONUSWERTE,bonus.wert));
+     wert.addEventListener("change",event=>aktualisiereBonus(index,"wert",event.target.value));
+   }
 
    const entfernen=document.createElement("button");
    entfernen.type="button";
@@ -1452,7 +1554,7 @@ function rendereBonusEditor(){
    entfernen.setAttribute("aria-label",`Bonuszeile ${index+1} löschen`);
    entfernen.addEventListener("click",()=>entferneBonuszeile(index));
 
-   zeile.append(ziel,bonusart,wert,entfernen);
+   zeile.append(ziel,bonusart,wertQuelle,wert,entfernen);
    container.appendChild(zeile);
  });
 }
