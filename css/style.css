@@ -553,3 +553,5 @@ nav {
 #effektStufenklasseAndere[hidden]{display:none}
 
 #effektStufenklasse{width:100%;min-height:36px} #effektStufenklasseAndere[hidden]{display:none} #btnStufenbereichHinzufuegen:disabled{opacity:.45}
+
+.effekt-stufenbox{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;font-size:.8rem}.effekt-stufenbox input{width:64px}.effekt-stufenwert-aktuell{font-weight:700}
