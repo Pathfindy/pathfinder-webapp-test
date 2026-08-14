@@ -8,12 +8,12 @@
     <title>Das azlantische Helferlein der Boni</title>
 
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=39">
     <link rel="stylesheet" href="css/charakterwerte.css?v=38.1">
     <link rel="stylesheet" href="css/commit21.css?v=21">
     <link rel="stylesheet" href="css/commit22.css?v=22">
     <link rel="stylesheet" href="css/commit24.css?v=24">
-    <link rel="stylesheet" href="css/commit25.css?v=38.1">
+    <link rel="stylesheet" href="css/commit25.css?v=38.3">
     <link rel="stylesheet" href="css/commit26.css?v=26">
     <link rel="stylesheet" href="css/commit27.css?v=27">
     <link rel="stylesheet" href="css/commit28.css?v=28">
@@ -28,7 +28,7 @@
 
 <header>
 
-    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.38.1</span></h1>
+    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.39</span></h1>
 
 </header>
 
@@ -300,7 +300,7 @@
             <div class="kampagnen-verwaltung-kopf">
                 <div>
                     <h3 id="kampagnenTitel">Kampagnen</h3>
-                    <p>Charaktere werden ihrer Kampagne untergeordnet angezeigt.</p>
+                    <p>Charaktere werden ihrer Kampagne untergeordnet angezeigt. Es werden auf den folge Seiten nur Charakter der aktiven Kampagne zur Auswahl gestellt. Klassen und Stufen werden direkt im Charakterbanner gepflegt; die Gesamtstufe wird automatisch berechnet.</p>
                 </div>
                 <div class="kampagne-neu-zeile">
                     <input id="neueKampagneName" type="text" maxlength="60" placeholder="Neue Kampagne">
@@ -309,10 +309,7 @@
             </div>
             <div id="kampagnenBaum" class="kampagnen-baum" aria-live="polite"></div>
         </section>
-
-        <div id="charakterListe" aria-live="polite" hidden></div>
-
-    </section>
+</section>
 
     <!-- ========================= -->
     <!-- Admin                     -->
@@ -345,20 +342,20 @@
 
 </main>
 
-<script src="js/app.js?v=38.1"></script>
+<script src="js/app.js?v=39"></script>
 <script src="js/charakterwerte.js?v=38"></script>
 <script src="js/leben.js?v=38"></script>
 <script src="js/filter.js"></script>
-<script src="js/berechnung.js?v=36"></script>
+<script src="js/berechnung.js?v=39"></script>
 <script src="js/makros.js"></script>
 <script src="js/speicher.js"></script>
 <script src="js/commit21.js?v=21.1"></script>
-<script src="js/commit22.js?v=30"></script>
+<script src="js/commit22.js?v=38.2"></script>
 <script src="js/commit23.js?v=23"></script>
 <script src="js/commit24.js?v=30"></script>
 <script src="js/commit25.js?v=38.1"></script>
 <script src="js/commit26.js?v=36.1"></script>
-<script src="js/commit29.js?v=38.1"></script>    
+<script src="js/commit29.js?v=39"></script>    
 
 <dialog id="effektDialog">
 <h3>Neuen Effekt anlegen</h3>
@@ -378,6 +375,31 @@
 <input type="checkbox" id="effektAngriffZuweisbar">
 Angriff zuweisbar
 </label><br><br>
+
+<section id="stufenEditor" class="stufen-editor">
+<h4>Stufenabhängigkeit</h4>
+<label class="stufen-aktiv">
+<input type="checkbox" id="effektStufenabhaengig">
+Stufenabhängigen Wert verwenden
+</label>
+<div class="stufen-editor-felder">
+<label>Bezug
+<select id="effektStufenbezug">
+<option value="charakter">Charakterstufe</option>
+<option value="klasse">Klassenstufe</option>
+<option value="zauberstufe">Zauberstufe im Effekt</option>
+<option value="manuell">Manuelle Stufe im Effekt</option>
+</select>
+</label>
+<label>Klasse
+<input id="effektStufenklasse" type="text" placeholder="z. B. Magier">
+</label>
+</div>
+<div class="stufenbereiche-kopf"><span>Von</span><span>Bis</span><span>Wert</span><span></span></div>
+<div id="stufenBereiche"></div>
+<button type="button" id="btnStufenbereichHinzufuegen">+ Stufenbereich</button>
+</section>
+
 <div id="bonusEditor">
 <h4>Boni</h4>
 <div id="bonusContainer"></div>
