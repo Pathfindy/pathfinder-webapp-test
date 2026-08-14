@@ -94,6 +94,18 @@ function charakterGesamtstufe(charakter=aktiverCharakter()){
    .reduce((summe,eintrag)=>summe+Number(eintrag.stufe||0),0);
 }
 
+function charakterGAB(charakter=aktiverCharakter()){
+ if(!charakter) return 0;
+ const direkt=Number(charakter.gab);
+ if(Number.isFinite(direkt) && direkt>=0) return Math.trunc(direkt);
+ const feld=document.getElementById("gabBasis");
+ if(feld){
+   const wert=Number(feld.value ?? feld.textContent);
+   if(Number.isFinite(wert)) return Math.trunc(wert);
+ }
+ return 0;
+}
+
 function charakterKlassenstufe(charakter,klasse){
  const name=String(klasse||"").trim().toLocaleLowerCase("de");
  if(!charakter || !name) return 0;
@@ -631,12 +643,12 @@ function normalisiereBonus(bonus={}){
    ziel:typeof bonus.ziel==="string"?bonus.ziel:"",
    bonusart:normalisiereBonusart(bonus.bonusart),
    wert:Number.isFinite(wert)?wert:0,
-   wertQuelle:bonus.wertQuelle==="stufenwert"?"stufenwert":"fest"
+   wertQuelle:["stufenwert","gabwert"].includes(bonus.wertQuelle)?bonus.wertQuelle:"fest"
  };
 }
 
 function normalisiereStufenlogik(logik={}){
- const bezug=["charakter","klasse","zauberstufe","manuell"].includes(logik?.bezug)
+ const bezug=["charakter","klasse","zauberstufe","manuell","gab"].includes(logik?.bezug)
    ?logik.bezug
    :"charakter";
  const bereiche=Array.isArray(logik?.bereiche)
@@ -658,10 +670,10 @@ function normalisiereEffekt(effekt={}){
  const standard=!!effekt.standard;
  const stufenlogik=normalisiereStufenlogik(effekt.stufenlogik);
  const roheBoni=Array.isArray(effekt.boni)?effekt.boni:[];
- const hatExpliziteWertQuelle=roheBoni.some(bonus=>bonus && Object.prototype.hasOwnProperty.call(bonus,"wertQuelle"));
  const boni=roheBoni.map(bonus=>{
    const normalisiert=normalisiereBonus(bonus);
-   if(stufenlogik.aktiv && !hatExpliziteWertQuelle) normalisiert.wertQuelle="stufenwert";
+   const hatQuelle=bonus && Object.prototype.hasOwnProperty.call(bonus,"wertQuelle");
+   if(stufenlogik.aktiv && !hatQuelle) normalisiert.wertQuelle="stufenwert";
    return normalisiert;
  });
  return {
@@ -673,6 +685,7 @@ function normalisiereEffekt(effekt={}){
    beschreibung:effekt.beschreibung||"",
    quelle:effekt.quelle||"",
    angriffZuweisbar:!!effekt.angriffZuweisbar,
+   angriffsModus:["alle","einer"].includes(effekt.angriffsModus)?effekt.angriffsModus:(effekt.angriffZuweisbar?"einer":"alle"),
    stufenlogik,
    boni
  };
@@ -1047,6 +1060,7 @@ function effektBezugsstufe(effekt,charakter=aktiverCharakter()){
  const logik=effekt?.stufenlogik;
  if(!logik?.aktiv) return 0;
  if(logik.bezug==="klasse") return charakterKlassenstufe(charakter,logik.klasse);
+ if(logik.bezug==="gab") return charakterGAB(charakter);
  if(logik.bezug==="zauberstufe" || logik.bezug==="manuell"){
    return Number(effektStufeFuerCharakter(effekt.id,charakter?.id))||0;
  }
@@ -1161,7 +1175,7 @@ function baueEffektliste(){
    }
 
    let angriffsAuswahl=null;
-   if(effekt.angriffZuweisbar){
+   if(effekt.angriffZuweisbar && effekt.angriffsModus!=="alle"){
      const zuweisung=document.createElement("label");
      zuweisung.className="effekt-angriffsziel-30";
      const beschriftung=document.createElement("span");
@@ -1333,6 +1347,7 @@ function leseEditorFormular(){
    beschreibung:document.getElementById("effektBeschreibung")?.value.trim()||"",
    quelle:document.getElementById("effektQuelle")?.value.trim()||"",
    angriffZuweisbar:!!document.getElementById("effektAngriffZuweisbar")?.checked,
+   angriffsModus:document.getElementById("effektAngriffsModus")?.value||"alle",
    stufenlogik:normalisiereStufenlogik(editorState.entwurf.stufenlogik),
    boni:editorState.entwurf.boni.map(normalisiereBonus)
  };
@@ -1348,6 +1363,7 @@ function schreibeEditorFormular(){
  const beschreibung=document.getElementById("effektBeschreibung");
  const quelle=document.getElementById("effektQuelle");
  const angriffZuweisbar=document.getElementById("effektAngriffZuweisbar");
+ const angriffsModus=document.getElementById("effektAngriffsModus");
  const titel=document.querySelector("#effektDialog h3");
 
  if(name) name.value=editorState.entwurf.name;
@@ -1355,6 +1371,7 @@ function schreibeEditorFormular(){
  if(beschreibung) beschreibung.value=editorState.entwurf.beschreibung;
  if(quelle) quelle.value=editorState.entwurf.quelle;
  if(angriffZuweisbar) angriffZuweisbar.checked=!!editorState.entwurf.angriffZuweisbar;
+ if(angriffsModus) angriffsModus.value=editorState.entwurf.angriffsModus||"alle";
  if(titel){
    titel.textContent=editorState.effektId
      ?"Effekt bearbeiten"
