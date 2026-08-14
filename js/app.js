@@ -663,6 +663,7 @@ function normalisiereEffekt(effekt={}){
    beschreibung:effekt.beschreibung||"",
    quelle:effekt.quelle||"",
    angriffZuweisbar:!!effekt.angriffZuweisbar,
+   stufenlogik:normalisiereStufenlogik(effekt.stufenlogik),
    boni:Array.isArray(effekt.boni)?effekt.boni.map(normalisiereBonus):[]
  };
 }
@@ -1254,6 +1255,7 @@ function leseEditorFormular(){
    beschreibung:document.getElementById("effektBeschreibung")?.value.trim()||"",
    quelle:document.getElementById("effektQuelle")?.value.trim()||"",
    angriffZuweisbar:!!document.getElementById("effektAngriffZuweisbar")?.checked,
+   stufenlogik:normalisiereStufenlogik(editorState.entwurf.stufenlogik),
    boni:editorState.entwurf.boni.map(normalisiereBonus)
  };
 
@@ -1281,6 +1283,7 @@ function schreibeEditorFormular(){
      :(editorState.standardNeu?"Neuen Standardeffekt anlegen":"Neuen Effekt anlegen");
  }
 
+ rendereStufenEditor();
  rendereBonusEditor();
 }
 
@@ -1317,15 +1320,9 @@ function fuegeBonuszeileHinzu(){
 function rendereStufenEditor(){
  const bereich=document.getElementById("stufenEditor");
  if(!bereich || !editorState.entwurf) return;
-
- if(!editorState.entwurf.stufenlogik){
-   editorState.entwurf.stufenlogik=normalisiereStufenlogik({});
- }
- if(!Array.isArray(editorState.entwurf.stufenlogik.bereiche)){
-   editorState.entwurf.stufenlogik.bereiche=[];
- }
-
+ editorState.entwurf.stufenlogik=normalisiereStufenlogik(editorState.entwurf.stufenlogik);
  const logik=editorState.entwurf.stufenlogik;
+
  const aktiv=document.getElementById("effektStufenabhaengig");
  const bezug=document.getElementById("effektStufenbezug");
  const klasse=document.getElementById("effektStufenklasse");
@@ -1333,7 +1330,13 @@ function rendereStufenEditor(){
  const bereiche=document.getElementById("stufenBereiche");
  const hinzufuegen=document.getElementById("btnStufenbereichHinzufuegen");
 
- if(aktiv) aktiv.checked=!!logik.aktiv;
+ if(aktiv){
+   aktiv.checked=!!logik.aktiv;
+   aktiv.onchange=()=>{
+     editorState.entwurf.stufenlogik.aktiv=aktiv.checked;
+     rendereStufenEditor();
+   };
+ }
  bereich.classList.toggle("inaktiv",!logik.aktiv);
 
  if(bezug){
@@ -1344,38 +1347,26 @@ function rendereStufenEditor(){
    };
  }
 
- const klassenLabel=klasse?.closest("label");
- if(klassenLabel) klassenLabel.classList.toggle("versteckt",(logik.bezug||"charakter")!=="klasse");
+ const labelKlasse=klasse?.closest("label");
+ if(labelKlasse) labelKlasse.classList.toggle("versteckt",(logik.bezug||"charakter")!=="klasse");
 
  if(klasse){
-   const aktuelleKlasse=String(logik.klasse||"");
+   const aktuell=String(logik.klasse||"");
    klasse.innerHTML="";
-   klasse.appendChild(erzeugeKlassenOptionen(aktuelleKlasse,true));
-   klasse.value=PF_KLASSEN.includes(aktuelleKlasse)?aktuelleKlasse:"__andere__";
-
+   klasse.appendChild(erzeugeKlassenOptionen(aktuell,true));
+   const bekannt=PF_KLASSEN.includes(aktuell);
+   klasse.value=bekannt?aktuell:"__andere__";
    if(klasseAndere){
-     const andere=klasse.value==="__andere__";
-     klasseAndere.hidden=!andere;
-     klasseAndere.value=andere?aktuelleKlasse:"";
+     klasseAndere.hidden=bekannt;
+     klasseAndere.value=bekannt?"":aktuell;
      klasseAndere.oninput=()=>{
-       if(klasse.value==="__andere__"){
-         editorState.entwurf.stufenlogik.klasse=klasseAndere.value;
-       }
+       if(klasse.value==="__andere__") editorState.entwurf.stufenlogik.klasse=klasseAndere.value;
      };
    }
-
    klasse.onchange=()=>{
      const andere=klasse.value==="__andere__";
      if(klasseAndere) klasseAndere.hidden=!andere;
      editorState.entwurf.stufenlogik.klasse=andere?(klasseAndere?.value||""):klasse.value;
-   };
- }
-
- if(aktiv){
-   aktiv.onchange=()=>{
-     editorState.entwurf.stufenlogik.aktiv=aktiv.checked;
-     rendereStufenEditor();
-     rendereBonusEditor();
    };
  }
 
@@ -1384,21 +1375,17 @@ function rendereStufenEditor(){
    logik.bereiche.forEach((eintrag,index)=>{
      const zeile=document.createElement("div");
      zeile.className="stufenbereich-zeile";
-
      [["min","Von"],["max","Bis"],["wert","Wert"]].forEach(([feld,label])=>{
        const input=document.createElement("input");
        input.type="number";
+       input.step="1";
        input.min=feld==="wert"?"-99":"0";
        input.max="99";
-       input.step="1";
        input.value=String(eintrag[feld]??0);
        input.setAttribute("aria-label",`${label} Bereich ${index+1}`);
-       input.oninput=()=>{
-         editorState.entwurf.stufenlogik.bereiche[index][feld]=Number(input.value)||0;
-       };
+       input.onchange=()=>{editorState.entwurf.stufenlogik.bereiche[index][feld]=Number(input.value)||0;};
        zeile.appendChild(input);
      });
-
      const del=document.createElement("button");
      del.type="button";
      del.className="icon-button";
@@ -1415,9 +1402,11 @@ function rendereStufenEditor(){
  if(hinzufuegen){
    hinzufuegen.disabled=!logik.aktiv;
    hinzufuegen.onclick=()=>{
-     const letzte=editorState.entwurf.stufenlogik.bereiche.at(-1);
-     const von=letzte?Math.min(99,Number(letzte.max||0)+1):1;
-     editorState.entwurf.stufenlogik.bereiche.push({min:von,max:von,wert:0});
+     if(!editorState.entwurf.stufenlogik.aktiv) return;
+     const liste=editorState.entwurf.stufenlogik.bereiche;
+     const letzte=liste.at(-1);
+     const min=letzte?Math.min(99,(Number(letzte.max)||0)+1):1;
+     liste.push({min:min,max:min,wert:0});
      rendereStufenEditor();
    };
  }
@@ -1594,6 +1583,7 @@ function bereiteStandardEffektFuerExportVor(effekt){
    beschreibung:effekt.beschreibung||"",
    quelle:effekt.quelle||"",
    angriffZuweisbar:!!effekt.angriffZuweisbar,
+   stufenlogik:normalisiereStufenlogik(effekt.stufenlogik),
    boni:Array.isArray(effekt.boni)?effekt.boni.map(normalisiereBonus):[]
  };
 }
