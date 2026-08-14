@@ -30,6 +30,7 @@ const STORAGE_KEYS={
  aktiverCharakter:"pf-aktiver-charakter",
  charakterEffekte:"pf-charakter-effekte",
  charakterEffektAngriffe:"pf-charakter-effekt-angriffe",
+ charakterEffektStufen:"pf-charakter-effekt-stufen",
  aktiveKampagne:"pf-aktive-kampagne",
  kampagnen:"pf-kampagnen",
  adminPinHash:"pf-admin-pin-hash",
@@ -61,6 +62,18 @@ function neueCharakterId(){
  return "charakter-"+Date.now()+"-"+Math.random().toString(36).slice(2);
 }
 
+function normalisiereKlassen(klassen){
+ const quelle=Array.isArray(klassen)?klassen:[];
+ return quelle
+   .map(eintrag=>({
+     name:typeof eintrag?.name==="string"?eintrag.name.trim():"",
+     stufe:Number.isFinite(Number(eintrag?.stufe))
+       ?Math.max(0,Math.min(99,Math.trunc(Number(eintrag.stufe))))
+       :0
+   }))
+   .filter(eintrag=>eintrag.name || eintrag.stufe>0);
+}
+
 function normalisiereCharakter(charakter={}){
  return {
    id:charakter.id||neueCharakterId(),
@@ -69,8 +82,33 @@ function normalisiereCharakter(charakter={}){
      :"Unbenannter Charakter",
    kampagne:typeof charakter.kampagne==="string" && charakter.kampagne.trim()
      ?charakter.kampagne.trim()
-     :"Standard"
+     :"Charakter ohne Kampagnenzuordnung",
+   klassen:normalisiereKlassen(charakter.klassen)
  };
+}
+
+function charakterGesamtstufe(charakter=aktiverCharakter()){
+ if(!charakter) return 0;
+ return normalisiereKlassen(charakter.klassen)
+   .reduce((summe,eintrag)=>summe+Number(eintrag.stufe||0),0);
+}
+
+function charakterKlassenstufe(charakter,klasse){
+ const name=String(klasse||"").trim().toLocaleLowerCase("de");
+ if(!charakter || !name) return 0;
+ return normalisiereKlassen(charakter.klassen)
+   .filter(eintrag=>eintrag.name.toLocaleLowerCase("de")===name)
+   .reduce((summe,eintrag)=>summe+Number(eintrag.stufe||0),0);
+}
+
+function setzeCharakterKlassen(id,klassen){
+ const charakter=findeCharakter(id);
+ if(!charakter) return false;
+ charakter.klassen=normalisiereKlassen(klassen);
+ speichereCharaktere();
+ if(typeof window.rendereKampagnenBaum==="function") window.rendereKampagnenBaum();
+ if(typeof window.aktualisiereAlleAnsichten==="function") window.aktualisiereAlleAnsichten();
+ return true;
 }
 
 function speichereCharaktere(){
@@ -90,16 +128,27 @@ function aktiverCharakter(){
 
 function kampagnenListe(){
  const gespeichert=ladeJson(STORAGE_KEYS.kampagnen,[]);
- const namen=new Set(
-   (Array.isArray(gespeichert)?gespeichert:[])
-     .map(name=>String(name||"").trim())
-     .filter(Boolean)
- );
- charaktere.forEach(charakter=>{
-   namen.add(String(charakter.kampagne||"Standard").trim()||"Standard");
+ const vorhanden=new Set();
+ const liste=[];
+
+ (Array.isArray(gespeichert)?gespeichert:[]).forEach(name=>{
+   const bereinigt=String(name||"").trim();
+   if(bereinigt && !vorhanden.has(bereinigt)){
+     vorhanden.add(bereinigt);
+     liste.push(bereinigt);
+   }
  });
- if(namen.size===0) namen.add("Standard");
- return [...namen].sort((a,b)=>a.localeCompare(b,"de"));
+
+ charaktere.forEach(charakter=>{
+   const name=String(charakter.kampagne||"Charakter ohne Kampagnenzuordnung").trim()||"Charakter ohne Kampagnenzuordnung";
+   if(!vorhanden.has(name)){
+     vorhanden.add(name);
+     liste.push(name);
+   }
+ });
+
+ if(!vorhanden.has("Charakter ohne Kampagnenzuordnung")) liste.push("Charakter ohne Kampagnenzuordnung");
+ return liste;
 }
 
 function speichereKampagnen(namen){
@@ -112,10 +161,52 @@ function erstelleKampagne(name){
  if(!neu) return false;
  const kampagnen=kampagnenListe();
  if(!kampagnen.includes(neu)){
-   kampagnen.push(neu);
+   kampagnen.unshift(neu);
    speichereKampagnen(kampagnen);
  }
  if(typeof window.rendereKampagnenBaum==="function") window.rendereKampagnenBaum();
+ return true;
+}
+
+function verschiebeKampagne(name,richtung){
+ const kampagne=String(name||"").trim();
+ const liste=kampagnenListe();
+ const index=liste.indexOf(kampagne);
+ if(index<0) return false;
+
+ const zielIndex=richtung==="hoch" ? index-1 : index+1;
+ if(zielIndex<0 || zielIndex>=liste.length) return false;
+
+ [liste[index],liste[zielIndex]]=[liste[zielIndex],liste[index]];
+ speichereKampagnen(liste);
+ if(typeof window.rendereKampagnenBaum==="function") window.rendereKampagnenBaum();
+ return true;
+}
+
+
+function loescheKampagne(name){
+ const kampagne=String(name||"").trim();
+ if(!kampagne || kampagne==="Charakter ohne Kampagnenzuordnung") return false;
+
+ const standard="Charakter ohne Kampagnenzuordnung";
+ charaktere.forEach(charakter=>{
+   if((charakter.kampagne||standard)===kampagne) charakter.kampagne=standard;
+ });
+
+ const verbleibend=kampagnenListe().filter(eintrag=>eintrag!==kampagne);
+ speichereKampagnen(verbleibend);
+ speichereCharaktere();
+
+ if(aktiveKampagne()===kampagne){
+   localStorage.setItem(STORAGE_KEYS.aktiveKampagne,standard);
+   const kandidat=charaktere.find(c=>(c.kampagne||standard)===standard);
+   if(kandidat) aktiverCharakterId=kandidat.id;
+ }
+
+ rendereCharaktere();
+ if(typeof window.aktualisiereGlobaleCharakterauswahl==="function") window.aktualisiereGlobaleCharakterauswahl();
+ if(typeof window.rendereKampagnenBaum==="function") window.rendereKampagnenBaum();
+ if(typeof window.aktualisiereAlleAnsichten==="function") window.aktualisiereAlleAnsichten();
  return true;
 }
 
@@ -123,11 +214,11 @@ function aktiveKampagne(){
  const gespeichert=localStorage.getItem(STORAGE_KEYS.aktiveKampagne);
  const kampagnen=kampagnenListe();
  if(gespeichert && kampagnen.includes(gespeichert)) return gespeichert;
- return aktiverCharakter()?.kampagne || kampagnen[0] || "Standard";
+ return aktiverCharakter()?.kampagne || kampagnen[0] || "Charakter ohne Kampagnenzuordnung";
 }
 
 function setzeAktiveKampagne(name){
- const kampagne=String(name||"").trim()||"Standard";
+ const kampagne=String(name||"").trim()||"Charakter ohne Kampagnenzuordnung";
  localStorage.setItem(STORAGE_KEYS.aktiveKampagne,kampagne);
  const kandidaten=charaktere.filter(charakter=>charakter.kampagne===kampagne);
  if(kandidaten.length && !kandidaten.some(charakter=>charakter.id===aktiverCharakterId)){
@@ -150,7 +241,7 @@ function setzeAktiveKampagne(name){
 function setzeCharakterKampagne(id,name){
  const charakter=findeCharakter(id);
  if(!charakter) return false;
- const kampagne=String(name||"").trim()||"Standard";
+ const kampagne=String(name||"").trim()||"Charakter ohne Kampagnenzuordnung";
  charakter.kampagne=kampagne;
  erstelleKampagne(kampagne);
  speichereCharaktere();
@@ -434,6 +525,33 @@ function setzeAngriffszielFuerEffekt(effekt,ziel,charakterId=aktiverCharakterId)
  return true;
 }
 
+function ladeAlleEffektStufen(){
+ const gespeichert=ladeJson(STORAGE_KEYS.charakterEffektStufen,{});
+ return gespeichert && typeof gespeichert==="object" && !Array.isArray(gespeichert)
+   ?gespeichert
+   :{};
+}
+
+function effektStufeFuerCharakter(effektId,charakterId=aktiverCharakterId){
+ if(!effektId || !charakterId) return "";
+ const alle=ladeAlleEffektStufen();
+ const wert=alle?.[charakterId]?.[String(effektId)];
+ return Number.isFinite(Number(wert))?Math.max(0,Math.trunc(Number(wert))):"";
+}
+
+function setzeEffektStufeFuerCharakter(effektId,wert,charakterId=aktiverCharakterId){
+ if(!effektId || !charakterId) return false;
+ const alle=ladeAlleEffektStufen();
+ if(!alle[charakterId]) alle[charakterId]={};
+ if(wert==="" || wert===null || typeof wert==="undefined"){
+   delete alle[charakterId][String(effektId)];
+ }else{
+   alle[charakterId][String(effektId)]=Math.max(0,Math.min(99,Math.trunc(Number(wert)||0)));
+ }
+ speichereJson(STORAGE_KEYS.charakterEffektStufen,alle);
+ return true;
+}
+
 function kopiereEffektstatus(quelleId,zielId){
  const quelle=findeCharakter(quelleId);
  const ziel=findeCharakter(zielId);
@@ -510,7 +628,27 @@ function normalisiereBonus(bonus={}){
  return {
    ziel:typeof bonus.ziel==="string"?bonus.ziel:"",
    bonusart:normalisiereBonusart(bonus.bonusart),
-   wert:Number.isFinite(wert)?wert:0
+   wert:Number.isFinite(wert)?wert:0,
+   wertQuelle:bonus.wertQuelle==="stufenwert"?"stufenwert":"fest"
+ };
+}
+
+function normalisiereStufenlogik(logik={}){
+ const bezug=["charakter","klasse","zauberstufe","manuell"].includes(logik?.bezug)
+   ?logik.bezug
+   :"charakter";
+ const bereiche=Array.isArray(logik?.bereiche)
+   ?logik.bereiche.map(bereich=>({
+       min:Math.max(0,Math.min(99,Math.trunc(Number(bereich?.min)||0))),
+       max:Math.max(0,Math.min(99,Math.trunc(Number(bereich?.max)||0))),
+       wert:Math.max(-99,Math.min(99,Math.trunc(Number(bereich?.wert)||0)))
+     })).filter(bereich=>bereich.max>=bereich.min)
+   :[];
+ return {
+   aktiv:!!logik?.aktiv,
+   bezug,
+   klasse:typeof logik?.klasse==="string"?logik.klasse.trim():"",
+   bereiche
  };
 }
 
@@ -862,6 +1000,31 @@ function baueKategorieFilter(){
  }
 }
 
+function effektBezugsstufe(effekt,charakter=aktiverCharakter()){
+ const logik=effekt?.stufenlogik;
+ if(!logik?.aktiv) return 0;
+ if(logik.bezug==="klasse") return charakterKlassenstufe(charakter,logik.klasse);
+ if(logik.bezug==="zauberstufe" || logik.bezug==="manuell"){
+   return Number(effektStufeFuerCharakter(effekt.id,charakter?.id))||0;
+ }
+ return charakterGesamtstufe(charakter);
+}
+
+function effektStufenwert(effekt,charakter=aktiverCharakter()){
+ const stufe=effektBezugsstufe(effekt,charakter);
+ const bereiche=Array.isArray(effekt?.stufenlogik?.bereiche)?effekt.stufenlogik.bereiche:[];
+ const passend=bereiche.find(bereich=>stufe>=Number(bereich.min) && stufe<=Number(bereich.max));
+ return passend?Number(passend.wert)||0:0;
+}
+
+function aktualisiereEffektStufenAnzeige(effekt,container){
+ const ausgabe=container?.querySelector(".effekt-stufenwert-aktuell");
+ if(!ausgabe) return;
+ const stufe=effektBezugsstufe(effekt);
+ const wert=effektStufenwert(effekt);
+ ausgabe.textContent=`Stufe ${stufe} → ${wert>=0?"+":""}${wert}`;
+}
+
 function baueEffektliste(){
  const liste=document.getElementById("boniListe");
  const suche=document.getElementById("suche");
@@ -1128,6 +1291,76 @@ function fuegeBonuszeileHinzu(){
  if(!editorState.entwurf) editorZuruecksetzen();
  editorState.entwurf.boni.push(neuerLeererBonus());
  rendereBonusEditor();
+}
+
+function rendereStufenEditor(){
+ const bereich=document.getElementById("stufenEditor");
+ if(!bereich || !editorState.entwurf) return;
+ const logik=editorState.entwurf.stufenlogik||normalisiereStufenlogik({});
+ editorState.entwurf.stufenlogik=logik;
+
+ const aktiv=document.getElementById("effektStufenabhaengig");
+ const bezug=document.getElementById("effektStufenbezug");
+ const klasse=document.getElementById("effektStufenklasse");
+ const bereiche=document.getElementById("stufenBereiche");
+
+ if(aktiv) aktiv.checked=!!logik.aktiv;
+ bereich.classList.toggle("inaktiv",!logik.aktiv);
+ if(bezug) bezug.value=logik.bezug;
+ if(klasse){
+   klasse.value=logik.klasse||"";
+   klasse.closest("label")?.classList.toggle("versteckt",logik.bezug!=="klasse");
+ }
+
+ if(bereiche){
+   bereiche.innerHTML="";
+   (logik.bereiche||[]).forEach((eintrag,index)=>{
+     const zeile=document.createElement("div");
+     zeile.className="stufenbereich-zeile";
+     [["min","Von"],["max","Bis"],["wert","Wert"]].forEach(([feld,label])=>{
+       const input=document.createElement("input");
+       input.type="number";
+       input.min=feld==="wert"?"-99":"0";
+       input.max="99";
+       input.value=String(eintrag[feld]??0);
+       input.setAttribute("aria-label",`${label} Bereich ${index+1}`);
+       input.addEventListener("input",()=>{
+         editorState.entwurf.stufenlogik.bereiche[index][feld]=Number(input.value)||0;
+       });
+       zeile.appendChild(input);
+     });
+     const del=document.createElement("button");
+     del.type="button";
+     del.className="icon-button";
+     del.textContent="🗑";
+     del.addEventListener("click",()=>{
+       editorState.entwurf.stufenlogik.bereiche.splice(index,1);
+       rendereStufenEditor();
+     });
+     zeile.appendChild(del);
+     bereiche.appendChild(zeile);
+   });
+ }
+
+ if(!bereich.dataset.bound){
+   bereich.dataset.bound="1";
+   aktiv?.addEventListener("change",()=>{
+     editorState.entwurf.stufenlogik.aktiv=aktiv.checked;
+     rendereStufenEditor();
+     rendereBonusEditor();
+   });
+   bezug?.addEventListener("change",()=>{
+     editorState.entwurf.stufenlogik.bezug=bezug.value;
+     rendereStufenEditor();
+   });
+   klasse?.addEventListener("input",()=>{
+     editorState.entwurf.stufenlogik.klasse=klasse.value;
+   });
+   document.getElementById("btnStufenbereichHinzufuegen")?.addEventListener("click",()=>{
+     editorState.entwurf.stufenlogik.bereiche.push({min:1,max:1,wert:0});
+     rendereStufenEditor();
+   });
+ }
 }
 
 function rendereBonusEditor(){

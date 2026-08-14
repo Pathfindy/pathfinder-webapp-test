@@ -30,7 +30,8 @@ function normalisiereBerechnungsBonus(bonus = {}) {
     return {
         ziel: typeof bonus.ziel === "string" ? bonus.ziel.trim() : "",
         bonusart: normalisiereBerechnungsBonusart(bonus.bonusart),
-        wert: Number.isFinite(wert) ? wert : 0
+        wert: Number.isFinite(wert) ? wert : 0,
+        wertQuelle: bonus.wertQuelle === "stufenwert" ? "stufenwert" : "fest"
     };
 }
 
@@ -46,13 +47,23 @@ function sammleAktiveBoni(effektListe = []) {
                 ? angriffszielFuerEffekt(effekt)
                 : "-";
 
-            return effekt.boni.map(bonus => ({
-                ...normalisiereBerechnungsBonus(bonus),
-                effektId: effekt.id || null,
-                effektName: effekt.name || "",
-                angriffZuweisbar: !!effekt.angriffZuweisbar,
-                angriffZiel
-            }));
+            return effekt.boni.map(bonus => {
+                const normalisiert = normalisiereBerechnungsBonus(bonus);
+                const dynamischerWert =
+                    normalisiert.wertQuelle === "stufenwert" &&
+                    typeof effektStufenwert === "function"
+                        ? effektStufenwert(effekt)
+                        : normalisiert.wert;
+
+                return {
+                    ...normalisiert,
+                    wert: Number(dynamischerWert) || 0,
+                    effektId: effekt.id || null,
+                    effektName: effekt.name || "",
+                    angriffZuweisbar: !!effekt.angriffZuweisbar,
+                    angriffZiel
+                };
+            });
         })
         .filter(bonus => bonus.ziel && bonus.wert !== 0);
 }
