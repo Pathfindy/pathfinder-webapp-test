@@ -530,3 +530,19 @@ nav {
     top: 0;
     z-index: 1000;
 }
+
+
+/* Commit 39: stufenabhängige Effekte */
+.stufen-editor{margin:12px 0;padding:10px;border:1px solid #d7dce2;border-radius:9px;background:#f8fafc}
+.stufen-editor h4{margin:0 0 8px}
+.stufen-editor.inaktiv .stufen-editor-felder,.stufen-editor.inaktiv .stufenbereiche-kopf,.stufen-editor.inaktiv #stufenBereiche,.stufen-editor.inaktiv #btnStufenbereichHinzufuegen{display:none}
+.stufen-aktiv{display:flex;align-items:center;gap:6px;font-weight:600}
+.stufen-editor-felder{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.stufen-editor-felder label{display:grid;gap:4px}.stufen-editor .versteckt{display:none}
+.stufenbereiche-kopf,.stufenbereich-zeile{display:grid;grid-template-columns:70px 70px 70px 40px;gap:6px;align-items:center}
+.stufenbereiche-kopf{margin-top:6px;font-size:.78rem;font-weight:700;color:#667}
+.stufenbereich-zeile{margin-top:5px}.stufenbereich-zeile input{width:100%;min-height:34px}
+.bonus-zeile{grid-template-columns:minmax(0,2fr) minmax(0,1.5fr) minmax(92px,.9fr) minmax(76px,.7fr) 40px}
+.effekt-stufenbox{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px;font-size:.78rem;color:#5c6673}
+.effekt-stufenbox input{width:64px;min-height:30px;padding:3px 5px}.effekt-stufenwert-aktuell{color:#1e3a5f}
+@media(max-width:600px){.stufen-editor-felder{grid-template-columns:1fr}.bonus-zeile{grid-template-columns:1fr 1fr}}

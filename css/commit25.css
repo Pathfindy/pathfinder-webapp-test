@@ -322,3 +322,75 @@
  .kampagnen-charakter-kopf{grid-template-columns:auto minmax(0,1fr)}
  .kampagnen-zuweisung{grid-column:1/-1}
 }
+
+/* Commit 38.2: Kampagnen- und Charakteraktionen im Hierarchiebaum */
+.kampagnen-gruppe-kopfzeile {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 40px;
+    gap: 6px;
+    align-items: stretch;
+}
+.kampagne-loeschen {
+    border: 0;
+    border-radius: 8px;
+    background: #f1dede;
+    color: #8a1f1f;
+    cursor: pointer;
+}
+.kampagne-loeschen:hover {
+    background: #e7caca;
+}
+.kampagnen-charakter-aktionen {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+.kampagnen-charakter-aktionen .icon-button {
+    min-width: 32px;
+    min-height: 30px;
+    padding: 4px 6px;
+}
+
+
+/* Commit 38.3: Kampagnen sortierbar und ausklappbar */
+.kampagnen-gruppe-kopfzeile {
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+.kampagnen-aktionen {
+    display: flex;
+    gap: 4px;
+}
+.kampagnen-aktionen button {
+    min-width: 36px;
+    min-height: 38px;
+    padding: 4px 7px;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.kampagnen-aktionen button:disabled {
+    opacity: .4;
+    cursor: default;
+}
+.kampagne-aktivieren,
+.kampagne-verschieben {
+    background: #e9eef5;
+    color: #1e3a5f;
+    font-weight: 700;
+}
+.kampagnen-pfeil {
+    display: inline-block;
+    width: 20px;
+    margin-right: 4px;
+}
+.kampagnen-charaktere[hidden] {
+    display: none !important;
+}
+@media (max-width: 520px) {
+    .kampagnen-gruppe-kopfzeile {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .kampagnen-aktionen {
+        justify-content: flex-end;
+    }
+}
