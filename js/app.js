@@ -1317,90 +1317,110 @@ function fuegeBonuszeileHinzu(){
 function rendereStufenEditor(){
  const bereich=document.getElementById("stufenEditor");
  if(!bereich || !editorState.entwurf) return;
- const logik=editorState.entwurf.stufenlogik||normalisiereStufenlogik({});
- editorState.entwurf.stufenlogik=logik;
 
+ if(!editorState.entwurf.stufenlogik){
+   editorState.entwurf.stufenlogik=normalisiereStufenlogik({});
+ }
+ if(!Array.isArray(editorState.entwurf.stufenlogik.bereiche)){
+   editorState.entwurf.stufenlogik.bereiche=[];
+ }
+
+ const logik=editorState.entwurf.stufenlogik;
  const aktiv=document.getElementById("effektStufenabhaengig");
  const bezug=document.getElementById("effektStufenbezug");
  const klasse=document.getElementById("effektStufenklasse");
+ const klasseAndere=document.getElementById("effektStufenklasseAndere");
  const bereiche=document.getElementById("stufenBereiche");
+ const hinzufuegen=document.getElementById("btnStufenbereichHinzufuegen");
 
  if(aktiv) aktiv.checked=!!logik.aktiv;
  bereich.classList.toggle("inaktiv",!logik.aktiv);
- if(bezug) bezug.value=logik.bezug;
- if(klasse){
-   klasse.closest("label")?.classList.toggle("versteckt",logik.bezug!=="klasse");
+
+ if(bezug){
+   bezug.value=logik.bezug||"charakter";
+   bezug.onchange=()=>{
+     editorState.entwurf.stufenlogik.bezug=bezug.value;
+     rendereStufenEditor();
+   };
  }
 
- if(bereiche){
-   bereiche.innerHTML="";
-   (logik.bereiche||[]).forEach((eintrag,index)=>{
-     const zeile=document.createElement("div");
-     zeile.className="stufenbereich-zeile";
-     [["min","Von"],["max","Bis"],["wert","Wert"]].forEach(([feld,label])=>{
-       const input=document.createElement("input");
-       input.type="number";
-       input.min=feld==="wert"?"-99":"0";
-       input.max="99";
-       input.value=String(eintrag[feld]??0);
-       input.setAttribute("aria-label",`${label} Bereich ${index+1}`);
-       input.addEventListener("input",()=>{
-         editorState.entwurf.stufenlogik.bereiche[index][feld]=Number(input.value)||0;
-       });
-       zeile.appendChild(input);
-     });
-     const del=document.createElement("button");
-     del.type="button";
-     del.className="icon-button";
-     del.textContent="🗑";
-     del.addEventListener("click",()=>{
-       editorState.entwurf.stufenlogik.bereiche.splice(index,1);
-       rendereStufenEditor();
-     });
-     zeile.appendChild(del);
-     bereiche.appendChild(zeile);
-   });
- }
+ const klassenLabel=klasse?.closest("label");
+ if(klassenLabel) klassenLabel.classList.toggle("versteckt",(logik.bezug||"charakter")!=="klasse");
 
- if(aktiv) aktiv.onchange=()=>{
-   editorState.entwurf.stufenlogik.aktiv=aktiv.checked;
-   rendereStufenEditor();
-   rendereBonusEditor();
- };
- if(bezug) bezug.onchange=()=>{
-   editorState.entwurf.stufenlogik.bezug=bezug.value;
-   rendereStufenEditor();
- };
- const klasseAndere=document.getElementById("effektStufenklasseAndere");
  if(klasse){
-   const aktuelleKlasse=editorState.entwurf.stufenlogik.klasse||"";
+   const aktuelleKlasse=String(logik.klasse||"");
    klasse.innerHTML="";
    klasse.appendChild(erzeugeKlassenOptionen(aktuelleKlasse,true));
    klasse.value=PF_KLASSEN.includes(aktuelleKlasse)?aktuelleKlasse:"__andere__";
+
+   if(klasseAndere){
+     const andere=klasse.value==="__andere__";
+     klasseAndere.hidden=!andere;
+     klasseAndere.value=andere?aktuelleKlasse:"";
+     klasseAndere.oninput=()=>{
+       if(klasse.value==="__andere__"){
+         editorState.entwurf.stufenlogik.klasse=klasseAndere.value;
+       }
+     };
+   }
+
    klasse.onchange=()=>{
      const andere=klasse.value==="__andere__";
      if(klasseAndere) klasseAndere.hidden=!andere;
      editorState.entwurf.stufenlogik.klasse=andere?(klasseAndere?.value||""):klasse.value;
    };
-   if(klasseAndere){
-     const andere=!PF_KLASSEN.includes(aktuelleKlasse);
-     klasseAndere.hidden=!andere;
-     klasseAndere.value=andere?aktuelleKlasse:"";
-     klasseAndere.oninput=()=>{
-       if(klasse.value==="__andere__") editorState.entwurf.stufenlogik.klasse=klasseAndere.value;
-     };
-   }
  }
- const hinzufuegen=document.getElementById("btnStufenbereichHinzufuegen");
- if(hinzufuegen) hinzufuegen.onclick=()=>{
-   if(!Array.isArray(editorState.entwurf.stufenlogik.bereiche)){
-     editorState.entwurf.stufenlogik.bereiche=[];
-   }
-   const letzte=editorState.entwurf.stufenlogik.bereiche.at(-1);
-   const von=letzte?Math.min(99,Number(letzte.max||0)+1):1;
-   editorState.entwurf.stufenlogik.bereiche.push({min:von,max:von,wert:0});
-   rendereStufenEditor();
- };
+
+ if(aktiv){
+   aktiv.onchange=()=>{
+     editorState.entwurf.stufenlogik.aktiv=aktiv.checked;
+     rendereStufenEditor();
+     rendereBonusEditor();
+   };
+ }
+
+ if(bereiche){
+   bereiche.innerHTML="";
+   logik.bereiche.forEach((eintrag,index)=>{
+     const zeile=document.createElement("div");
+     zeile.className="stufenbereich-zeile";
+
+     [["min","Von"],["max","Bis"],["wert","Wert"]].forEach(([feld,label])=>{
+       const input=document.createElement("input");
+       input.type="number";
+       input.min=feld==="wert"?"-99":"0";
+       input.max="99";
+       input.step="1";
+       input.value=String(eintrag[feld]??0);
+       input.setAttribute("aria-label",`${label} Bereich ${index+1}`);
+       input.oninput=()=>{
+         editorState.entwurf.stufenlogik.bereiche[index][feld]=Number(input.value)||0;
+       };
+       zeile.appendChild(input);
+     });
+
+     const del=document.createElement("button");
+     del.type="button";
+     del.className="icon-button";
+     del.textContent="🗑";
+     del.onclick=()=>{
+       editorState.entwurf.stufenlogik.bereiche.splice(index,1);
+       rendereStufenEditor();
+     };
+     zeile.appendChild(del);
+     bereiche.appendChild(zeile);
+   });
+ }
+
+ if(hinzufuegen){
+   hinzufuegen.disabled=!logik.aktiv;
+   hinzufuegen.onclick=()=>{
+     const letzte=editorState.entwurf.stufenlogik.bereiche.at(-1);
+     const von=letzte?Math.min(99,Number(letzte.max||0)+1):1;
+     editorState.entwurf.stufenlogik.bereiche.push({min:von,max:von,wert:0});
+     rendereStufenEditor();
+   };
+ }
 }
 
 function rendereBonusEditor(){
