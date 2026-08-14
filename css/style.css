@@ -552,7 +552,4 @@ nav {
 .charakter-klasse-name-wrap select,.charakter-klasse-name-wrap input{width:100%;min-width:0}
 #effektStufenklasseAndere[hidden]{display:none}
 
-/* Commit 39.2 */
-#effektStufenklasse{width:100%;min-height:36px}
-#effektStufenklasseAndere{width:100%;margin-top:5px}
-#btnStufenbereichHinzufuegen:disabled{opacity:.45;cursor:not-allowed}
+#effektStufenklasse{width:100%;min-height:36px} #effektStufenklasseAndere[hidden]{display:none} #btnStufenbereichHinzufuegen:disabled{opacity:.45}
