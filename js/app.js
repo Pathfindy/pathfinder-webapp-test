@@ -1182,6 +1182,27 @@ const PF_BONUS_ZIELE=[
  "RW-Bezauberung"
 ];
 
+const PF_KLASSEN=["Alchemist","Antipaladin","Arkanist","Attentäter","Barbar","Barde","Blutwüter","Draufgänger","Druide","Eidolon","Ermittler","Gestaltwandler","Hexe","Hexenmeister","Inquisitor","Jäger","Kampfmagus","Kämpfer","Kinetiker","Kleriker","Kriegspriester","Magier","Medium","Mönch","Mystiker","Ninja","Okkultist","Paladin","Paktmagier","Raufbold","Ritter","Schamane","Schütze","Schurke","Skalde","Tiergefährte","Vertrauter","Waldläufer"];
+
+function erzeugeKlassenOptionen(aktuell="",mitAndere=true){
+ const fragment=document.createDocumentFragment();
+ PF_KLASSEN.forEach(name=>{
+   const option=document.createElement("option");
+   option.value=name;
+   option.textContent=name;
+   option.selected=name===aktuell;
+   fragment.appendChild(option);
+ });
+ if(mitAndere){
+   const option=document.createElement("option");
+   option.value="__andere__";
+   option.textContent="Andere Klasse…";
+   option.selected=!!aktuell && !PF_KLASSEN.includes(aktuell);
+   fragment.appendChild(option);
+ }
+ return fragment;
+}
+
 const PF_BONUSARTEN=[
  "Ablenkung",
  "Alchemistisch",
@@ -1308,7 +1329,6 @@ function rendereStufenEditor(){
  bereich.classList.toggle("inaktiv",!logik.aktiv);
  if(bezug) bezug.value=logik.bezug;
  if(klasse){
-   klasse.value=logik.klasse||"";
    klasse.closest("label")?.classList.toggle("versteckt",logik.bezug!=="klasse");
  }
 
@@ -1342,25 +1362,45 @@ function rendereStufenEditor(){
    });
  }
 
- if(!bereich.dataset.bound){
-   bereich.dataset.bound="1";
-   aktiv?.addEventListener("change",()=>{
-     editorState.entwurf.stufenlogik.aktiv=aktiv.checked;
-     rendereStufenEditor();
-     rendereBonusEditor();
-   });
-   bezug?.addEventListener("change",()=>{
-     editorState.entwurf.stufenlogik.bezug=bezug.value;
-     rendereStufenEditor();
-   });
-   klasse?.addEventListener("input",()=>{
-     editorState.entwurf.stufenlogik.klasse=klasse.value;
-   });
-   document.getElementById("btnStufenbereichHinzufuegen")?.addEventListener("click",()=>{
-     editorState.entwurf.stufenlogik.bereiche.push({min:1,max:1,wert:0});
-     rendereStufenEditor();
-   });
+ if(aktiv) aktiv.onchange=()=>{
+   editorState.entwurf.stufenlogik.aktiv=aktiv.checked;
+   rendereStufenEditor();
+   rendereBonusEditor();
+ };
+ if(bezug) bezug.onchange=()=>{
+   editorState.entwurf.stufenlogik.bezug=bezug.value;
+   rendereStufenEditor();
+ };
+ const klasseAndere=document.getElementById("effektStufenklasseAndere");
+ if(klasse){
+   const aktuelleKlasse=editorState.entwurf.stufenlogik.klasse||"";
+   klasse.innerHTML="";
+   klasse.appendChild(erzeugeKlassenOptionen(aktuelleKlasse,true));
+   klasse.value=PF_KLASSEN.includes(aktuelleKlasse)?aktuelleKlasse:"__andere__";
+   klasse.onchange=()=>{
+     const andere=klasse.value==="__andere__";
+     if(klasseAndere) klasseAndere.hidden=!andere;
+     editorState.entwurf.stufenlogik.klasse=andere?(klasseAndere?.value||""):klasse.value;
+   };
+   if(klasseAndere){
+     const andere=!PF_KLASSEN.includes(aktuelleKlasse);
+     klasseAndere.hidden=!andere;
+     klasseAndere.value=andere?aktuelleKlasse:"";
+     klasseAndere.oninput=()=>{
+       if(klasse.value==="__andere__") editorState.entwurf.stufenlogik.klasse=klasseAndere.value;
+     };
+   }
  }
+ const hinzufuegen=document.getElementById("btnStufenbereichHinzufuegen");
+ if(hinzufuegen) hinzufuegen.onclick=()=>{
+   if(!Array.isArray(editorState.entwurf.stufenlogik.bereiche)){
+     editorState.entwurf.stufenlogik.bereiche=[];
+   }
+   const letzte=editorState.entwurf.stufenlogik.bereiche.at(-1);
+   const von=letzte?Math.min(99,Number(letzte.max||0)+1):1;
+   editorState.entwurf.stufenlogik.bereiche.push({min:von,max:von,wert:0});
+   rendereStufenEditor();
+ };
 }
 
 function rendereBonusEditor(){

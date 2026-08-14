@@ -410,7 +410,12 @@
 
         const speichereKlassen = () => {
           const neueKlassen = [...klassenListe.querySelectorAll(".charakter-klasse-zeile")].map(zeile => ({
-            name: zeile.querySelector(".charakter-klasse-name")?.value || "",
+            name: (() => {
+              const auswahl=zeile.querySelector(".charakter-klasse-name");
+              return auswahl?.value==="__andere__"
+                ? (zeile.querySelector(".charakter-klasse-andere")?.value || "")
+                : (auswahl?.value || "");
+            })(),
             stufe: Number(zeile.querySelector(".charakter-klasse-stufe")?.value || 0)
           }));
           if (typeof setzeCharakterKlassen === "function") setzeCharakterKlassen(charakter.id, neueKlassen);
@@ -420,11 +425,29 @@
           const zeile = document.createElement("div");
           zeile.className = "charakter-klasse-zeile";
 
-          const nameFeld = document.createElement("input");
-          nameFeld.type = "text";
+          const nameWrap = document.createElement("div");
+          nameWrap.className = "charakter-klasse-name-wrap";
+
+          const nameFeld = document.createElement("select");
           nameFeld.className = "charakter-klasse-name";
-          nameFeld.placeholder = "Klasse";
-          nameFeld.value = eintrag.name || "";
+          const aktuellerName = eintrag.name || "";
+          if (typeof erzeugeKlassenOptionen === "function") {
+            nameFeld.appendChild(erzeugeKlassenOptionen(aktuellerName, true));
+          }
+          nameFeld.value = PF_KLASSEN.includes(aktuellerName) ? aktuellerName : "__andere__";
+
+          const andereKlasse = document.createElement("input");
+          andereKlasse.type = "text";
+          andereKlasse.className = "charakter-klasse-andere";
+          andereKlasse.placeholder = "Andere Klasse";
+          andereKlasse.value = PF_KLASSEN.includes(aktuellerName) ? "" : aktuellerName;
+          andereKlasse.hidden = nameFeld.value !== "__andere__";
+          nameFeld.addEventListener("change", () => {
+            andereKlasse.hidden = nameFeld.value !== "__andere__";
+            speichereKlassen();
+          });
+          andereKlasse.addEventListener("change", speichereKlassen);
+          nameWrap.append(nameFeld, andereKlasse);
 
           const stufeFeld = document.createElement("input");
           stufeFeld.type = "number";
@@ -444,9 +467,8 @@
             speichereKlassen();
           });
 
-          nameFeld.addEventListener("change", speichereKlassen);
           stufeFeld.addEventListener("change", speichereKlassen);
-          zeile.append(nameFeld, stufeFeld, entfernen);
+          zeile.append(nameWrap, stufeFeld, entfernen);
           klassenListe.appendChild(zeile);
         };
 
