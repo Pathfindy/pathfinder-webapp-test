@@ -202,34 +202,6 @@
     "dauer": "unbegrenzt"
   },
   {
-    "id": 1,
-    "name": "Bärenstärke",
-    "kategorie": "Zauber",
-    "aktiv": false,
-    "beschreibung": "BÄRENSTÄRKE\n\nSchule: Verwandlung; Grad: KLE 2, DRU 2, PAL 2, HXM/MAG 2\nZeitaufwand: 1 Standard-Aktion\nKomponenten: V, G, M/GF (ein paar Haare oder ein wenig Dung \nvon einem Bären)\nReichweite: Berührung\nZiel: Berührte Kreatur\nWirkungsdauer: 1 Min./Stufe\nRettungswurf: Willen, keine Wirkung (harmlos);  \nZauberresistenz: Ja (harmlos) \n\nDas Ziel wird stärker. Der Zauber verleiht einen Verbesserungsbonus \nvon +4 auf Stärke, was auch die üblichen Vorteile für Nahkampf-\nangriffe, Schadenswürfe im Nahkampf und andere Verwendungen \ndes Stärkemodifikators mit sich bringt.",
-    "quelle": "GRW S.249",
-    "angriffZuweisbar": false,
-    "boni": [
-      {
-        "ziel": "Angriff Nah",
-        "bonusart": "Modifikator Attribut",
-        "wert": 2
-      },
-      {
-        "ziel": "Schaden Nah",
-        "bonusart": "Modifikator Attribut",
-        "wert": 2
-      },
-      {
-        "ziel": "KMB",
-        "bonusart": "Modifikator Attribut",
-        "wert": 2
-      }
-    ],
-    "gebiet": "",
-    "dauer": "1 Min./Stufe"
-  },
-  {
     "id": "standard-admin-44c61dea-9fd7-47d5-bcdc-df1e125220e4",
     "name": "Beistand",
     "kategorie": "Zauber",
@@ -287,6 +259,34 @@
     ],
     "gebiet": "selbst",
     "dauer": "unbegrenzt"
+  },
+  {
+    "id": 1,
+    "name": "Bärenstärke",
+    "kategorie": "Zauber",
+    "aktiv": false,
+    "beschreibung": "BÄRENSTÄRKE\n\nSchule: Verwandlung; Grad: KLE 2, DRU 2, PAL 2, HXM/MAG 2\nZeitaufwand: 1 Standard-Aktion\nKomponenten: V, G, M/GF (ein paar Haare oder ein wenig Dung \nvon einem Bären)\nReichweite: Berührung\nZiel: Berührte Kreatur\nWirkungsdauer: 1 Min./Stufe\nRettungswurf: Willen, keine Wirkung (harmlos);  \nZauberresistenz: Ja (harmlos) \n\nDas Ziel wird stärker. Der Zauber verleiht einen Verbesserungsbonus \nvon +4 auf Stärke, was auch die üblichen Vorteile für Nahkampf-\nangriffe, Schadenswürfe im Nahkampf und andere Verwendungen \ndes Stärkemodifikators mit sich bringt.",
+    "quelle": "GRW S.249",
+    "angriffZuweisbar": false,
+    "boni": [
+      {
+        "ziel": "Angriff Nah",
+        "bonusart": "Modifikator Attribut",
+        "wert": 2
+      },
+      {
+        "ziel": "Schaden Nah",
+        "bonusart": "Modifikator Attribut",
+        "wert": 2
+      },
+      {
+        "ziel": "KMB",
+        "bonusart": "Modifikator Attribut",
+        "wert": 2
+      }
+    ],
+    "gebiet": "",
+    "dauer": "1 Min./Stufe"
   },
   {
     "id": "standard-admin-73cd1beb-c64e-449c-a225-3603b93bde5a",
@@ -967,6 +967,62 @@
     "dauer": ""
   },
   {
+    "id": "standard-admin-b9747fd7-971c-467e-8f40-34beef59c016",
+    "name": "Große Zähigkeit",
+    "kategorie": "Talente",
+    "aktiv": false,
+    "beschreibung": "Große Zähigkeit \nDu bist gegen Gifte, Krankheiten und andere tödliche Übel \nwiderstandsfähiger als andere.\nVorteil: Auf alle Rettungswürfe auf Zähigkeit erhältst du \neinen Bonus von +2.",
+    "quelle": "GRW S. 123",
+    "angriffZuweisbar": false,
+    "boni": [
+      {
+        "ziel": "RW-Zähigkeit",
+        "bonusart": "Namenlos",
+        "wert": 2
+      }
+    ],
+    "gebiet": "selbst",
+    "dauer": "unbegrenzt"
+  },
+  {
+    "id": "standard-admin-75538f17-4740-4735-99e8-c72d73f5f0a0",
+    "name": "Großer Heldenmut",
+    "kategorie": "Zauber",
+    "aktiv": false,
+    "beschreibung": "GROSSER HELDENMUT\nSchule: Verzauberung (Zwang) [Geistesbeeinflussung];  \nGrad: BAR 5, HXM/MAG 6\nWirkungsdauer: 1 Min./Stufe\nDieser Zauber funktioniert wie Heldenmut, verleiht der betroffenen \nKreatur aber einen Moralbonus von +4 auf Angriffs-, Rettungs- und \nFertigkeitswürfe, eine Immunität gegen Furchteffekte und so viele \ntemporäre Trefferpunkte, wie es deiner Zauberstufe entspricht \n(maximal 20).",
+    "quelle": "GRW S. 285",
+    "angriffZuweisbar": false,
+    "boni": [
+      {
+        "ziel": "Angriff Nah",
+        "bonusart": "Moral",
+        "wert": 4
+      },
+      {
+        "ziel": "Angriff Fern",
+        "bonusart": "Moral",
+        "wert": 4
+      },
+      {
+        "ziel": "RW-Reflex",
+        "bonusart": "Moral",
+        "wert": 4
+      },
+      {
+        "ziel": "RW-Wille",
+        "bonusart": "Moral",
+        "wert": 4
+      },
+      {
+        "ziel": "RW-Zähigkeit",
+        "bonusart": "Moral",
+        "wert": 4
+      }
+    ],
+    "gebiet": "Berührung",
+    "dauer": "1 Min./Stufe"
+  },
+  {
     "id": "standard-admin-7fe36631-7d99-47be-af87-b5486e4c05c2",
     "name": "Göttliche Gunst (1. bis 3. Stufe)",
     "kategorie": "Zauber",
@@ -1034,62 +1090,6 @@
     ],
     "gebiet": "selbst",
     "dauer": ""
-  },
-  {
-    "id": "standard-admin-b9747fd7-971c-467e-8f40-34beef59c016",
-    "name": "Große Zähigkeit",
-    "kategorie": "Talente",
-    "aktiv": false,
-    "beschreibung": "Große Zähigkeit \nDu bist gegen Gifte, Krankheiten und andere tödliche Übel \nwiderstandsfähiger als andere.\nVorteil: Auf alle Rettungswürfe auf Zähigkeit erhältst du \neinen Bonus von +2.",
-    "quelle": "GRW S. 123",
-    "angriffZuweisbar": false,
-    "boni": [
-      {
-        "ziel": "RW-Zähigkeit",
-        "bonusart": "Namenlos",
-        "wert": 2
-      }
-    ],
-    "gebiet": "selbst",
-    "dauer": "unbegrenzt"
-  },
-  {
-    "id": "standard-admin-75538f17-4740-4735-99e8-c72d73f5f0a0",
-    "name": "Großer Heldenmut",
-    "kategorie": "Zauber",
-    "aktiv": false,
-    "beschreibung": "GROSSER HELDENMUT\nSchule: Verzauberung (Zwang) [Geistesbeeinflussung];  \nGrad: BAR 5, HXM/MAG 6\nWirkungsdauer: 1 Min./Stufe\nDieser Zauber funktioniert wie Heldenmut, verleiht der betroffenen \nKreatur aber einen Moralbonus von +4 auf Angriffs-, Rettungs- und \nFertigkeitswürfe, eine Immunität gegen Furchteffekte und so viele \ntemporäre Trefferpunkte, wie es deiner Zauberstufe entspricht \n(maximal 20).",
-    "quelle": "GRW S. 285",
-    "angriffZuweisbar": false,
-    "boni": [
-      {
-        "ziel": "Angriff Nah",
-        "bonusart": "Moral",
-        "wert": 4
-      },
-      {
-        "ziel": "Angriff Fern",
-        "bonusart": "Moral",
-        "wert": 4
-      },
-      {
-        "ziel": "RW-Reflex",
-        "bonusart": "Moral",
-        "wert": 4
-      },
-      {
-        "ziel": "RW-Wille",
-        "bonusart": "Moral",
-        "wert": 4
-      },
-      {
-        "ziel": "RW-Zähigkeit",
-        "bonusart": "Moral",
-        "wert": 4
-      }
-    ],
-    "gebiet": "Berührung",
-    "dauer": "1 Min./Stufe"
   },
   {
     "id": "standard-admin-57b2d3ba-ed3c-4d61-a80f-6f4503afac9b",
@@ -1212,111 +1212,68 @@
   },
   {
     "id": "standard-admin-aa24da58-ed16-421b-9270-65b49b5cf67b",
-    "name": "Heftiger Angriff (GAB 1-3)",
+    "name": "Heftiger Angriff",
     "kategorie": "Talente",
     "aktiv": false,
     "beschreibung": "Heftiger Angriff [Kampf] \n\nDu opferst einen Teil deiner Zielgenauigkeit für größere \nStärke und machst so außerordentlich tödliche Nahkampf­\nangriffe.\nVoraussetzungen: ST 13, Grund­Angriffsbonus +1\n\nVorteil: Du kannst wählen, einen Malus von – 1 auf alle \nNahkampf­Angriffswürfe und Kampfmanöver­Würfe zu \nerhalten. Dafür gewinnst du einen Bonus von +2 auf alle \nNahkampf­Schadenswürfe. Dieser Schadensbonus erhöht sich \nnochmal um die Hälfte (+50%), wenn du eine zweihändige \nWaffe, eine einhändige mit zwei Händen geführte Waffe oder \neine natürliche Waffe verwendest, die einen 1 ½ ­fachen \nStärke­Modifikator auf den Schadenswurf verleiht. Umgekehrt \nwird der Schadensbonus halbiert, wenn der Angriff mit einer \nZweithandwaffe oder einer natürlichen Zweitwaffe ausgeführt \nwird. Wenn dein Grund­Angriffsbonus +4 erreicht und für \njede +4 danach erhöht sich der Malus um weitere – 1 und \nder Schadensbonus um weitere +2. Du musst dich vor dem \nAngriffswurf entscheiden, ob du dieses Talent einsetzen \nmöchtest. Seine Wirkung dauert bis zu deinem nächsten Zug \nan. Der Bonusschaden gilt nicht für Berührungsangriffe oder \nEffekte, die keinen Trefferpunkteschaden verursachen.",
     "quelle": "GRW S. 124",
     "angriffZuweisbar": false,
+    "sonderlogik": "heftiger-angriff",
+    "stufenlogik": {
+      "aktiv": true,
+      "bezug": "gab",
+      "klasse": "",
+      "bereiche": [
+        {
+          "min": 1,
+          "max": 3,
+          "wert": 1
+        },
+        {
+          "min": 4,
+          "max": 7,
+          "wert": 2
+        },
+        {
+          "min": 8,
+          "max": 11,
+          "wert": 3
+        },
+        {
+          "min": 12,
+          "max": 15,
+          "wert": 4
+        },
+        {
+          "min": 16,
+          "max": 19,
+          "wert": 5
+        },
+        {
+          "min": 20,
+          "max": 99,
+          "wert": 6
+        }
+      ]
+    },
     "boni": [
       {
         "ziel": "Angriff Nah",
         "bonusart": "Malus",
-        "wert": -1
+        "wert": -1,
+        "wertQuelle": "stufenwert"
       },
       {
         "ziel": "Schaden Nah",
         "bonusart": "Namenlos",
-        "wert": 2
+        "wert": 2,
+        "wertQuelle": "stufenwert"
       },
       {
         "ziel": "KMB",
         "bonusart": "Malus",
-        "wert": -1
-      }
-    ],
-    "gebiet": "selbst",
-    "dauer": "1 Runde"
-  },
-  {
-    "id": "standard-admin-d512fa3e-56f2-445e-ada0-b594966f6ecb",
-    "name": "Heftiger Angriff (GAB 12-15)",
-    "kategorie": "Talente",
-    "aktiv": false,
-    "beschreibung": "Heftiger Angriff [Kampf] \n\nDu opferst einen Teil deiner Zielgenauigkeit für größere \nStärke und machst so außerordentlich tödliche Nahkampf­\nangriffe.\nVoraussetzungen: ST 13, Grund­Angriffsbonus +1\n\nVorteil: Du kannst wählen, einen Malus von – 1 auf alle \nNahkampf­Angriffswürfe und Kampfmanöver­Würfe zu \nerhalten. Dafür gewinnst du einen Bonus von +2 auf alle \nNahkampf­Schadenswürfe. Dieser Schadensbonus erhöht sich \nnochmal um die Hälfte (+50%), wenn du eine zweihändige \nWaffe, eine einhändige mit zwei Händen geführte Waffe oder \neine natürliche Waffe verwendest, die einen 1 ½ ­fachen \nStärke­Modifikator auf den Schadenswurf verleiht. Umgekehrt \nwird der Schadensbonus halbiert, wenn der Angriff mit einer \nZweithandwaffe oder einer natürlichen Zweitwaffe ausgeführt \nwird. Wenn dein Grund­Angriffsbonus +4 erreicht und für \njede +4 danach erhöht sich der Malus um weitere – 1 und \nder Schadensbonus um weitere +2. Du musst dich vor dem \nAngriffswurf entscheiden, ob du dieses Talent einsetzen \nmöchtest. Seine Wirkung dauert bis zu deinem nächsten Zug \nan. Der Bonusschaden gilt nicht für Berührungsangriffe oder \nEffekte, die keinen Trefferpunkteschaden verursachen.",
-    "quelle": "GRW S. 124",
-    "angriffZuweisbar": false,
-    "boni": [
-      {
-        "ziel": "Angriff Nah",
-        "bonusart": "Malus",
-        "wert": -4
-      },
-      {
-        "ziel": "Schaden Nah",
-        "bonusart": "Namenlos",
-        "wert": 8
-      },
-      {
-        "ziel": "KMB",
-        "bonusart": "Malus",
-        "wert": -4
-      }
-    ],
-    "gebiet": "selbst",
-    "dauer": "1 Runde"
-  },
-  {
-    "id": "standard-admin-853368b6-d56e-43bf-8564-e30376d34da3",
-    "name": "Heftiger Angriff (GAB 4-7)",
-    "kategorie": "Talente",
-    "aktiv": false,
-    "beschreibung": "Heftiger Angriff [Kampf] \n\nDu opferst einen Teil deiner Zielgenauigkeit für größere \nStärke und machst so außerordentlich tödliche Nahkampf­\nangriffe.\nVoraussetzungen: ST 13, Grund­Angriffsbonus +1\n\nVorteil: Du kannst wählen, einen Malus von – 1 auf alle \nNahkampf­Angriffswürfe und Kampfmanöver­Würfe zu \nerhalten. Dafür gewinnst du einen Bonus von +2 auf alle \nNahkampf­Schadenswürfe. Dieser Schadensbonus erhöht sich \nnochmal um die Hälfte (+50%), wenn du eine zweihändige \nWaffe, eine einhändige mit zwei Händen geführte Waffe oder \neine natürliche Waffe verwendest, die einen 1 ½ ­fachen \nStärke­Modifikator auf den Schadenswurf verleiht. Umgekehrt \nwird der Schadensbonus halbiert, wenn der Angriff mit einer \nZweithandwaffe oder einer natürlichen Zweitwaffe ausgeführt \nwird. Wenn dein Grund­Angriffsbonus +4 erreicht und für \njede +4 danach erhöht sich der Malus um weitere – 1 und \nder Schadensbonus um weitere +2. Du musst dich vor dem \nAngriffswurf entscheiden, ob du dieses Talent einsetzen \nmöchtest. Seine Wirkung dauert bis zu deinem nächsten Zug \nan. Der Bonusschaden gilt nicht für Berührungsangriffe oder \nEffekte, die keinen Trefferpunkteschaden verursachen.",
-    "quelle": "GRW S. 124",
-    "angriffZuweisbar": false,
-    "boni": [
-      {
-        "ziel": "Angriff Nah",
-        "bonusart": "Malus",
-        "wert": -2
-      },
-      {
-        "ziel": "Schaden Nah",
-        "bonusart": "Namenlos",
-        "wert": 4
-      },
-      {
-        "ziel": "KMB",
-        "bonusart": "Malus",
-        "wert": -2
-      }
-    ],
-    "gebiet": "selbst",
-    "dauer": "1 Runde"
-  },
-  {
-    "id": "standard-admin-bbf32848-00b5-45a6-a6c0-07296c10942b",
-    "name": "Heftiger Angriff (GAB 8-11)",
-    "kategorie": "Talente",
-    "aktiv": false,
-    "beschreibung": "Heftiger Angriff [Kampf] \n\nDu opferst einen Teil deiner Zielgenauigkeit für größere \nStärke und machst so außerordentlich tödliche Nahkampf­\nangriffe.\nVoraussetzungen: ST 13, Grund­Angriffsbonus +1\n\nVorteil: Du kannst wählen, einen Malus von – 1 auf alle \nNahkampf­Angriffswürfe und Kampfmanöver­Würfe zu \nerhalten. Dafür gewinnst du einen Bonus von +2 auf alle \nNahkampf­Schadenswürfe. Dieser Schadensbonus erhöht sich \nnochmal um die Hälfte (+50%), wenn du eine zweihändige \nWaffe, eine einhändige mit zwei Händen geführte Waffe oder \neine natürliche Waffe verwendest, die einen 1 ½ ­fachen \nStärke­Modifikator auf den Schadenswurf verleiht. Umgekehrt \nwird der Schadensbonus halbiert, wenn der Angriff mit einer \nZweithandwaffe oder einer natürlichen Zweitwaffe ausgeführt \nwird. Wenn dein Grund­Angriffsbonus +4 erreicht und für \njede +4 danach erhöht sich der Malus um weitere – 1 und \nder Schadensbonus um weitere +2. Du musst dich vor dem \nAngriffswurf entscheiden, ob du dieses Talent einsetzen \nmöchtest. Seine Wirkung dauert bis zu deinem nächsten Zug \nan. Der Bonusschaden gilt nicht für Berührungsangriffe oder \nEffekte, die keinen Trefferpunkteschaden verursachen.",
-    "quelle": "GRW S. 124",
-    "angriffZuweisbar": false,
-    "boni": [
-      {
-        "ziel": "Angriff Nah",
-        "bonusart": "Malus",
-        "wert": -3
-      },
-      {
-        "ziel": "Schaden Nah",
-        "bonusart": "Namenlos",
-        "wert": 6
-      },
-      {
-        "ziel": "KMB",
-        "bonusart": "Malus",
-        "wert": -3
+        "wert": -1,
+        "wertQuelle": "stufenwert"
       }
     ],
     "gebiet": "selbst",
@@ -1562,44 +1519,6 @@
     "dauer": "so lange Kampfrausch"
   },
   {
-    "id": "standard-admin-90160717-ee87-42ab-933c-d7c642b918fe",
-    "name": "Kämpft beengt oder gezwängt",
-    "kategorie": "Kampf",
-    "aktiv": false,
-    "beschreibung": "Durchzwängen: In manchen Fällen musst du dich vielleicht \nin ein Gebiet hinein­ oder durch es hindurchzwängen, das \nnicht so groß wie deine Angriffsfläche ist. Du kannst dich \ndurch oder in jedes Gebiet zwängen, dass mindestens halb \nso breit wie die Angriffsfläche ist, die du normalerweise \neinnimmst. Jede Bewegung in oder durch einen engen \nRaum kostet dich in Bezug auf die Bewegungsrate 2 Felder. \nWährend du dich in einem engen Raum aufhältst, erhältst \ndu einen Malus von – 4 auf deine Angriffswürfe und einen \nMalus von – 4 auf deine RK.\nWenn eine große Kreatur (die normalerweise 4 Felder \neinnimmt) sich in ein Feld hineinzwängt, das nur 1 Feld \nbreit ist, nimmt sie zu diesem Zeitpunkt 2 Felder ein \nund ihr Mittelpunkt liegt auf der Linie zwischen diesen \nbeiden Feldern. Analog dazu kannst du den Mittelpunkt \nvon größeren Kreaturen bestimmen, die sich auf ähnliche \nWeise in enge Räume hindurchzwängen.\nEine Kreatur kann sich im Rahmen ihrer Bewegung an \neiner anderen Kreatur vorbeizwängen, kann ihre Bewegung \naber nicht in einem besetzten Feld enden lassen.\nUm sich durch oder in einen noch engeren Raum zu \nzwängen, musst du die Fertigkeit Entfesselungskunst \nverwenden. Währenddessen kannst du jedoch nicht angreifen, \nerhältst einen Malus von – 4 auf deine RK und verlierst den \nGeschicklichkeitsbonus auf deine RK.",
-    "quelle": "GRW S. 193",
-    "angriffZuweisbar": false,
-    "boni": [
-      {
-        "ziel": "Angriff Nah",
-        "bonusart": "Malus",
-        "wert": -4
-      },
-      {
-        "ziel": "Angriff Fern",
-        "bonusart": "Malus",
-        "wert": -4
-      },
-      {
-        "ziel": "KMB",
-        "bonusart": "Malus",
-        "wert": -4
-      },
-      {
-        "ziel": "Rüstungsklasse",
-        "bonusart": "Malus",
-        "wert": -4
-      },
-      {
-        "ziel": "KMV",
-        "bonusart": "Malus",
-        "wert": -4
-      }
-    ],
-    "gebiet": "selbst",
-    "dauer": ""
-  },
-  {
     "id": "standard-admin-0d91c5be-156a-40e9-871b-9b968d798abe",
     "name": "Katzenhafte Anmut",
     "kategorie": "Zauber",
@@ -1702,6 +1621,44 @@
     ],
     "gebiet": "selbst",
     "dauer": "Nach Angabe SL"
+  },
+  {
+    "id": "standard-admin-90160717-ee87-42ab-933c-d7c642b918fe",
+    "name": "Kämpft beengt oder gezwängt",
+    "kategorie": "Kampf",
+    "aktiv": false,
+    "beschreibung": "Durchzwängen: In manchen Fällen musst du dich vielleicht \nin ein Gebiet hinein­ oder durch es hindurchzwängen, das \nnicht so groß wie deine Angriffsfläche ist. Du kannst dich \ndurch oder in jedes Gebiet zwängen, dass mindestens halb \nso breit wie die Angriffsfläche ist, die du normalerweise \neinnimmst. Jede Bewegung in oder durch einen engen \nRaum kostet dich in Bezug auf die Bewegungsrate 2 Felder. \nWährend du dich in einem engen Raum aufhältst, erhältst \ndu einen Malus von – 4 auf deine Angriffswürfe und einen \nMalus von – 4 auf deine RK.\nWenn eine große Kreatur (die normalerweise 4 Felder \neinnimmt) sich in ein Feld hineinzwängt, das nur 1 Feld \nbreit ist, nimmt sie zu diesem Zeitpunkt 2 Felder ein \nund ihr Mittelpunkt liegt auf der Linie zwischen diesen \nbeiden Feldern. Analog dazu kannst du den Mittelpunkt \nvon größeren Kreaturen bestimmen, die sich auf ähnliche \nWeise in enge Räume hindurchzwängen.\nEine Kreatur kann sich im Rahmen ihrer Bewegung an \neiner anderen Kreatur vorbeizwängen, kann ihre Bewegung \naber nicht in einem besetzten Feld enden lassen.\nUm sich durch oder in einen noch engeren Raum zu \nzwängen, musst du die Fertigkeit Entfesselungskunst \nverwenden. Währenddessen kannst du jedoch nicht angreifen, \nerhältst einen Malus von – 4 auf deine RK und verlierst den \nGeschicklichkeitsbonus auf deine RK.",
+    "quelle": "GRW S. 193",
+    "angriffZuweisbar": false,
+    "boni": [
+      {
+        "ziel": "Angriff Nah",
+        "bonusart": "Malus",
+        "wert": -4
+      },
+      {
+        "ziel": "Angriff Fern",
+        "bonusart": "Malus",
+        "wert": -4
+      },
+      {
+        "ziel": "KMB",
+        "bonusart": "Malus",
+        "wert": -4
+      },
+      {
+        "ziel": "Rüstungsklasse",
+        "bonusart": "Malus",
+        "wert": -4
+      },
+      {
+        "ziel": "KMV",
+        "bonusart": "Malus",
+        "wert": -4
+      }
+    ],
+    "gebiet": "selbst",
+    "dauer": ""
   },
   {
     "id": "standard-admin-a1f984c4-9052-41b2-b659-018f8dae76f6",
@@ -1896,100 +1853,6 @@
     "dauer": "so lange vorgetragen"
   },
   {
-    "id": "standard-admin-d118065c-88af-45fe-84bd-a93c39f92ac4",
-    "name": "Mächtige magische Fänge (Version alle Angriffe +1)",
-    "kategorie": "Zauber",
-    "aktiv": false,
-    "beschreibung": "MÄCHTIGE MAGISCHE FÄNGE \nSchule: Verwandlung; Grad: DRU 3, WAL 3\nReichweite: Nah (7,50 m + 1,50 m/2 Stufen)\nZiel: Eine lebende Kreatur\nWirkungsdauer: 1 Stunde/Stufe\nFunktioniert wie Magische Fänge, der Verbesserungsbonus auf \nAngriffs- und Schadenswürfe steigt aber alle 4 Zauberstufen um +1 \n(maximal +5). Der Bonus ermöglicht es natürlichen Waffen jedoch \nnicht, Schadensreduzierung außer gegen Magie zu umgehen.\nDu kannst alternativ dazu auch allen natürlichen Waffen des Ziels \neinen Verbesserungsbonus von +1 verleihen (ungeachtet deiner \nZauberstufe).\nMächtige Magische Fänge kann mit Dauerhaftigkeit permanent \ngemacht werden.",
-    "quelle": "GRW S. 302",
-    "angriffZuweisbar": true,
-    "boni": [
-      {
-        "ziel": "Angriff Nah",
-        "bonusart": "Verbesserung",
-        "wert": 1
-      },
-      {
-        "ziel": "Schaden Nah",
-        "bonusart": "Verbesserung",
-        "wert": 1
-      },
-      {
-        "ziel": "KMB",
-        "bonusart": "Verbesserung",
-        "wert": 1
-      }
-    ],
-    "gebiet": "",
-    "dauer": "1 Std./Stufe"
-  },
-  {
-    "id": "standard-admin-0aa5c036-a9f6-485c-bc68-38cb4b80eab8",
-    "name": "Mächtiges Verbündeten Schützen (AF, Paktmagier, Verbündete)",
-    "kategorie": "Klassenmerkmale",
-    "aktiv": false,
-    "beschreibung": "Alle Verbündete",
-    "quelle": "EXP S. 58",
-    "angriffZuweisbar": false,
-    "boni": [
-      {
-        "ziel": "Rüstungsklasse",
-        "bonusart": "Schild",
-        "wert": 2
-      },
-      {
-        "ziel": "RW-Reflex",
-        "bonusart": "Situation",
-        "wert": 2
-      },
-      {
-        "ziel": "RW-Wille",
-        "bonusart": "Situation",
-        "wert": 2
-      },
-      {
-        "ziel": "RW-Zähigkeit",
-        "bonusart": "Situation",
-        "wert": 2
-      }
-    ],
-    "gebiet": "Reichweite Eidolon",
-    "dauer": "in Reichweite"
-  },
-  {
-    "id": "standard-admin-d34dc026-f075-49f8-a95c-176de712d4e7",
-    "name": "Mächtiges Verbündeten Schützen (AF, Paktmagier)",
-    "kategorie": "Klassenmerkmale",
-    "aktiv": false,
-    "beschreibung": "Ab 12. Stufe, auf Paktmagier",
-    "quelle": "EXP S. 58",
-    "angriffZuweisbar": false,
-    "boni": [
-      {
-        "ziel": "Rüstungsklasse",
-        "bonusart": "Schild",
-        "wert": 4
-      },
-      {
-        "ziel": "RW-Reflex",
-        "bonusart": "Situation",
-        "wert": 4
-      },
-      {
-        "ziel": "RW-Wille",
-        "bonusart": "Situation",
-        "wert": 4
-      },
-      {
-        "ziel": "RW-Zähigkeit",
-        "bonusart": "Situation",
-        "wert": 4
-      }
-    ],
-    "gebiet": "Reichweite Eidolon",
-    "dauer": "in Reichweite"
-  },
-  {
     "id": "standard-admin-be4af10c-8c17-4cac-a70c-5879f7123a04",
     "name": "Magierrüstung",
     "kategorie": "Zauber",
@@ -2029,6 +1892,130 @@
     ],
     "gebiet": "Berührung",
     "dauer": "1 Min./Stufe"
+  },
+  {
+    "id": "standard-admin-d118065c-88af-45fe-84bd-a93c39f92ac4",
+    "name": "Mächtige magische Fänge",
+    "kategorie": "Zauber",
+    "aktiv": false,
+    "beschreibung": "MÄCHTIGE MAGISCHE FÄNGE \nSchule: Verwandlung; Grad: DRU 3, WAL 3\nReichweite: Nah (7,50 m + 1,50 m/2 Stufen)\nZiel: Eine lebende Kreatur\nWirkungsdauer: 1 Stunde/Stufe\nFunktioniert wie Magische Fänge, der Verbesserungsbonus auf \nAngriffs- und Schadenswürfe steigt aber alle 4 Zauberstufen um +1 \n(maximal +5). Der Bonus ermöglicht es natürlichen Waffen jedoch \nnicht, Schadensreduzierung außer gegen Magie zu umgehen.\nDu kannst alternativ dazu auch allen natürlichen Waffen des Ziels \neinen Verbesserungsbonus von +1 verleihen (ungeachtet deiner \nZauberstufe).\nMächtige Magische Fänge kann mit Dauerhaftigkeit permanent \ngemacht werden.",
+    "quelle": "GRW S. 302",
+    "angriffZuweisbar": true,
+    "sonderlogik": "maechtige-magische-faenge",
+    "stufenlogik": {
+      "aktiv": true,
+      "bezug": "zauberstufe",
+      "klasse": "",
+      "bereiche": [
+        {
+          "min": 1,
+          "max": 7,
+          "wert": 1
+        },
+        {
+          "min": 8,
+          "max": 11,
+          "wert": 2
+        },
+        {
+          "min": 12,
+          "max": 15,
+          "wert": 3
+        },
+        {
+          "min": 16,
+          "max": 19,
+          "wert": 4
+        },
+        {
+          "min": 20,
+          "max": 99,
+          "wert": 5
+        }
+      ]
+    },
+    "boni": [
+      {
+        "ziel": "Angriff Nah",
+        "bonusart": "Verbesserung",
+        "wert": 1,
+        "wertQuelle": "stufenwert"
+      },
+      {
+        "ziel": "Schaden Nah",
+        "bonusart": "Verbesserung",
+        "wert": 1,
+        "wertQuelle": "stufenwert"
+      }
+    ],
+    "gebiet": "",
+    "dauer": "1 Std./Stufe"
+  },
+  {
+    "id": "standard-admin-d34dc026-f075-49f8-a95c-176de712d4e7",
+    "name": "Mächtiges Verbündeten Schützen (AF, Paktmagier)",
+    "kategorie": "Klassenmerkmale",
+    "aktiv": false,
+    "beschreibung": "Ab 12. Stufe, auf Paktmagier",
+    "quelle": "EXP S. 58",
+    "angriffZuweisbar": false,
+    "boni": [
+      {
+        "ziel": "Rüstungsklasse",
+        "bonusart": "Schild",
+        "wert": 4
+      },
+      {
+        "ziel": "RW-Reflex",
+        "bonusart": "Situation",
+        "wert": 4
+      },
+      {
+        "ziel": "RW-Wille",
+        "bonusart": "Situation",
+        "wert": 4
+      },
+      {
+        "ziel": "RW-Zähigkeit",
+        "bonusart": "Situation",
+        "wert": 4
+      }
+    ],
+    "gebiet": "Reichweite Eidolon",
+    "dauer": "in Reichweite"
+  },
+  {
+    "id": "standard-admin-0aa5c036-a9f6-485c-bc68-38cb4b80eab8",
+    "name": "Mächtiges Verbündeten Schützen (AF, Paktmagier, Verbündete)",
+    "kategorie": "Klassenmerkmale",
+    "aktiv": false,
+    "beschreibung": "Alle Verbündete",
+    "quelle": "EXP S. 58",
+    "angriffZuweisbar": false,
+    "boni": [
+      {
+        "ziel": "Rüstungsklasse",
+        "bonusart": "Schild",
+        "wert": 2
+      },
+      {
+        "ziel": "RW-Reflex",
+        "bonusart": "Situation",
+        "wert": 2
+      },
+      {
+        "ziel": "RW-Wille",
+        "bonusart": "Situation",
+        "wert": 2
+      },
+      {
+        "ziel": "RW-Zähigkeit",
+        "bonusart": "Situation",
+        "wert": 2
+      }
+    ],
+    "gebiet": "Reichweite Eidolon",
+    "dauer": "in Reichweite"
   },
   {
     "id": "standard-admin-1d59b687-8648-4dfd-aa13-4259ff925874",
@@ -2488,49 +2475,6 @@
     "dauer": ""
   },
   {
-    "id": "standard-admin-86c9750a-fecd-4586-b8d9-950c86a4da06",
-    "name": "Verängstigt",
-    "kategorie": "Zustände",
-    "aktiv": false,
-    "beschreibung": "Verängstigt: Eine verängstigte Kreatur flieht vor der Quelle \nihrer Furcht so gut sie kann. Kann sie nicht fliehen, darf sie \nkämpfen. Ein Verängstigter erhält einen Malus von – 2 auf alle \nAngriffs­, Rettungs­, Fertigkeits­ und Attributswürfe. Er kann \naber besondere Fähigkeiten, auch Zauber, einsetzen, um zu \nfliehen. Ja der Charakter muss diese Mittel sogar einsetzen, \nwenn es ihm sonst nicht möglich ist zu fliehen. \nVerängstigt gleicht dem Zustand erschüttert, außer dass die \nKreatur fliehen muss, wenn ihr dies möglich ist. In Panik ist \nein noch intensiverer Zustand der Furcht.",
-    "quelle": "GRW S. 568",
-    "angriffZuweisbar": false,
-    "boni": [
-      {
-        "ziel": "Angriff Nah",
-        "bonusart": "Malus",
-        "wert": -2
-      },
-      {
-        "ziel": "Angriff Fern",
-        "bonusart": "Malus",
-        "wert": -2
-      },
-      {
-        "ziel": "KMB",
-        "bonusart": "Malus",
-        "wert": -2
-      },
-      {
-        "ziel": "RW-Reflex",
-        "bonusart": "Malus",
-        "wert": -2
-      },
-      {
-        "ziel": "RW-Wille",
-        "bonusart": "Malus",
-        "wert": -2
-      },
-      {
-        "ziel": "RW-Zähigkeit",
-        "bonusart": "Malus",
-        "wert": -2
-      }
-    ],
-    "gebiet": "selbst",
-    "dauer": "Nach Angabe SL"
-  },
-  {
     "id": "standard-admin-ceeb3a33-32c9-4f5d-9488-67cd22f78a57",
     "name": "Verbündeten Schützen (AF, Paktmagier)",
     "kategorie": "Klassenmerkmale",
@@ -2590,6 +2534,49 @@
       {
         "ziel": "KMV",
         "bonusart": "Modifikator Attribut",
+        "wert": -2
+      }
+    ],
+    "gebiet": "selbst",
+    "dauer": "Nach Angabe SL"
+  },
+  {
+    "id": "standard-admin-86c9750a-fecd-4586-b8d9-950c86a4da06",
+    "name": "Verängstigt",
+    "kategorie": "Zustände",
+    "aktiv": false,
+    "beschreibung": "Verängstigt: Eine verängstigte Kreatur flieht vor der Quelle \nihrer Furcht so gut sie kann. Kann sie nicht fliehen, darf sie \nkämpfen. Ein Verängstigter erhält einen Malus von – 2 auf alle \nAngriffs­, Rettungs­, Fertigkeits­ und Attributswürfe. Er kann \naber besondere Fähigkeiten, auch Zauber, einsetzen, um zu \nfliehen. Ja der Charakter muss diese Mittel sogar einsetzen, \nwenn es ihm sonst nicht möglich ist zu fliehen. \nVerängstigt gleicht dem Zustand erschüttert, außer dass die \nKreatur fliehen muss, wenn ihr dies möglich ist. In Panik ist \nein noch intensiverer Zustand der Furcht.",
+    "quelle": "GRW S. 568",
+    "angriffZuweisbar": false,
+    "boni": [
+      {
+        "ziel": "Angriff Nah",
+        "bonusart": "Malus",
+        "wert": -2
+      },
+      {
+        "ziel": "Angriff Fern",
+        "bonusart": "Malus",
+        "wert": -2
+      },
+      {
+        "ziel": "KMB",
+        "bonusart": "Malus",
+        "wert": -2
+      },
+      {
+        "ziel": "RW-Reflex",
+        "bonusart": "Malus",
+        "wert": -2
+      },
+      {
+        "ziel": "RW-Wille",
+        "bonusart": "Malus",
+        "wert": -2
+      },
+      {
+        "ziel": "RW-Zähigkeit",
+        "bonusart": "Malus",
         "wert": -2
       }
     ],
