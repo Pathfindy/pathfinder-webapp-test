@@ -51,6 +51,7 @@ function sammleAktiveBoni(effektListe = []) {
                 const normalisiert = normalisiereBerechnungsBonus(bonus);
                 const dynamischerWert =
                     normalisiert.wertQuelle === "stufenwert" &&
+                    effekt?.stufenlogik?.aktiv &&
                     typeof effektStufenwert === "function"
                         ? effektStufenwert(effekt)
                         : normalisiert.wert;

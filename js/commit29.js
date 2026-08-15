@@ -400,9 +400,30 @@
         klassenTitel.className = "charakter-klassen-kopf";
         const klassenName = document.createElement("strong");
         klassenName.textContent = "Klassen & Stufen";
+        const werteKopf = document.createElement("div");
+        werteKopf.className = "charakter-stufen-werte";
+
         const gesamt = document.createElement("span");
         gesamt.textContent = `Gesamtstufe: ${typeof charakterGesamtstufe === "function" ? charakterGesamtstufe(charakter) : 0}`;
-        klassenTitel.append(klassenName, gesamt);
+
+        const gabLabel = document.createElement("label");
+        gabLabel.className = "charakter-gab-feld";
+        gabLabel.innerHTML = "<span>GAB</span>";
+        const gabInput = document.createElement("input");
+        gabInput.type = "number";
+        gabInput.min = "0";
+        gabInput.max = "99";
+        gabInput.step = "1";
+        gabInput.inputMode = "numeric";
+        gabInput.value = String(Number(charakter.gab) || 0);
+        gabInput.setAttribute("aria-label", `GAB für ${charakter.name}`);
+        gabInput.addEventListener("change", () => {
+          if (typeof setzeCharakterGAB === "function") setzeCharakterGAB(charakter.id, gabInput.value);
+        });
+        gabLabel.appendChild(gabInput);
+        werteKopf.append(gesamt, gabLabel);
+
+        klassenTitel.append(klassenName, werteKopf);
         klassenBereich.appendChild(klassenTitel);
 
         const klassenListe = document.createElement("div");

@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.32";
+const APP_VERSION="0.39.6";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -84,7 +84,10 @@ function normalisiereCharakter(charakter={}){
    kampagne:typeof charakter.kampagne==="string" && charakter.kampagne.trim()
      ?charakter.kampagne.trim()
      :"Charakter ohne Kampagnenzuordnung",
-   klassen:normalisiereKlassen(charakter.klassen)
+   klassen:normalisiereKlassen(charakter.klassen),
+   gab:Number.isFinite(Number(charakter.gab))
+     ?Math.max(0,Math.min(99,Math.trunc(Number(charakter.gab))))
+     :0
  };
 }
 
@@ -96,14 +99,18 @@ function charakterGesamtstufe(charakter=aktiverCharakter()){
 
 function charakterGAB(charakter=aktiverCharakter()){
  if(!charakter) return 0;
- const direkt=Number(charakter.gab);
- if(Number.isFinite(direkt) && direkt>=0) return Math.trunc(direkt);
- const feld=document.getElementById("gabBasis");
- if(feld){
-   const wert=Number(feld.value ?? feld.textContent);
-   if(Number.isFinite(wert)) return Math.trunc(wert);
- }
- return 0;
+ const wert=Number(charakter.gab);
+ return Number.isFinite(wert)?Math.max(0,Math.trunc(wert)):0;
+}
+
+function setzeCharakterGAB(id,wert){
+ const charakter=findeCharakter(id);
+ if(!charakter) return false;
+ charakter.gab=Math.max(0,Math.min(99,Math.trunc(Number(wert)||0)));
+ speichereCharaktere();
+ if(typeof berechneWerte==="function") berechneWerte();
+ if(typeof window.aktualisiereAlleAnsichten==="function") window.aktualisiereAlleAnsichten();
+ return true;
 }
 
 function charakterKlassenstufe(charakter,klasse){
@@ -670,12 +677,14 @@ function normalisiereEffekt(effekt={}){
  const standard=!!effekt.standard;
  const stufenlogik=normalisiereStufenlogik(effekt.stufenlogik);
  const roheBoni=Array.isArray(effekt.boni)?effekt.boni:[];
- const boni=roheBoni.map(bonus=>{
-   const normalisiert=normalisiereBonus(bonus);
-   const hatQuelle=bonus && Object.prototype.hasOwnProperty.call(bonus,"wertQuelle");
-   if(stufenlogik.aktiv && !hatQuelle) normalisiert.wertQuelle="stufenwert";
-   return normalisiert;
- });
+ let boni=roheBoni.map(bonus=>normalisiereBonus(bonus));
+
+ // Migration der bisherigen fehlerhaften Commit-39-Daten:
+ // Ein stufenabhängiger Effekt, bei dem keine Bonuszeile den Stufenwert nutzt,
+ // würde sonst weiterhin den alten festen Wert (typisch +1) berechnen.
+ if(stufenlogik.aktiv && boni.length && !boni.some(bonus=>bonus.wertQuelle==="stufenwert")){
+   boni=boni.map(bonus=>({...bonus,wertQuelle:"stufenwert"}));
+ }
  return {
    id:effekt.id||(standard?standardEffektId(effekt):neueEffektId()),
    standard,
@@ -798,10 +807,11 @@ function speichereAdminStandardAenderungen(aenderungen){
 }
 
 function angewendeterStandardEffekt(effekt){
- if(!istAdminEntsperrt()) return effekt;
  const aenderungen=ladeAdminStandardAenderungen();
  const entwurf=aenderungen[effekt.id];
- return entwurf?normalisiereEffekt({...effekt,...entwurf,id:effekt.id,standard:true}):effekt;
+ return entwurf
+   ?normalisiereEffekt({...effekt,...entwurf,id:effekt.id,standard:true})
+   :effekt;
 }
 
 function aktualisiereStandardEffekt(id,daten={}){
@@ -1429,7 +1439,14 @@ function rendereStufenEditor(){
    aktiv.checked=!!logik.aktiv;
    aktiv.onchange=()=>{
      editorState.entwurf.stufenlogik.aktiv=aktiv.checked;
+     if(aktiv.checked && Array.isArray(editorState.entwurf.boni)){
+       editorState.entwurf.boni=editorState.entwurf.boni.map(bonus=>({
+         ...bonus,
+         wertQuelle:"stufenwert"
+       }));
+     }
      rendereStufenEditor();
+     rendereBonusEditor();
    };
  }
  bereich.classList.toggle("inaktiv",!logik.aktiv);
@@ -1639,6 +1656,8 @@ function speichereEditor(){
  }
 
  baueEffektliste();
+ if(typeof berechneWerte==="function") berechneWerte();
+ if(typeof window.aktualisiereAlleAnsichten==="function") window.aktualisiereAlleAnsichten();
  schliesseEffektEditor();
 }
 
@@ -1702,6 +1721,7 @@ function bereiteStandardEffektFuerExportVor(effekt){
    beschreibung:effekt.beschreibung||"",
    quelle:effekt.quelle||"",
    angriffZuweisbar:!!effekt.angriffZuweisbar,
+   angriffsModus:["alle","einer"].includes(effekt.angriffsModus)?effekt.angriffsModus:(effekt.angriffZuweisbar?"einer":"alle"),
    stufenlogik:normalisiereStufenlogik(effekt.stufenlogik),
    boni:Array.isArray(effekt.boni)?effekt.boni.map(normalisiereBonus):[]
  };
