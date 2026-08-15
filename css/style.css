@@ -555,9 +555,3 @@ nav {
 #effektStufenklasse{width:100%;min-height:36px} #effektStufenklasseAndere[hidden]{display:none} #btnStufenbereichHinzufuegen:disabled{opacity:.45}
 
 .effekt-stufenbox{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;font-size:.8rem}.effekt-stufenbox input{width:64px}.effekt-stufenwert-aktuell{font-weight:700}
-
-/* Commit 39.4 */
-.effekt-angriffsmodus-editor{display:grid;gap:4px;margin:6px 0}
-.effekt-angriffsmodus-editor select{min-height:36px}
-.bonus-zeile{grid-template-columns:minmax(0,2fr) minmax(0,1.5fr) minmax(92px,1fr) minmax(76px,.8fr) 40px}
-@media(max-width:600px){.bonus-zeile{grid-template-columns:1fr 1fr}}
