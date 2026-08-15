@@ -8,7 +8,7 @@
     <title>Das azlantische Helferlein der Boni</title>
 
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="css/style.css?v=39.8">
+    <link rel="stylesheet" href="css/style.css?v=39.9">
     <link rel="stylesheet" href="css/charakterwerte.css?v=38.1">
     <link rel="stylesheet" href="css/commit21.css?v=21">
     <link rel="stylesheet" href="css/commit22.css?v=22">
@@ -28,7 +28,7 @@
 
 <header>
 
-    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.39.8</span></h1>
+    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.39.9</span></h1>
 
 </header>
 
@@ -298,7 +298,7 @@
             <div class="kampagnen-verwaltung-kopf">
                 <div>
                     <h3 id="kampagnenTitel">Kampagnen</h3>
-                    <p>Charaktere werden ihrer Kampagne untergeordnet angezeigt. Es werden auf den folge Seiten nur Charakter der aktiven Kampagne zur Auswahl gestellt. Klassen und Stufen werden direkt im Charakterbanner gepflegt; die Gesamtstufe wird automatisch berechnet.</p>
+                    <p>Charaktere werden ihrer Kampagne untergeordnet angezeigt. Es werden auf den folge Seiten nur Charakter der aktiven Kampagne zur Auswahl gestellt.</p>
                 </div>
                 <div class="kampagne-neu-zeile">
                     <input id="neueKampagneName" type="text" maxlength="60" placeholder="Neue Kampagne">
@@ -340,11 +340,11 @@
 
 </main>
 
-<script src="js/app.js?v=39.8"></script>
+<script src="js/app.js?v=39.9"></script>
 <script src="js/charakterwerte.js?v=38"></script>
 <script src="js/leben.js?v=38"></script>
 <script src="js/filter.js"></script>
-<script src="js/berechnung.js?v=39.8"></script>
+<script src="js/berechnung.js?v=39.9"></script>
 <script src="js/makros.js"></script>
 <script src="js/speicher.js"></script>
 <script src="js/commit21.js?v=21.1"></script>
@@ -398,6 +398,7 @@ Stufenabhängigen Wert verwenden
 <div class="stufenbereiche-kopf"><span>Von</span><span>Bis</span><span>Wert</span><span></span></div>
 <div id="stufenBereiche"></div>
 <button type="button" id="btnStufenbereichHinzufuegen">+ Stufenbereich</button>
+<p class="stufen-admin-hinweis">Für GAB-abhängige Talente: Bezug „GAB“ wählen, GAB-Bereiche definieren und bei jeder Bonuszeile „Stufenwert“ plus Faktor setzen (z. B. −1 Angriff, +1 RK, +2 Schaden).</p>
 </section>
 
 <div id="bonusEditor">
