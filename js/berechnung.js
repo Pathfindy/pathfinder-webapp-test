@@ -35,6 +35,56 @@ function normalisiereBerechnungsBonus(bonus = {}) {
     };
 }
 
+function effektOptionenBerechnung(effekt){
+    return typeof effektOptionenFuerCharakter === "function"
+        ? effektOptionenFuerCharakter(effekt?.id)
+        : {};
+}
+
+function dynamischerBonuswert(effekt, bonus, normalisiert) {
+    if (!effekt || !bonus) return normalisiert.wert;
+
+    if (effekt.sonderlogik === "heftiger-angriff") {
+        const stufe = typeof effektStufenwert === "function" ? effektStufenwert(effekt) : 0;
+        const optionen = effektOptionenBerechnung(effekt);
+        if (bonus.ziel === "Angriff Nah" || bonus.ziel === "KMB") return -stufe;
+        if (bonus.ziel === "Schaden Nah") {
+            const faktor = optionen.schadensart === "zweihand"
+                ? 3
+                : optionen.schadensart === "zweithand"
+                    ? 1
+                    : 2;
+            return stufe * faktor;
+        }
+    }
+
+    if (effekt.sonderlogik === "maechtige-magische-faenge") {
+        const optionen = effektOptionenBerechnung(effekt);
+        if (optionen.modus === "einzeln") {
+            return typeof effektStufenwert === "function" ? effektStufenwert(effekt) : 1;
+        }
+        return 1;
+    }
+
+    if (
+        normalisiert.wertQuelle === "stufenwert" &&
+        effekt?.stufenlogik?.aktiv &&
+        typeof effektStufenwert === "function"
+    ) {
+        return effektStufenwert(effekt);
+    }
+
+    return normalisiert.wert;
+}
+
+function effektiverAngriffsModusBerechnung(effekt){
+    if(effekt?.sonderlogik==="maechtige-magische-faenge"){
+        const optionen=effektOptionenBerechnung(effekt);
+        return optionen.modus==="einzeln"?"einer":"alle";
+    }
+    return effekt?.angriffZuweisbar?"einer":"alle";
+}
+
 function sammleAktiveBoni(effektListe = []) {
     if (!Array.isArray(effektListe)) return [];
 
@@ -50,11 +100,7 @@ function sammleAktiveBoni(effektListe = []) {
             return effekt.boni.map(bonus => {
                 const normalisiert = normalisiereBerechnungsBonus(bonus);
                 const dynamischerWert =
-                    normalisiert.wertQuelle === "stufenwert" &&
-                    effekt?.stufenlogik?.aktiv &&
-                    typeof effektStufenwert === "function"
-                        ? effektStufenwert(effekt)
-                        : normalisiert.wert;
+                    dynamischerBonuswert(effekt, bonus, normalisiert);
 
                 return {
                     ...normalisiert,
@@ -62,6 +108,7 @@ function sammleAktiveBoni(effektListe = []) {
                     effektId: effekt.id || null,
                     effektName: effekt.name || "",
                     angriffZuweisbar: !!effekt.angriffZuweisbar,
+                    angriffsModus: effektiverAngriffsModusBerechnung(effekt),
                     angriffZiel
                 };
             });

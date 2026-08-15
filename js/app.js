@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.39.7";
+const APP_VERSION="0.39.8";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -31,6 +31,8 @@ const STORAGE_KEYS={
  charakterEffekte:"pf-charakter-effekte",
  charakterEffektAngriffe:"pf-charakter-effekt-angriffe",
  charakterEffektStufen:"pf-charakter-effekt-stufen",
+ charakterEffektOptionen:"pf-charakter-effekt-optionen",
+ charakterEffektFilter:"pf-charakter-effekt-filter",
  aktiveKampagne:"pf-aktive-kampagne",
  kampagnen:"pf-kampagnen",
  adminPinHash:"pf-admin-pin-hash",
@@ -475,12 +477,31 @@ function normalisiereStatus(status){
  return status && typeof status==="object" && !Array.isArray(status)?status:{};
 }
 
+function migriereEffektStatus39_8(status){
+ const neu={...normalisiereStatus(status)};
+
+ if(!Object.prototype.hasOwnProperty.call(neu,"Heftiger Angriff")){
+   const alte=Object.keys(neu).filter(name=>name.startsWith("Heftiger Angriff ("));
+   if(alte.some(name=>!!neu[name])) neu["Heftiger Angriff"]=true;
+ }
+
+ if(!Object.prototype.hasOwnProperty.call(neu,"Mächtige magische Fänge")){
+   const alte=Object.keys(neu).filter(name=>name.startsWith("Mächtige magische Fänge ("));
+   if(alte.some(name=>!!neu[name])) neu["Mächtige magische Fänge"]=true;
+ }
+
+ return neu;
+}
+
 function ladeStatusFuerCharakter(charakterId){
  if(!charakterId) return {};
 
  const statusNachCharakter=ladeAlleCharakterStatus();
  if(Object.prototype.hasOwnProperty.call(statusNachCharakter,charakterId)){
-   return normalisiereStatus(statusNachCharakter[charakterId]);
+   const migriert=migriereEffektStatus39_8(statusNachCharakter[charakterId]);
+   statusNachCharakter[charakterId]=migriert;
+   speichereAlleCharakterStatus(statusNachCharakter);
+   return migriert;
  }
 
  // Einmalige Migration des bisherigen globalen Effektstatus auf den aktiven Charakter.
@@ -548,6 +569,69 @@ function setzeAngriffszielFuerEffekt(effekt,ziel,charakterId=aktiverCharakterId)
  return true;
 }
 
+function ladeAlleEffektOptionen(){
+ const gespeichert=ladeJson(STORAGE_KEYS.charakterEffektOptionen,{});
+ return gespeichert && typeof gespeichert==="object" && !Array.isArray(gespeichert)
+   ?gespeichert
+   :{};
+}
+
+function effektOptionenFuerCharakter(effektId,charakterId=aktiverCharakterId){
+ if(!effektId || !charakterId) return {};
+ const alle=ladeAlleEffektOptionen();
+ const optionen=alle?.[charakterId]?.[String(effektId)];
+ return optionen && typeof optionen==="object" && !Array.isArray(optionen)
+   ?{...optionen}
+   :{};
+}
+
+function setzeEffektOptionenFuerCharakter(effektId,optionen,charakterId=aktiverCharakterId){
+ if(!effektId || !charakterId) return false;
+ const alle=ladeAlleEffektOptionen();
+ if(!alle[charakterId]) alle[charakterId]={};
+ alle[charakterId][String(effektId)]={
+   ...(alle[charakterId][String(effektId)]||{}),
+   ...(optionen||{})
+ };
+ speichereJson(STORAGE_KEYS.charakterEffektOptionen,alle);
+ return true;
+}
+
+function ladeAlleEffektFilter(){
+ const gespeichert=ladeJson(STORAGE_KEYS.charakterEffektFilter,{});
+ return gespeichert && typeof gespeichert==="object" && !Array.isArray(gespeichert)
+   ?gespeichert
+   :{};
+}
+
+function effektFilterFuerCharakter(charakterId=aktiverCharakterId){
+ if(!charakterId) return {kategorien:null,suche:"",nurAktiv:false,nurFavoriten:false};
+ const alle=ladeAlleEffektFilter();
+ const wert=alle[charakterId];
+ if(!wert || typeof wert!=="object" || Array.isArray(wert)){
+   return {kategorien:null,suche:"",nurAktiv:false,nurFavoriten:false};
+ }
+ return {
+   kategorien:Array.isArray(wert.kategorien)?wert.kategorien.map(String):null,
+   suche:typeof wert.suche==="string"?wert.suche:"",
+   nurAktiv:!!wert.nurAktiv,
+   nurFavoriten:!!wert.nurFavoriten
+ };
+}
+
+function speichereEffektFilterFuerCharakter(filter,charakterId=aktiverCharakterId){
+ if(!charakterId) return false;
+ const alle=ladeAlleEffektFilter();
+ alle[charakterId]={
+   kategorien:Array.isArray(filter?.kategorien)?[...new Set(filter.kategorien.map(String))]:null,
+   suche:typeof filter?.suche==="string"?filter.suche:"",
+   nurAktiv:!!filter?.nurAktiv,
+   nurFavoriten:!!filter?.nurFavoriten
+ };
+ speichereJson(STORAGE_KEYS.charakterEffektFilter,alle);
+ return true;
+}
+
 function ladeAlleEffektStufen(){
  const gespeichert=ladeJson(STORAGE_KEYS.charakterEffektStufen,{});
  return gespeichert && typeof gespeichert==="object" && !Array.isArray(gespeichert)
@@ -588,6 +672,24 @@ function kopiereEffektstatus(quelleId,zielId){
  const quellZiele=ladeEffektAngriffszieleFuerCharakter(quelleId);
  speichereEffektAngriffszieleFuerCharakter(zielId,{...quellZiele});
 
+ const alleStufen=ladeAlleEffektStufen();
+ if(alleStufen[quelleId]){
+   alleStufen[zielId]={...alleStufen[quelleId]};
+   speichereJson(STORAGE_KEYS.charakterEffektStufen,alleStufen);
+ }
+
+ const alleOptionen=ladeAlleEffektOptionen();
+ if(alleOptionen[quelleId]){
+   alleOptionen[zielId]=JSON.parse(JSON.stringify(alleOptionen[quelleId]));
+   speichereJson(STORAGE_KEYS.charakterEffektOptionen,alleOptionen);
+ }
+
+ const alleFilter=ladeAlleEffektFilter();
+ if(alleFilter[quelleId]){
+   alleFilter[zielId]=JSON.parse(JSON.stringify(alleFilter[quelleId]));
+   speichereJson(STORAGE_KEYS.charakterEffektFilter,alleFilter);
+ }
+
  if(zielId===aktiverCharakterId){
    baueEffektliste();
    if(typeof berechneWerte==="function") berechneWerte();
@@ -607,6 +709,24 @@ function loescheCharakterStatus(charakterId){
  if(Object.prototype.hasOwnProperty.call(zieleNachCharakter,charakterId)){
    delete zieleNachCharakter[charakterId];
    speichereAlleEffektAngriffsziele(zieleNachCharakter);
+ }
+
+ const stufenNachCharakter=ladeAlleEffektStufen();
+ if(Object.prototype.hasOwnProperty.call(stufenNachCharakter,charakterId)){
+   delete stufenNachCharakter[charakterId];
+   speichereJson(STORAGE_KEYS.charakterEffektStufen,stufenNachCharakter);
+ }
+
+ const optionenNachCharakter=ladeAlleEffektOptionen();
+ if(Object.prototype.hasOwnProperty.call(optionenNachCharakter,charakterId)){
+   delete optionenNachCharakter[charakterId];
+   speichereJson(STORAGE_KEYS.charakterEffektOptionen,optionenNachCharakter);
+ }
+
+ const filterNachCharakter=ladeAlleEffektFilter();
+ if(Object.prototype.hasOwnProperty.call(filterNachCharakter,charakterId)){
+   delete filterNachCharakter[charakterId];
+   speichereJson(STORAGE_KEYS.charakterEffektFilter,filterNachCharakter);
  }
 }
 
@@ -702,6 +822,7 @@ function normalisiereEffekt(effekt={}){
    beschreibung:effekt.beschreibung||"",
    quelle:effekt.quelle||"",
    angriffZuweisbar:!!effekt.angriffZuweisbar,
+   sonderlogik:["heftiger-angriff","maechtige-magische-faenge"].includes(effekt.sonderlogik)?effekt.sonderlogik:"",
    stufenlogik,
    boni
  };
@@ -1050,26 +1171,77 @@ function effektKategorien(){
 }
 
 function baueKategorieFilter(){
- const auswahl=document.getElementById("filterKategorie");
- if(!auswahl) return;
+ const container=document.getElementById("filterKategorie");
+ if(!container) return;
 
- const bisherigerWert=auswahl.value;
- auswahl.innerHTML="";
+ const kategorien=effektKategorien();
+ const gespeichert=effektFilterFuerCharakter();
+ const aktiveKategorien=Array.isArray(gespeichert.kategorien)
+   ?new Set(gespeichert.kategorien)
+   :new Set(kategorien);
 
- const alle=document.createElement("option");
- alle.value="";
- alle.textContent="Alle Kategorien";
- auswahl.appendChild(alle);
+ container.innerHTML="";
 
- effektKategorien().forEach(kategorie=>{
-   const option=document.createElement("option");
-   option.value=kategorie;
-   option.textContent=kategorie;
-   auswahl.appendChild(option);
+ const alleLabel=document.createElement("label");
+ alleLabel.className="filter-kategorie-option filter-kategorie-alle";
+ const alle=document.createElement("input");
+ alle.type="checkbox";
+ alle.checked=kategorien.length>0 && kategorien.every(k=>aktiveKategorien.has(k));
+ const alleText=document.createElement("span");
+ alleText.textContent="Alle";
+ alleLabel.append(alle,alleText);
+ container.appendChild(alleLabel);
+
+ kategorien.forEach(kategorie=>{
+   const label=document.createElement("label");
+   label.className="filter-kategorie-option";
+   const checkbox=document.createElement("input");
+   checkbox.type="checkbox";
+   checkbox.value=kategorie;
+   checkbox.checked=aktiveKategorien.has(kategorie);
+   const text=document.createElement("span");
+   text.textContent=kategorie;
+   label.append(checkbox,text);
+   container.appendChild(label);
  });
 
- if([...auswahl.options].some(option=>option.value===bisherigerWert)){
-   auswahl.value=bisherigerWert;
+ const speichereAuswahl=()=>{
+   const checkboxen=[...container.querySelectorAll('input[type="checkbox"][value]')];
+   const aktiv=checkboxen.filter(cb=>cb.checked).map(cb=>cb.value);
+   const bisher=effektFilterFuerCharakter();
+   speichereEffektFilterFuerCharakter({...bisher,kategorien:aktiv});
+   alle.checked=checkboxen.length>0 && checkboxen.every(cb=>cb.checked);
+   baueEffektliste();
+ };
+
+ alle.addEventListener("change",()=>{
+   container.querySelectorAll('input[type="checkbox"][value]').forEach(cb=>cb.checked=alle.checked);
+   speichereAuswahl();
+ });
+
+ container.querySelectorAll('input[type="checkbox"][value]').forEach(cb=>{
+   cb.addEventListener("change",speichereAuswahl);
+ });
+}
+
+function synchronisiereEffektFilterUI(){
+ const filter=effektFilterFuerCharakter();
+ const suche=document.getElementById("suche");
+ const nurAktiv=document.getElementById("filterNurAktiv");
+ const nurFavoriten=document.getElementById("filterNurFavoriten");
+ if(suche && document.activeElement!==suche) suche.value=filter.suche||"";
+ if(nurAktiv) nurAktiv.checked=!!filter.nurAktiv;
+ if(nurFavoriten) nurFavoriten.checked=!!filter.nurFavoriten;
+
+ const container=document.getElementById("filterKategorie");
+ if(container){
+   const kategorien=effektKategorien();
+   const aktiv=Array.isArray(filter.kategorien)?new Set(filter.kategorien):new Set(kategorien);
+   container.querySelectorAll('input[type="checkbox"][value]').forEach(cb=>{
+     cb.checked=aktiv.has(cb.value);
+   });
+   const alle=container.querySelector(".filter-kategorie-alle input");
+   if(alle) alle.checked=kategorien.length>0 && kategorien.every(k=>aktiv.has(k));
  }
 }
 
@@ -1099,17 +1271,96 @@ function aktualisiereEffektStufenAnzeige(effekt,container){
  ausgabe.textContent=`Stufe ${stufe} → ${wert>=0?"+":""}${wert}`;
 }
 
+function effektAngriffsModus(effekt){
+ if(effekt?.sonderlogik==="maechtige-magische-faenge"){
+   const optionen=effektOptionenFuerCharakter(effekt.id);
+   return optionen.modus==="einzeln"?"einer":"alle";
+ }
+ return effekt?.angriffZuweisbar?"einer":"alle";
+}
+
+function rendereSonderoptionenFuerEffekt(effekt,info){
+ if(!effekt?.sonderlogik || !info) return;
+
+ const box=document.createElement("div");
+ box.className="effekt-sonderoptionen";
+
+ if(effekt.sonderlogik==="maechtige-magische-faenge"){
+   const optionen=effektOptionenFuerCharakter(effekt.id);
+   const label=document.createElement("label");
+   label.appendChild(document.createTextNode("Anwendung "));
+   const select=document.createElement("select");
+   [
+     ["alle","Alle natürlichen Angriffe +1"],
+     ["einzeln","Ein Angriff nach Zauberstufe (+1 bis +5)"]
+   ].forEach(([wert,text])=>{
+     const option=document.createElement("option");
+     option.value=wert;
+     option.textContent=text;
+     select.appendChild(option);
+   });
+   select.value=optionen.modus==="einzeln"?"einzeln":"alle";
+   select.addEventListener("click",event=>event.stopPropagation());
+   select.addEventListener("change",event=>{
+     event.stopPropagation();
+     setzeEffektOptionenFuerCharakter(effekt.id,{modus:select.value});
+     baueEffektliste();
+     if(typeof berechneWerte==="function") berechneWerte();
+   });
+   label.appendChild(select);
+   box.appendChild(label);
+ }
+
+ if(effekt.sonderlogik==="heftiger-angriff"){
+   const optionen=effektOptionenFuerCharakter(effekt.id);
+   const label=document.createElement("label");
+   label.appendChild(document.createTextNode("Schadensart "));
+   const select=document.createElement("select");
+   [
+     ["normal","Normal / einhändig (+2 je Stufe)"],
+     ["zweihand","Zweihändig / 1½× ST (+3 je Stufe)"],
+     ["zweithand","Zweithand / sekundär (+1 je Stufe)"]
+   ].forEach(([wert,text])=>{
+     const option=document.createElement("option");
+     option.value=wert;
+     option.textContent=text;
+     select.appendChild(option);
+   });
+   select.value=["normal","zweihand","zweithand"].includes(optionen.schadensart)
+     ?optionen.schadensart
+     :"normal";
+   select.addEventListener("click",event=>event.stopPropagation());
+   select.addEventListener("change",event=>{
+     event.stopPropagation();
+     setzeEffektOptionenFuerCharakter(effekt.id,{schadensart:select.value});
+     if(typeof berechneWerte==="function") berechneWerte();
+   });
+   label.appendChild(select);
+   box.appendChild(label);
+ }
+
+ if(box.childNodes.length) info.appendChild(box);
+}
+
 function baueEffektliste(){
  const liste=document.getElementById("boniListe");
  const suche=document.getElementById("suche");
  const kategorieFilter=document.getElementById("filterKategorie");
  const nurAktivFilter=document.getElementById("filterNurAktiv");
+ const nurFavoritenFilter=document.getElementById("filterNurFavoriten");
  const ergebnis=document.getElementById("filterErgebnis");
  if(!liste) return;
 
+ synchronisiereEffektFilterUI();
+
  const status=ladeStatus();
- const suchtext=(suche?.value||"").trim().toLowerCase();
- const kategorie=kategorieFilter?.value||"";
+ const filterEinstellungen=effektFilterFuerCharakter();
+ const suchtext=(suche?.value||filterEinstellungen.suche||"").trim().toLowerCase();
+ const aktiveKategorien=new Set(
+   Array.isArray(filterEinstellungen.kategorien)
+     ?filterEinstellungen.kategorien
+     :effektKategorien()
+ );
  const nurAktiv=!!nurAktivFilter?.checked;
 
  liste.innerHTML="";
@@ -1123,7 +1374,7 @@ function baueEffektliste(){
      String(effekt.beschreibung||"").toLowerCase().includes(suchtext) ||
      String(effekt.quelle||"").toLowerCase().includes(suchtext);
 
-   const passtZurKategorie=!kategorie || effekt.kategorie===kategorie;
+   const passtZurKategorie=aktiveKategorien.has(effekt.kategorie);
    const passtZumAktivFilter=!nurAktiv || effekt.aktiv;
 
    return passtZurSuche && passtZurKategorie && passtZumAktivFilter;
@@ -1158,6 +1409,12 @@ function baueEffektliste(){
    if(effekt.stufenlogik?.aktiv){
      const stufenBox=document.createElement("div");
      stufenBox.className="effekt-stufenbox";
+     if(
+       effekt.sonderlogik==="maechtige-magische-faenge" &&
+       effektOptionenFuerCharakter(effekt.id).modus!=="einzeln"
+     ){
+       stufenBox.hidden=true;
+     }
      let bezugText="Charakterstufe";
      if(effekt.stufenlogik.bezug==="klasse"){
        bezugText=`Klassenstufe${effekt.stufenlogik.klasse?` (${effekt.stufenlogik.klasse})`:""}`;
@@ -1193,8 +1450,11 @@ function baueEffektliste(){
      aktualisiereEffektStufenAnzeige(effekt,stufenBox);
    }
 
+   rendereSonderoptionenFuerEffekt(effekt,info);
+
    let angriffsAuswahl=null;
-   if(effekt.angriffZuweisbar){
+   const angriffsModus=effektAngriffsModus(effekt);
+   if(effekt.angriffZuweisbar && angriffsModus==="einer"){
      const zuweisung=document.createElement("label");
      zuweisung.className="effekt-angriffsziel-30";
      const beschriftung=document.createElement("span");
@@ -1267,17 +1527,29 @@ function baueEffektliste(){
 
  if(suche && !suche.dataset.bound){
     suche.dataset.bound="1";
-    suche.addEventListener("input",baueEffektliste);
- }
-
- if(kategorieFilter && !kategorieFilter.dataset.bound){
-    kategorieFilter.dataset.bound="1";
-    kategorieFilter.addEventListener("change",baueEffektliste);
+    suche.addEventListener("input",()=>{
+      const bisher=effektFilterFuerCharakter();
+      speichereEffektFilterFuerCharakter({...bisher,suche:suche.value});
+      baueEffektliste();
+    });
  }
 
  if(nurAktivFilter && !nurAktivFilter.dataset.bound){
     nurAktivFilter.dataset.bound="1";
-    nurAktivFilter.addEventListener("change",baueEffektliste);
+    nurAktivFilter.addEventListener("change",()=>{
+      const bisher=effektFilterFuerCharakter();
+      speichereEffektFilterFuerCharakter({...bisher,nurAktiv:nurAktivFilter.checked});
+      baueEffektliste();
+    });
+ }
+
+ if(nurFavoritenFilter && !nurFavoritenFilter.dataset.bound){
+    nurFavoritenFilter.dataset.bound="1";
+    nurFavoritenFilter.addEventListener("change",()=>{
+      const bisher=effektFilterFuerCharakter();
+      speichereEffektFilterFuerCharakter({...bisher,nurFavoriten:nurFavoritenFilter.checked});
+      baueEffektliste();
+    });
  }
 }
 

@@ -504,6 +504,11 @@
         gabZeile.append(gabText, gabFeld);
         klassenBereich.appendChild(gabZeile);
 
+        const gabHinweis = document.createElement("p");
+        gabHinweis.className = "charakter-gab-hinweis";
+        gabHinweis.textContent = "GAB nur für GAB-abhängige Effekte. Wird nicht bei der Berechnung des Angriffswerts berücksichtigt.";
+        klassenBereich.appendChild(gabHinweis);
+
         const notiz = document.createElement("textarea");
         notiz.className = "charakter-notiz-29";
         notiz.rows = 1;
