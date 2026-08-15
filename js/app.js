@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.39.6";
+const APP_VERSION="0.39.7";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -108,10 +108,12 @@ function setzeCharakterGAB(id,wert){
  if(!charakter) return false;
  charakter.gab=Math.max(0,Math.min(99,Math.trunc(Number(wert)||0)));
  speichereCharaktere();
+ if(id===aktiverCharakterId && typeof baueEffektliste==="function") baueEffektliste();
  if(typeof berechneWerte==="function") berechneWerte();
  if(typeof window.aktualisiereAlleAnsichten==="function") window.aktualisiereAlleAnsichten();
  return true;
 }
+
 
 function charakterKlassenstufe(charakter,klasse){
  const name=String(klasse||"").trim().toLocaleLowerCase("de");
@@ -650,7 +652,7 @@ function normalisiereBonus(bonus={}){
    ziel:typeof bonus.ziel==="string"?bonus.ziel:"",
    bonusart:normalisiereBonusart(bonus.bonusart),
    wert:Number.isFinite(wert)?wert:0,
-   wertQuelle:["stufenwert","gabwert"].includes(bonus.wertQuelle)?bonus.wertQuelle:"fest"
+   wertQuelle:bonus.wertQuelle==="stufenwert"?"stufenwert":"fest"
  };
 }
 
@@ -677,12 +679,18 @@ function normalisiereEffekt(effekt={}){
  const standard=!!effekt.standard;
  const stufenlogik=normalisiereStufenlogik(effekt.stufenlogik);
  const roheBoni=Array.isArray(effekt.boni)?effekt.boni:[];
- let boni=roheBoni.map(bonus=>normalisiereBonus(bonus));
+ let boni=roheBoni.map(bonus=>{
+   const normalisiert=normalisiereBonus(bonus);
+   const hatQuelle=bonus && Object.prototype.hasOwnProperty.call(bonus,"wertQuelle");
+   if(stufenlogik.aktiv && !hatQuelle) normalisiert.wertQuelle="stufenwert";
+   return normalisiert;
+ });
 
- // Migration der bisherigen fehlerhaften Commit-39-Daten:
- // Ein stufenabhängiger Effekt, bei dem keine Bonuszeile den Stufenwert nutzt,
- // würde sonst weiterhin den alten festen Wert (typisch +1) berechnen.
- if(stufenlogik.aktiv && boni.length && !boni.some(bonus=>bonus.wertQuelle==="stufenwert")){
+ // Reparatur für bereits in Commit 39 gespeicherte Effekte:
+ // Wenn ein Effekt stufenabhängig ist, aber ALLE Bonuszeilen noch explizit
+ // als "fest" gespeichert wurden, stammt das typischerweise aus dem alten
+ // Fehlerzustand. In diesem eindeutigen Altfall auf Stufenwert migrieren.
+ if(stufenlogik.aktiv && boni.length && boni.every(bonus=>bonus.wertQuelle==="fest")){
    boni=boni.map(bonus=>({...bonus,wertQuelle:"stufenwert"}));
  }
  return {
@@ -694,7 +702,6 @@ function normalisiereEffekt(effekt={}){
    beschreibung:effekt.beschreibung||"",
    quelle:effekt.quelle||"",
    angriffZuweisbar:!!effekt.angriffZuweisbar,
-   angriffsModus:["alle","einer"].includes(effekt.angriffsModus)?effekt.angriffsModus:(effekt.angriffZuweisbar?"einer":"alle"),
    stufenlogik,
    boni
  };
@@ -1158,6 +1165,8 @@ function baueEffektliste(){
        bezugText="Zauberstufe";
      }else if(effekt.stufenlogik.bezug==="manuell"){
        bezugText="Manuelle Stufe";
+     }else if(effekt.stufenlogik.bezug==="gab"){
+       bezugText="GAB";
      }
      const labelStufe=document.createElement("span");
      labelStufe.textContent=bezugText;
@@ -1185,7 +1194,7 @@ function baueEffektliste(){
    }
 
    let angriffsAuswahl=null;
-   if(effekt.angriffZuweisbar && effekt.angriffsModus!=="alle"){
+   if(effekt.angriffZuweisbar){
      const zuweisung=document.createElement("label");
      zuweisung.className="effekt-angriffsziel-30";
      const beschriftung=document.createElement("span");
@@ -1357,7 +1366,6 @@ function leseEditorFormular(){
    beschreibung:document.getElementById("effektBeschreibung")?.value.trim()||"",
    quelle:document.getElementById("effektQuelle")?.value.trim()||"",
    angriffZuweisbar:!!document.getElementById("effektAngriffZuweisbar")?.checked,
-   angriffsModus:document.getElementById("effektAngriffsModus")?.value||"alle",
    stufenlogik:normalisiereStufenlogik(editorState.entwurf.stufenlogik),
    boni:editorState.entwurf.boni.map(normalisiereBonus)
  };
@@ -1373,7 +1381,6 @@ function schreibeEditorFormular(){
  const beschreibung=document.getElementById("effektBeschreibung");
  const quelle=document.getElementById("effektQuelle");
  const angriffZuweisbar=document.getElementById("effektAngriffZuweisbar");
- const angriffsModus=document.getElementById("effektAngriffsModus");
  const titel=document.querySelector("#effektDialog h3");
 
  if(name) name.value=editorState.entwurf.name;
@@ -1381,7 +1388,6 @@ function schreibeEditorFormular(){
  if(beschreibung) beschreibung.value=editorState.entwurf.beschreibung;
  if(quelle) quelle.value=editorState.entwurf.quelle;
  if(angriffZuweisbar) angriffZuweisbar.checked=!!editorState.entwurf.angriffZuweisbar;
- if(angriffsModus) angriffsModus.value=editorState.entwurf.angriffsModus||"alle";
  if(titel){
    titel.textContent=editorState.effektId
      ?"Effekt bearbeiten"
@@ -1438,13 +1444,16 @@ function rendereStufenEditor(){
  if(aktiv){
    aktiv.checked=!!logik.aktiv;
    aktiv.onchange=()=>{
+     const warAktiv=!!editorState.entwurf.stufenlogik.aktiv;
      editorState.entwurf.stufenlogik.aktiv=aktiv.checked;
-     if(aktiv.checked && Array.isArray(editorState.entwurf.boni)){
+
+     if(aktiv.checked && !warAktiv && Array.isArray(editorState.entwurf.boni)){
        editorState.entwurf.boni=editorState.entwurf.boni.map(bonus=>({
          ...bonus,
          wertQuelle:"stufenwert"
        }));
      }
+
      rendereStufenEditor();
      rendereBonusEditor();
    };
@@ -1721,7 +1730,6 @@ function bereiteStandardEffektFuerExportVor(effekt){
    beschreibung:effekt.beschreibung||"",
    quelle:effekt.quelle||"",
    angriffZuweisbar:!!effekt.angriffZuweisbar,
-   angriffsModus:["alle","einer"].includes(effekt.angriffsModus)?effekt.angriffsModus:(effekt.angriffZuweisbar?"einer":"alle"),
    stufenlogik:normalisiereStufenlogik(effekt.stufenlogik),
    boni:Array.isArray(effekt.boni)?effekt.boni.map(normalisiereBonus):[]
  };

@@ -400,30 +400,9 @@
         klassenTitel.className = "charakter-klassen-kopf";
         const klassenName = document.createElement("strong");
         klassenName.textContent = "Klassen & Stufen";
-        const werteKopf = document.createElement("div");
-        werteKopf.className = "charakter-stufen-werte";
-
         const gesamt = document.createElement("span");
         gesamt.textContent = `Gesamtstufe: ${typeof charakterGesamtstufe === "function" ? charakterGesamtstufe(charakter) : 0}`;
-
-        const gabLabel = document.createElement("label");
-        gabLabel.className = "charakter-gab-feld";
-        gabLabel.innerHTML = "<span>GAB</span>";
-        const gabInput = document.createElement("input");
-        gabInput.type = "number";
-        gabInput.min = "0";
-        gabInput.max = "99";
-        gabInput.step = "1";
-        gabInput.inputMode = "numeric";
-        gabInput.value = String(Number(charakter.gab) || 0);
-        gabInput.setAttribute("aria-label", `GAB für ${charakter.name}`);
-        gabInput.addEventListener("change", () => {
-          if (typeof setzeCharakterGAB === "function") setzeCharakterGAB(charakter.id, gabInput.value);
-        });
-        gabLabel.appendChild(gabInput);
-        werteKopf.append(gesamt, gabLabel);
-
-        klassenTitel.append(klassenName, werteKopf);
+        klassenTitel.append(klassenName, gesamt);
         klassenBereich.appendChild(klassenTitel);
 
         const klassenListe = document.createElement("div");
@@ -504,6 +483,26 @@
         klasseNeu.addEventListener("click", () => fuegeKlassenZeileHinzu());
 
         klassenBereich.append(klassenListe, klasseNeu);
+
+        const gabZeile = document.createElement("label");
+        gabZeile.className = "charakter-gab-zeile";
+        const gabText = document.createElement("span");
+        gabText.textContent = "GAB";
+        const gabFeld = document.createElement("input");
+        gabFeld.type = "number";
+        gabFeld.min = "0";
+        gabFeld.max = "99";
+        gabFeld.step = "1";
+        gabFeld.inputMode = "numeric";
+        gabFeld.value = String(Number(charakter.gab) || 0);
+        gabFeld.setAttribute("aria-label", `GAB für ${charakter.name}`);
+        gabFeld.addEventListener("change", () => {
+          if (typeof setzeCharakterGAB === "function") {
+            setzeCharakterGAB(charakter.id, gabFeld.value);
+          }
+        });
+        gabZeile.append(gabText, gabFeld);
+        klassenBereich.appendChild(gabZeile);
 
         const notiz = document.createElement("textarea");
         notiz.className = "charakter-notiz-29";
