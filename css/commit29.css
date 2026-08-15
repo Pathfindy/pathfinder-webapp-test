@@ -144,3 +144,10 @@
     border-radius: 7px;
     font: inherit;
 }
+
+.charakter-gab-hinweis{
+  margin:4px 0 0;
+  color:#667;
+  font-size:.72rem;
+  line-height:1.3;
+}
