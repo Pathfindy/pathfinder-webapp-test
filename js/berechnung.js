@@ -31,7 +31,8 @@ function normalisiereBerechnungsBonus(bonus = {}) {
         ziel: typeof bonus.ziel === "string" ? bonus.ziel.trim() : "",
         bonusart: normalisiereBerechnungsBonusart(bonus.bonusart),
         wert: Number.isFinite(wert) ? wert : 0,
-        wertQuelle: bonus.wertQuelle === "stufenwert" ? "stufenwert" : "fest"
+        wertQuelle: bonus.wertQuelle === "stufenwert" ? "stufenwert" : "fest",
+        stufenFaktor: Number.isFinite(Number(bonus.stufenFaktor)) ? Number(bonus.stufenFaktor) : 1
     };
 }
 
@@ -71,7 +72,10 @@ function dynamischerBonuswert(effekt, bonus, normalisiert) {
         effekt?.stufenlogik?.aktiv &&
         typeof effektStufenwert === "function"
     ) {
-        return effektStufenwert(effekt);
+        const faktor = Number.isFinite(Number(bonus.stufenFaktor))
+            ? Number(bonus.stufenFaktor)
+            : 1;
+        return effektStufenwert(effekt) * faktor;
     }
 
     return normalisiert.wert;

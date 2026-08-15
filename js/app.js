@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.39.8";
+const APP_VERSION="0.39.9";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -772,7 +772,10 @@ function normalisiereBonus(bonus={}){
    ziel:typeof bonus.ziel==="string"?bonus.ziel:"",
    bonusart:normalisiereBonusart(bonus.bonusart),
    wert:Number.isFinite(wert)?wert:0,
-   wertQuelle:bonus.wertQuelle==="stufenwert"?"stufenwert":"fest"
+   wertQuelle:bonus.wertQuelle==="stufenwert"?"stufenwert":"fest",
+   stufenFaktor:Number.isFinite(Number(bonus.stufenFaktor))
+     ?Math.max(-10,Math.min(10,Math.trunc(Number(bonus.stufenFaktor))))
+     :1
  };
 }
 
@@ -1849,6 +1852,22 @@ function rendereBonusEditor(){
      rendereBonusEditor();
    });
 
+   const faktor=document.createElement("input");
+   faktor.type="number";
+   faktor.min="-10";
+   faktor.max="10";
+   faktor.step="1";
+   faktor.className="bonus-stufenfaktor";
+   faktor.value=String(Number.isFinite(Number(bonus.stufenFaktor))?bonus.stufenFaktor:1);
+   faktor.title="Faktor für den Stufenwert, z. B. -1, +1, +2 oder +3";
+   faktor.setAttribute("aria-label",`Stufenfaktor der Bonuszeile ${index+1}`);
+   faktor.disabled=bonus.wertQuelle!=="stufenwert";
+   faktor.addEventListener("change",event=>{
+     const faktorWert=Math.max(-10,Math.min(10,Math.trunc(Number(event.target.value)||0)));
+     event.target.value=String(faktorWert);
+     aktualisiereBonus(index,"stufenFaktor",faktorWert);
+   });
+
    const wert=document.createElement("select");
    wert.setAttribute("aria-label",`Wert der Bonuszeile ${index+1}`);
    if(bonus.wertQuelle==="stufenwert"){
@@ -1869,7 +1888,7 @@ function rendereBonusEditor(){
    entfernen.setAttribute("aria-label",`Bonuszeile ${index+1} löschen`);
    entfernen.addEventListener("click",()=>entferneBonuszeile(index));
 
-   zeile.append(ziel,bonusart,wertQuelle,wert,entfernen);
+   zeile.append(ziel,bonusart,wertQuelle,faktor,wert,entfernen);
    container.appendChild(zeile);
  });
 }
