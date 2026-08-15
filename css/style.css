@@ -615,3 +615,27 @@ nav {
   .filter-kategorien-mehrfach{gap:4px 8px}
   .filter-kategorie-option{font-size:.75rem}
 }
+
+/* Commit 39.9: kompakter, handyfreundlicher Kategorienfilter */
+.effekt-filter{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:6px}
+.filter-kategorien-feld{min-width:0;margin:0;padding:4px 6px 5px}
+.filter-kategorien-feld legend{font-size:.72rem;line-height:1}
+.filter-kategorien-mehrfach{display:grid;grid-auto-flow:column;grid-auto-columns:max-content;grid-template-rows:1fr;gap:3px 8px;overflow-x:auto;overflow-y:hidden;padding:1px 0 3px;scrollbar-width:thin}
+.filter-kategorie-option{font-size:.74rem;line-height:1.1;gap:3px}
+.filter-kategorie-option input{width:.92rem;height:.92rem;margin:0}
+.effekt-filter .filter-schalter{font-size:.74rem;white-space:nowrap}
+@media(max-width:600px){
+ .effekt-filter{grid-template-columns:1fr auto auto;gap:4px}
+ .filter-kategorien-mehrfach{grid-template-rows:repeat(2,auto);max-height:42px;gap:3px 7px}
+ .filter-kategorie-option,.effekt-filter .filter-schalter{font-size:.68rem}
+}
+@media(max-width:390px){
+ .effekt-filter{grid-template-columns:1fr}
+ .effekt-filter .filter-schalter{display:inline-flex;margin-right:8px}
+}
+
+/* Commit 39.9: allgemeiner Stufenfaktor im Admin-Effekteditor */
+.bonus-zeile{grid-template-columns:minmax(0,1.7fr) minmax(0,1.2fr) minmax(86px,.8fr) 64px minmax(72px,.65fr) 38px}
+.bonus-stufenfaktor{min-width:0;width:100%;min-height:34px;padding:5px 6px;box-sizing:border-box}
+.stufen-admin-hinweis{margin:7px 0 0;color:#667;font-size:.72rem;line-height:1.3}
+@media(max-width:650px){.bonus-zeile{grid-template-columns:1fr 1fr}}
