@@ -8,7 +8,7 @@
     <title>Das azlantische Helferlein der Boni</title>
 
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="css/style.css?v=40">
+    <link rel="stylesheet" href="css/style.css?v=40.1">
     <link rel="stylesheet" href="css/charakterwerte.css?v=38.1">
     <link rel="stylesheet" href="css/commit21.css?v=21">
     <link rel="stylesheet" href="css/commit22.css?v=22">
@@ -28,7 +28,7 @@
 
 <header>
 
-    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.40</span></h1>
+    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.40.1</span></h1>
 
 </header>
 
@@ -340,11 +340,11 @@
 
 </main>
 
-<script src="js/app.js?v=40"></script>
+<script src="js/app.js?v=40.1"></script>
 <script src="js/charakterwerte.js?v=38"></script>
 <script src="js/leben.js?v=38"></script>
 <script src="js/filter.js"></script>
-<script src="js/berechnung.js?v=40"></script>
+<script src="js/berechnung.js?v=40.1"></script>
 <script src="js/makros.js"></script>
 <script src="js/speicher.js"></script>
 <script src="js/commit21.js?v=21.1"></script>
@@ -369,30 +369,16 @@
 <option>Zauber</option>
 <option>Zustände</option>
 </select></label><br><br>
+<div class="effekt-editor-optionen">
 <label class="effekt-zuweisbar-editor-30">
 <input type="checkbox" id="effektAngriffZuweisbar">
 Angriff zuweisbar
-</label><br><br>
-
-<section id="nutzerBonusEditor" class="nutzerbonus-editor">
-<h4>Boni nach Nutzereingabe</h4>
+</label>
 <label class="nutzerbonus-aktiv">
 <input type="checkbox" id="effektNutzerBonusAktiv">
 Boni nach Nutzereingabe
 </label>
-<div class="nutzerbonus-felder">
-<label>Minimum
-<input id="effektNutzerBonusMin" type="number" min="-99" max="99" step="1" value="1">
-</label>
-<label>Maximum
-<input id="effektNutzerBonusMax" type="number" min="-99" max="99" step="1" value="5">
-</label>
-<label>Standard
-<input id="effektNutzerBonusStandard" type="number" min="-99" max="99" step="1" value="1">
-</label>
-</div>
-<p class="nutzerbonus-hinweis">Bonuszeilen mit Wertquelle „Nutzereingabe“ verwenden gemeinsam den im Effektbanner gewählten Wert.</p>
-</section>
+</div><br>
 
 <section id="stufenEditor" class="stufen-editor">
 <h4>Stufenabhängigkeit / GAB</h4>
