@@ -69,10 +69,15 @@ function dynamischerBonuswert(effekt, bonus, normalisiert) {
 
     if (
         normalisiert.wertQuelle === "nutzerwert" &&
-        effekt?.nutzerBonus?.aktiv &&
-        typeof nutzerBonusWertFuerEffekt === "function"
+        effekt?.nutzerBonus?.aktiv
     ) {
-        return nutzerBonusWertFuerEffekt(effekt);
+        if (Number.isFinite(Number(effekt.nutzerBonusWertAktuell))) {
+            return Number(effekt.nutzerBonusWertAktuell);
+        }
+        if (typeof nutzerBonusWertFuerEffekt === "function") {
+            return nutzerBonusWertFuerEffekt(effekt);
+        }
+        return Number(effekt.nutzerBonus?.standard) || 1;
     }
 
     if (

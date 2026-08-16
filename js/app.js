@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.40";
+const APP_VERSION="0.40.1";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -1297,8 +1297,11 @@ function setzeNutzerBonusWertFuerEffekt(effektId,wert){
  const min=Number(effekt.nutzerBonus.min);
  const max=Number(effekt.nutzerBonus.max);
  const sicher=Math.max(Math.min(Number(wert)||0,Math.max(min,max)),Math.min(min,max));
- setzeEffektOptionenFuerCharakter(effektId,{nutzerBonusWert:sicher});
+ if(!setzeEffektOptionenFuerCharakter(effektId,{nutzerBonusWert:sicher})) return false;
+
+ effekt.nutzerBonusWertAktuell=sicher;
  if(typeof berechneWerte==="function") berechneWerte();
+ if(typeof window.aktualisiereAlleAnsichten==="function") window.aktualisiereAlleAnsichten();
  return true;
 }
 
@@ -1385,6 +1388,15 @@ function baueEffektliste(){
  synchronisiereEffektFilterUI();
 
  const status=ladeStatus();
+
+ effekte.forEach(effekt=>{
+   if(effekt?.nutzerBonus?.aktiv){
+     effekt.nutzerBonusWertAktuell=nutzerBonusWertFuerEffekt(effekt);
+   }else{
+     delete effekt.nutzerBonusWertAktuell;
+   }
+ });
+
  const filterEinstellungen=effektFilterFuerCharakter();
  const suchtext=(suche?.value||filterEinstellungen.suche||"").trim().toLowerCase();
  const aktiveKategorien=new Set(
@@ -1696,9 +1708,9 @@ function leseEditorFormular(){
    angriffZuweisbar:!!document.getElementById("effektAngriffZuweisbar")?.checked,
    nutzerBonus:{
      aktiv:!!document.getElementById("effektNutzerBonusAktiv")?.checked,
-     min:Number(document.getElementById("effektNutzerBonusMin")?.value)||1,
-     max:Number(document.getElementById("effektNutzerBonusMax")?.value)||5,
-     standard:Number(document.getElementById("effektNutzerBonusStandard")?.value)||1
+     min:1,
+     max:5,
+     standard:1
    },
    stufenlogik:normalisiereStufenlogik(editorState.entwurf.stufenlogik),
    boni:editorState.entwurf.boni.map(normalisiereBonus)
@@ -1716,9 +1728,6 @@ function schreibeEditorFormular(){
  const quelle=document.getElementById("effektQuelle");
  const angriffZuweisbar=document.getElementById("effektAngriffZuweisbar");
  const nutzerBonusAktiv=document.getElementById("effektNutzerBonusAktiv");
- const nutzerBonusMin=document.getElementById("effektNutzerBonusMin");
- const nutzerBonusMax=document.getElementById("effektNutzerBonusMax");
- const nutzerBonusStandard=document.getElementById("effektNutzerBonusStandard");
  const titel=document.querySelector("#effektDialog h3");
 
  if(name) name.value=editorState.entwurf.name;
@@ -1727,9 +1736,6 @@ function schreibeEditorFormular(){
  if(quelle) quelle.value=editorState.entwurf.quelle;
  if(angriffZuweisbar) angriffZuweisbar.checked=!!editorState.entwurf.angriffZuweisbar;
  if(nutzerBonusAktiv) nutzerBonusAktiv.checked=!!editorState.entwurf.nutzerBonus?.aktiv;
- if(nutzerBonusMin) nutzerBonusMin.value=String(editorState.entwurf.nutzerBonus?.min ?? 1);
- if(nutzerBonusMax) nutzerBonusMax.value=String(editorState.entwurf.nutzerBonus?.max ?? 5);
- if(nutzerBonusStandard) nutzerBonusStandard.value=String(editorState.entwurf.nutzerBonus?.standard ?? 1);
  if(titel){
    titel.textContent=editorState.effektId
      ?"Effekt bearbeiten"
