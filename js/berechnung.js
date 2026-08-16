@@ -45,6 +45,21 @@ function effektOptionenBerechnung(effekt){
 function dynamischerBonuswert(effekt, bonus, normalisiert) {
     if (!effekt || !bonus) return normalisiert.wert;
 
+    // Commit 40.2:
+    // "Boni nach Nutzereingabe" ist eine globale Effekt-Einstellung.
+    // Ist sie aktiv, ersetzt der im Effektbanner gewählte Wert den
+    // Grundwert ALLER Bonuszeilen des Effekts. Dadurch genügt es,
+    // die Bonuszeilen normal mit +1 anzulegen.
+    if (effekt?.nutzerBonus?.aktiv) {
+        if (Number.isFinite(Number(effekt.nutzerBonusWertAktuell))) {
+            return Number(effekt.nutzerBonusWertAktuell);
+        }
+        if (typeof nutzerBonusWertFuerEffekt === "function") {
+            return nutzerBonusWertFuerEffekt(effekt);
+        }
+        return 1;
+    }
+
     if (effekt.sonderlogik === "heftiger-angriff") {
         const stufe = typeof effektStufenwert === "function" ? effektStufenwert(effekt) : 0;
         const optionen = effektOptionenBerechnung(effekt);
@@ -65,19 +80,6 @@ function dynamischerBonuswert(effekt, bonus, normalisiert) {
             return typeof effektStufenwert === "function" ? effektStufenwert(effekt) : 1;
         }
         return 1;
-    }
-
-    if (
-        normalisiert.wertQuelle === "nutzerwert" &&
-        effekt?.nutzerBonus?.aktiv
-    ) {
-        if (Number.isFinite(Number(effekt.nutzerBonusWertAktuell))) {
-            return Number(effekt.nutzerBonusWertAktuell);
-        }
-        if (typeof nutzerBonusWertFuerEffekt === "function") {
-            return nutzerBonusWertFuerEffekt(effekt);
-        }
-        return Number(effekt.nutzerBonus?.standard) || 1;
     }
 
     if (

@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.40.1";
+const APP_VERSION="0.40.2";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -1294,9 +1294,9 @@ function nutzerBonusWertFuerEffekt(effekt){
 function setzeNutzerBonusWertFuerEffekt(effektId,wert){
  const effekt=findeEffekt(effektId);
  if(!effekt?.nutzerBonus?.aktiv) return false;
- const min=Number(effekt.nutzerBonus.min);
- const max=Number(effekt.nutzerBonus.max);
- const sicher=Math.max(Math.min(Number(wert)||0,Math.max(min,max)),Math.min(min,max));
+ const min=1;
+ const max=5;
+ const sicher=Math.max(min,Math.min(max,Math.trunc(Number(wert)||1)));
  if(!setzeEffektOptionenFuerCharakter(effektId,{nutzerBonusWert:sicher})) return false;
 
  effekt.nutzerBonusWertAktuell=sicher;
@@ -1912,13 +1912,12 @@ function rendereBonusEditor(){
    const wertQuelle=document.createElement("select");
    wertQuelle.className="bonus-wertquelle";
    wertQuelle.setAttribute("aria-label",`Wertquelle der Bonuszeile ${index+1}`);
-   [["fest","Fest"],["stufenwert","Stufenwert"],["nutzerwert","Nutzereingabe"]].forEach(([value,text])=>{
+   [["fest","Fest"],["stufenwert","Stufenwert"]].forEach(([value,text])=>{
      const option=document.createElement("option");
      option.value=value;
      option.textContent=text;
      option.selected=(bonus.wertQuelle||"fest")===value;
      if(value==="stufenwert" && !editorState.entwurf.stufenlogik?.aktiv) option.disabled=true;
-     if(value==="nutzerwert" && !editorState.entwurf.nutzerBonus?.aktiv) option.disabled=true;
      wertQuelle.appendChild(option);
    });
    wertQuelle.addEventListener("change",event=>{
