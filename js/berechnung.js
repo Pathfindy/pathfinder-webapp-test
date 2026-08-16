@@ -90,7 +90,12 @@ function dynamischerBonuswert(effekt, bonus, normalisiert) {
         const faktor = Number.isFinite(Number(bonus.stufenFaktor))
             ? Number(bonus.stufenFaktor)
             : 1;
-        return effektStufenwert(effekt) * faktor;
+
+        // Commit 40.3: Stufenwert bestimmt die Höhe; das Vorzeichen
+        // bleibt vom angelegten Grundwert der Bonuszeile erhalten.
+        const grundwert = Number(normalisiert.wert);
+        const vorzeichen = Number.isFinite(grundwert) && grundwert < 0 ? -1 : 1;
+        return effektStufenwert(effekt) * faktor * vorzeichen;
     }
 
     return normalisiert.wert;
