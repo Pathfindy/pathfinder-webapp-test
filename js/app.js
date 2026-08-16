@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.39.10";
+const APP_VERSION="0.40";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -772,7 +772,7 @@ function normalisiereBonus(bonus={}){
    ziel:typeof bonus.ziel==="string"?bonus.ziel:"",
    bonusart:normalisiereBonusart(bonus.bonusart),
    wert:Number.isFinite(wert)?wert:0,
-   wertQuelle:bonus.wertQuelle==="stufenwert"?"stufenwert":"fest",
+   wertQuelle:["stufenwert","nutzerwert"].includes(bonus.wertQuelle)?bonus.wertQuelle:"fest",
    stufenFaktor:Number.isFinite(Number(bonus.stufenFaktor))
      ?Math.max(-10,Math.min(10,Math.trunc(Number(bonus.stufenFaktor))))
      :1
@@ -826,6 +826,12 @@ function normalisiereEffekt(effekt={}){
    quelle:effekt.quelle||"",
    angriffZuweisbar:!!effekt.angriffZuweisbar,
    sonderlogik:["heftiger-angriff","maechtige-magische-faenge"].includes(effekt.sonderlogik)?effekt.sonderlogik:"",
+   nutzerBonus:{
+     aktiv:!!effekt?.nutzerBonus?.aktiv,
+     min:Number.isFinite(Number(effekt?.nutzerBonus?.min))?Math.trunc(Number(effekt.nutzerBonus.min)):1,
+     max:Number.isFinite(Number(effekt?.nutzerBonus?.max))?Math.trunc(Number(effekt.nutzerBonus.max)):5,
+     standard:Number.isFinite(Number(effekt?.nutzerBonus?.standard))?Math.trunc(Number(effekt.nutzerBonus.standard)):1
+   },
    stufenlogik,
    boni
  };
@@ -1274,6 +1280,28 @@ function aktualisiereEffektStufenAnzeige(effekt,container){
  ausgabe.textContent=`Stufe ${stufe} → ${wert>=0?"+":""}${wert}`;
 }
 
+function nutzerBonusWertFuerEffekt(effekt){
+ const konfig=effekt?.nutzerBonus||{};
+ const optionen=effektOptionenFuerCharakter(effekt?.id);
+ const min=Number.isFinite(Number(konfig.min))?Number(konfig.min):1;
+ const max=Number.isFinite(Number(konfig.max))?Number(konfig.max):5;
+ const standard=Number.isFinite(Number(konfig.standard))?Number(konfig.standard):min;
+ const roh=Number(optionen.nutzerBonusWert);
+ const wert=Number.isFinite(roh)?roh:standard;
+ return Math.max(Math.min(wert,Math.max(min,max)),Math.min(min,max));
+}
+
+function setzeNutzerBonusWertFuerEffekt(effektId,wert){
+ const effekt=findeEffekt(effektId);
+ if(!effekt?.nutzerBonus?.aktiv) return false;
+ const min=Number(effekt.nutzerBonus.min);
+ const max=Number(effekt.nutzerBonus.max);
+ const sicher=Math.max(Math.min(Number(wert)||0,Math.max(min,max)),Math.min(min,max));
+ setzeEffektOptionenFuerCharakter(effektId,{nutzerBonusWert:sicher});
+ if(typeof berechneWerte==="function") berechneWerte();
+ return true;
+}
+
 function effektAngriffsModus(effekt){
  if(effekt?.sonderlogik==="maechtige-magische-faenge"){
    const optionen=effektOptionenFuerCharakter(effekt.id);
@@ -1454,6 +1482,31 @@ function baueEffektliste(){
    }
 
    rendereSonderoptionenFuerEffekt(effekt,info);
+
+   if(effekt.nutzerBonus?.aktiv){
+     const box=document.createElement("div");
+     box.className="effekt-nutzerbonus";
+     const label=document.createElement("label");
+     label.appendChild(document.createTextNode("Bonus "));
+     const select=document.createElement("select");
+     const min=Math.min(Number(effekt.nutzerBonus.min)||1,Number(effekt.nutzerBonus.max)||5);
+     const max=Math.max(Number(effekt.nutzerBonus.min)||1,Number(effekt.nutzerBonus.max)||5);
+     for(let wert=min;wert<=max;wert++){
+       const option=document.createElement("option");
+       option.value=String(wert);
+       option.textContent=wert>0?`+${wert}`:String(wert);
+       select.appendChild(option);
+     }
+     select.value=String(nutzerBonusWertFuerEffekt(effekt));
+     select.addEventListener("click",event=>event.stopPropagation());
+     select.addEventListener("change",event=>{
+       event.stopPropagation();
+       setzeNutzerBonusWertFuerEffekt(effekt.id,Number(select.value));
+     });
+     label.appendChild(select);
+     box.appendChild(label);
+     info.appendChild(box);
+   }
 
    let angriffsAuswahl=null;
    const angriffsModus=effektAngriffsModus(effekt);
@@ -1641,6 +1694,12 @@ function leseEditorFormular(){
    beschreibung:document.getElementById("effektBeschreibung")?.value.trim()||"",
    quelle:document.getElementById("effektQuelle")?.value.trim()||"",
    angriffZuweisbar:!!document.getElementById("effektAngriffZuweisbar")?.checked,
+   nutzerBonus:{
+     aktiv:!!document.getElementById("effektNutzerBonusAktiv")?.checked,
+     min:Number(document.getElementById("effektNutzerBonusMin")?.value)||1,
+     max:Number(document.getElementById("effektNutzerBonusMax")?.value)||5,
+     standard:Number(document.getElementById("effektNutzerBonusStandard")?.value)||1
+   },
    stufenlogik:normalisiereStufenlogik(editorState.entwurf.stufenlogik),
    boni:editorState.entwurf.boni.map(normalisiereBonus)
  };
@@ -1656,6 +1715,10 @@ function schreibeEditorFormular(){
  const beschreibung=document.getElementById("effektBeschreibung");
  const quelle=document.getElementById("effektQuelle");
  const angriffZuweisbar=document.getElementById("effektAngriffZuweisbar");
+ const nutzerBonusAktiv=document.getElementById("effektNutzerBonusAktiv");
+ const nutzerBonusMin=document.getElementById("effektNutzerBonusMin");
+ const nutzerBonusMax=document.getElementById("effektNutzerBonusMax");
+ const nutzerBonusStandard=document.getElementById("effektNutzerBonusStandard");
  const titel=document.querySelector("#effektDialog h3");
 
  if(name) name.value=editorState.entwurf.name;
@@ -1663,6 +1726,10 @@ function schreibeEditorFormular(){
  if(beschreibung) beschreibung.value=editorState.entwurf.beschreibung;
  if(quelle) quelle.value=editorState.entwurf.quelle;
  if(angriffZuweisbar) angriffZuweisbar.checked=!!editorState.entwurf.angriffZuweisbar;
+ if(nutzerBonusAktiv) nutzerBonusAktiv.checked=!!editorState.entwurf.nutzerBonus?.aktiv;
+ if(nutzerBonusMin) nutzerBonusMin.value=String(editorState.entwurf.nutzerBonus?.min ?? 1);
+ if(nutzerBonusMax) nutzerBonusMax.value=String(editorState.entwurf.nutzerBonus?.max ?? 5);
+ if(nutzerBonusStandard) nutzerBonusStandard.value=String(editorState.entwurf.nutzerBonus?.standard ?? 1);
  if(titel){
    titel.textContent=editorState.effektId
      ?"Effekt bearbeiten"
@@ -1839,12 +1906,13 @@ function rendereBonusEditor(){
    const wertQuelle=document.createElement("select");
    wertQuelle.className="bonus-wertquelle";
    wertQuelle.setAttribute("aria-label",`Wertquelle der Bonuszeile ${index+1}`);
-   [["fest","Fest"],["stufenwert","Stufenwert"]].forEach(([value,text])=>{
+   [["fest","Fest"],["stufenwert","Stufenwert"],["nutzerwert","Nutzereingabe"]].forEach(([value,text])=>{
      const option=document.createElement("option");
      option.value=value;
      option.textContent=text;
      option.selected=(bonus.wertQuelle||"fest")===value;
      if(value==="stufenwert" && !editorState.entwurf.stufenlogik?.aktiv) option.disabled=true;
+     if(value==="nutzerwert" && !editorState.entwurf.nutzerBonus?.aktiv) option.disabled=true;
      wertQuelle.appendChild(option);
    });
    wertQuelle.addEventListener("change",event=>{
@@ -2021,6 +2089,7 @@ function bereiteStandardEffektFuerExportVor(effekt){
    beschreibung:effekt.beschreibung||"",
    quelle:effekt.quelle||"",
    angriffZuweisbar:!!effekt.angriffZuweisbar,
+   nutzerBonus:{...(effekt.nutzerBonus||{})},
    stufenlogik:normalisiereStufenlogik(effekt.stufenlogik),
    boni:Array.isArray(effekt.boni)?effekt.boni.map(normalisiereBonus):[]
  };
