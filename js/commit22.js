@@ -1,7 +1,7 @@
 // Commit 22: Charakter-Import und -Export (JSON)
 (() => {
   const EXPORT_FORMAT = "pathfinder-charakter";
-  const EXPORT_VERSION = 4;
+  const EXPORT_VERSION = 5;
 
   function sichereKopie(wert) {
     return JSON.parse(JSON.stringify(wert));
@@ -87,7 +87,7 @@
     if (daten.format !== EXPORT_FORMAT) {
       throw new Error("Die Datei ist kein Pathfinder-Charakterexport.");
     }
-    if (![1, 2, 3, 4].includes(Number(daten.version))) {
+    if (![1, 2, 3, 4, 5].includes(Number(daten.version))) {
       throw new Error(`Die Exportversion ${daten.version ?? "?"} wird nicht unterstützt.`);
     }
     if (!daten.charakter || typeof daten.charakter !== "object") {

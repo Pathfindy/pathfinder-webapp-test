@@ -117,9 +117,11 @@ function sammleAktiveBoni(effektListe = []) {
         .flatMap(effekt => {
             if (!Array.isArray(effekt.boni)) return [];
 
-            const angriffZiel = typeof angriffszielFuerEffekt === "function"
-                ? angriffszielFuerEffekt(effekt)
-                : "-";
+            const angriffZiele = typeof angriffszieleFuerEffekt === "function"
+                ? angriffszieleFuerEffekt(effekt)
+                : (typeof angriffszielFuerEffekt === "function"
+                    ? [angriffszielFuerEffekt(effekt)].filter(ziel => ziel && ziel !== "-")
+                    : []);
 
             return effekt.boni.map(bonus => {
                 const normalisiert = normalisiereBerechnungsBonus(bonus);
@@ -133,7 +135,8 @@ function sammleAktiveBoni(effektListe = []) {
                     effektName: effekt.name || "",
                     angriffZuweisbar: !!effekt.angriffZuweisbar,
                     angriffsModus: effektiverAngriffsModusBerechnung(effekt),
-                    angriffZiel
+                    angriffZiele,
+                    angriffZiel: angriffZiele[0] || "-"
                 };
             });
         })
@@ -237,7 +240,10 @@ function berechneBonusErgebnisFuerAngriff(effektListe = [], angriffsIndex = 0) {
     const boni = sammleAktiveBoni(effektListe).filter(bonus => {
         if (!ANGRIFFSGEBUNDENE_ZIELE.has(bonus.ziel)) return true;
         if (!bonus.angriffZuweisbar) return true;
-        return bonus.angriffZiel === "-" || bonus.angriffZiel === angriffsZiel;
+        const ziele=Array.isArray(bonus.angriffZiele)
+            ?bonus.angriffZiele
+            :(bonus.angriffZiel && bonus.angriffZiel!=="-"?[bonus.angriffZiel]:[]);
+        return ziele.length===0 || ziele.includes(angriffsZiel);
     });
     return berechneBonusErgebnisAusBoni(boni);
 }

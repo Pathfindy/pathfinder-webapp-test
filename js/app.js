@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.40.3";
+const APP_VERSION="0.41.0";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -533,9 +533,24 @@ function speichereAlleEffektAngriffsziele(zieleNachCharakter){
  speichereJson(STORAGE_KEYS.charakterEffektAngriffe,zieleNachCharakter);
 }
 
+const EFFEKT_ANGRIFFSZIELE=["A1","A2","A3","A4","A5","A6"];
+const EFFEKT_ANGRIFFSZIELE_MAX=3;
+
 function normalisiereAngriffsziel(wert){
  const ziel=String(wert||"-");
- return ["-","A1","A2","A3","A4","A5","A6"].includes(ziel)?ziel:"-";
+ return ["-",...EFFEKT_ANGRIFFSZIELE].includes(ziel)?ziel:"-";
+}
+
+function normalisiereAngriffsziele(wert,maximal=EFFEKT_ANGRIFFSZIELE_MAX){
+ const quelle=Array.isArray(wert)?wert:[wert];
+ const ergebnis=[];
+ quelle.forEach(eintrag=>{
+   const ziel=normalisiereAngriffsziel(eintrag);
+   if(ziel!=="-" && !ergebnis.includes(ziel) && ergebnis.length<maximal){
+     ergebnis.push(ziel);
+   }
+ });
+ return ergebnis;
 }
 
 function ladeEffektAngriffszieleFuerCharakter(charakterId=aktiverCharakterId){
@@ -549,24 +564,34 @@ function speichereEffektAngriffszieleFuerCharakter(charakterId,ziele){
  if(!charakterId) return;
  const alle=ladeAlleEffektAngriffsziele();
  alle[charakterId]={};
- Object.entries(ziele||{}).forEach(([effektId,ziel])=>{
-   alle[charakterId][String(effektId)]=normalisiereAngriffsziel(ziel);
+ Object.entries(ziele||{}).forEach(([effektId,wert])=>{
+   alle[charakterId][String(effektId)]=normalisiereAngriffsziele(wert);
  });
  speichereAlleEffektAngriffsziele(alle);
 }
 
-function angriffszielFuerEffekt(effekt,charakterId=aktiverCharakterId){
- if(!effekt?.angriffZuweisbar) return "-";
+function angriffszieleFuerEffekt(effekt,charakterId=aktiverCharakterId){
+ if(!effekt?.angriffZuweisbar) return [];
  const ziele=ladeEffektAngriffszieleFuerCharakter(charakterId);
- return normalisiereAngriffsziel(ziele[String(effekt.id)]);
+ const maximal=effekt?.sonderlogik==="maechtige-magische-faenge"?1:EFFEKT_ANGRIFFSZIELE_MAX;
+ return normalisiereAngriffsziele(ziele[String(effekt.id)],maximal);
+}
+
+function angriffszielFuerEffekt(effekt,charakterId=aktiverCharakterId){
+ return angriffszieleFuerEffekt(effekt,charakterId)[0]||"-";
+}
+
+function setzeAngriffszieleFuerEffekt(effekt,neueZiele,charakterId=aktiverCharakterId){
+ if(!effekt?.angriffZuweisbar || !charakterId) return false;
+ const maximal=effekt?.sonderlogik==="maechtige-magische-faenge"?1:EFFEKT_ANGRIFFSZIELE_MAX;
+ const ziele=ladeEffektAngriffszieleFuerCharakter(charakterId);
+ ziele[String(effekt.id)]=normalisiereAngriffsziele(neueZiele,maximal);
+ speichereEffektAngriffszieleFuerCharakter(charakterId,ziele);
+ return true;
 }
 
 function setzeAngriffszielFuerEffekt(effekt,ziel,charakterId=aktiverCharakterId){
- if(!effekt?.angriffZuweisbar || !charakterId) return false;
- const ziele=ladeEffektAngriffszieleFuerCharakter(charakterId);
- ziele[String(effekt.id)]=normalisiereAngriffsziel(ziel);
- speichereEffektAngriffszieleFuerCharakter(charakterId,ziele);
- return true;
+ return setzeAngriffszieleFuerEffekt(effekt,ziel==="-"?[]:[ziel],charakterId);
 }
 
 function ladeAlleEffektOptionen(){
@@ -829,7 +854,7 @@ function normalisiereEffekt(effekt={}){
    nutzerBonus:{
      aktiv:!!effekt?.nutzerBonus?.aktiv,
      min:Number.isFinite(Number(effekt?.nutzerBonus?.min))?Math.trunc(Number(effekt.nutzerBonus.min)):1,
-     max:Number.isFinite(Number(effekt?.nutzerBonus?.max))?Math.trunc(Number(effekt.nutzerBonus.max)):5,
+     max:Number.isFinite(Number(effekt?.nutzerBonus?.max))?Math.trunc(Number(effekt.nutzerBonus.max)):10,
      standard:Number.isFinite(Number(effekt?.nutzerBonus?.standard))?Math.trunc(Number(effekt.nutzerBonus.standard)):1
    },
    stufenlogik,
@@ -1284,7 +1309,7 @@ function nutzerBonusWertFuerEffekt(effekt){
  const konfig=effekt?.nutzerBonus||{};
  const optionen=effektOptionenFuerCharakter(effekt?.id);
  const min=Number.isFinite(Number(konfig.min))?Number(konfig.min):1;
- const max=Number.isFinite(Number(konfig.max))?Number(konfig.max):5;
+ const max=Number.isFinite(Number(konfig.max))?Number(konfig.max):10;
  const standard=Number.isFinite(Number(konfig.standard))?Number(konfig.standard):min;
  const roh=Number(optionen.nutzerBonusWert);
  const wert=Number.isFinite(roh)?roh:standard;
@@ -1294,9 +1319,11 @@ function nutzerBonusWertFuerEffekt(effekt){
 function setzeNutzerBonusWertFuerEffekt(effektId,wert){
  const effekt=findeEffekt(effektId);
  if(!effekt?.nutzerBonus?.aktiv) return false;
- const min=1;
- const max=5;
- const sicher=Math.max(min,Math.min(max,Math.trunc(Number(wert)||1)));
+ const min=Number.isFinite(Number(effekt.nutzerBonus.min))?Number(effekt.nutzerBonus.min):1;
+ const max=Number.isFinite(Number(effekt.nutzerBonus.max))?Number(effekt.nutzerBonus.max):10;
+ const unten=Math.min(min,max);
+ const oben=Math.max(min,max);
+ const sicher=Math.max(unten,Math.min(oben,Math.trunc(Number(wert)||1)));
  if(!setzeEffektOptionenFuerCharakter(effektId,{nutzerBonusWert:sicher})) return false;
 
  effekt.nutzerBonusWertAktuell=sicher;
@@ -1501,8 +1528,8 @@ function baueEffektliste(){
      const label=document.createElement("label");
      label.appendChild(document.createTextNode("Bonus "));
      const select=document.createElement("select");
-     const min=Math.min(Number(effekt.nutzerBonus.min)||1,Number(effekt.nutzerBonus.max)||5);
-     const max=Math.max(Number(effekt.nutzerBonus.min)||1,Number(effekt.nutzerBonus.max)||5);
+     const min=Math.min(Number(effekt.nutzerBonus.min)||1,Number(effekt.nutzerBonus.max)||10);
+     const max=Math.max(Number(effekt.nutzerBonus.min)||1,Number(effekt.nutzerBonus.max)||10);
      for(let wert=min;wert<=max;wert++){
        const option=document.createElement("option");
        option.value=String(wert);
@@ -1520,29 +1547,49 @@ function baueEffektliste(){
      info.appendChild(box);
    }
 
-   let angriffsAuswahl=null;
    const angriffsModus=effektAngriffsModus(effekt);
    if(effekt.angriffZuweisbar && angriffsModus==="einer"){
-     const zuweisung=document.createElement("label");
-     zuweisung.className="effekt-angriffsziel-30";
+     const zuweisung=document.createElement("div");
+     zuweisung.className="effekt-angriffsziel-30 effekt-angriffsziele-41";
      const beschriftung=document.createElement("span");
-     beschriftung.textContent="Angriff";
-     angriffsAuswahl=document.createElement("select");
-     angriffsAuswahl.setAttribute("aria-label",`${effekt.name}: betroffenen Angriff wählen`);
-     ["-","A1","A2","A3","A4","A5","A6"].forEach(wert=>{
-       const option=document.createElement("option");
-       option.value=wert;
-       option.textContent=wert;
-       angriffsAuswahl.appendChild(option);
+     const maximal=effekt.sonderlogik==="maechtige-magische-faenge"?1:EFFEKT_ANGRIFFSZIELE_MAX;
+     beschriftung.textContent=maximal===1?"Angriff":"Angriffe (max. 3)";
+     zuweisung.appendChild(beschriftung);
+
+     const auswahl=document.createElement("div");
+     auswahl.className="effekt-angriffsziele-auswahl-41";
+     const aktiv=new Set(angriffszieleFuerEffekt(effekt));
+
+     EFFEKT_ANGRIFFSZIELE.forEach(wert=>{
+       const labelZiel=document.createElement("label");
+       labelZiel.className="effekt-angriffsziel-option-41";
+       const checkbox=document.createElement("input");
+       checkbox.type="checkbox";
+       checkbox.value=wert;
+       checkbox.checked=aktiv.has(wert);
+       checkbox.setAttribute("aria-label",`${effekt.name}: ${wert}`);
+       checkbox.addEventListener("click",event=>event.stopPropagation());
+       checkbox.addEventListener("change",event=>{
+         event.stopPropagation();
+         let neu=new Set(angriffszieleFuerEffekt(effekt));
+         if(checkbox.checked){
+           if(maximal===1) neu=new Set([wert]);
+           else if(neu.size<maximal) neu.add(wert);
+           else checkbox.checked=false;
+         }else{
+           neu.delete(wert);
+         }
+         setzeAngriffszieleFuerEffekt(effekt,[...neu]);
+         baueEffektliste();
+         if(typeof berechneWerte==="function") berechneWerte();
+       });
+       const text=document.createElement("span");
+       text.textContent=wert;
+       labelZiel.append(checkbox,text);
+       auswahl.appendChild(labelZiel);
      });
-     angriffsAuswahl.value=angriffszielFuerEffekt(effekt);
-     angriffsAuswahl.addEventListener("click",event=>event.stopPropagation());
-     angriffsAuswahl.addEventListener("change",event=>{
-       event.stopPropagation();
-       setzeAngriffszielFuerEffekt(effekt,angriffsAuswahl.value);
-       if(typeof berechneWerte==="function") berechneWerte();
-     });
-     zuweisung.append(beschriftung,angriffsAuswahl);
+
+     zuweisung.appendChild(auswahl);
      info.appendChild(zuweisung);
    }
 
@@ -1709,7 +1756,7 @@ function leseEditorFormular(){
    nutzerBonus:{
      aktiv:!!document.getElementById("effektNutzerBonusAktiv")?.checked,
      min:1,
-     max:5,
+     max:10,
      standard:1
    },
    stufenlogik:normalisiereStufenlogik(editorState.entwurf.stufenlogik),
