@@ -467,6 +467,7 @@
             speichereKlassen();
           });
 
+          stufeFeld.addEventListener("input", speichereKlassen);
           stufeFeld.addEventListener("change", speichereKlassen);
           zeile.append(nameWrap, stufeFeld, entfernen);
           klassenListe.appendChild(zeile);
@@ -496,11 +497,13 @@
         gabFeld.inputMode = "numeric";
         gabFeld.value = String(Number(charakter.gab) || 0);
         gabFeld.setAttribute("aria-label", `GAB für ${charakter.name}`);
-        gabFeld.addEventListener("change", () => {
+        const speichereGab = () => {
           if (typeof setzeCharakterGAB === "function") {
             setzeCharakterGAB(charakter.id, gabFeld.value);
           }
-        });
+        };
+        gabFeld.addEventListener("input", speichereGab);
+        gabFeld.addEventListener("change", speichereGab);
         gabZeile.append(gabText, gabFeld);
         klassenBereich.appendChild(gabZeile);
 

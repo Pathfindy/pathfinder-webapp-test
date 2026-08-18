@@ -240,10 +240,14 @@ function berechneBonusErgebnisFuerAngriff(effektListe = [], angriffsIndex = 0) {
     const boni = sammleAktiveBoni(effektListe).filter(bonus => {
         if (!ANGRIFFSGEBUNDENE_ZIELE.has(bonus.ziel)) return true;
         if (!bonus.angriffZuweisbar) return true;
+        if (bonus.angriffsModus === "alle") return true;
+
         const ziele=Array.isArray(bonus.angriffZiele)
             ?bonus.angriffZiele
             :(bonus.angriffZiel && bonus.angriffZiel!=="-"?[bonus.angriffZiel]:[]);
-        return ziele.length===0 || ziele.includes(angriffsZiel);
+
+        // Ein zuweisbarer Effekt im Einzelmodus wirkt nur auf explizit gewählte Ziele.
+        return ziele.includes(angriffsZiel);
     });
     return berechneBonusErgebnisAusBoni(boni);
 }

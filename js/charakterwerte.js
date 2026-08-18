@@ -36,9 +36,7 @@
         ? angriff.name.trim()
         : `Angriff ${index + 1}`,
       art: angriff.art === "Fern" ? "Fern" : "Nah",
-      modus:["einzeln","iterativ","natuerlich"].includes(angriff.modus)?angriff.modus:"einzeln",
-      natuerlichAnzahl:ganzeZahl(angriff.natuerlichAnzahl ?? 1,1,6),
-      natuerlichTyp:angriff.natuerlichTyp==="sekundaer"?"sekundaer":"primaer",
+      modus:angriff.modus==="iterativ"?"iterativ":"einzeln",
       grundAngriff: ganzeZahl(angriff.grundAngriff, -999, 999),
       wuerfelAnzahl: ganzeZahl(angriff.wuerfelAnzahl, 0, 20),
       wuerfelSeiten,
@@ -332,11 +330,8 @@
       const gesamtAngriff = angriff.grundAngriff + angriffsBonus(angriff, boni);
       const folge=angriffsfolge(angriff,charakter,gesamtAngriff);
       const angriffsText=formatiereAngriffsfolge(folge);
-      const modusZusatz=angriff.modus==="natuerlich" && angriff.natuerlichAnzahl>1
-        ?` ×${angriff.natuerlichAnzahl}`
-        :"";
       ergebnis.innerHTML = `
-        <div><span>Angriff${modusZusatz}</span><strong>${angriffsText}</strong></div>
+        <div><span>Angriff</span><strong>${angriffsText}</strong></div>
         <div><span>Schaden</span><strong>${formatiereSchaden(angriff, boni)}</strong></div>
       `;
 
@@ -365,8 +360,7 @@
       const modus=document.createElement("select");
       [
         ["einzeln","Einzelangriff"],
-        ["iterativ","Iterativ nach GAB"],
-        ["natuerlich","Natürlicher Angriff"]
+        ["iterativ","Einzel- + Zusatzangriffe"]
       ].forEach(([wert,text])=>{
         const option=document.createElement("option");
         option.value=wert;
@@ -454,31 +448,7 @@
         felder.appendChild(folgeInfo);
       }
 
-      if(angriff.modus==="natuerlich"){
-        const anzahlLabel=document.createElement("label");
-        anzahlLabel.innerHTML="<span>Anzahl gleicher Angriffe</span>";
-        const natAnzahl=erstelleZahlenfeld(angriff.natuerlichAnzahl,"Anzahl natürlicher Angriffe",1,6);
-        natAnzahl.addEventListener("change",()=>speichereAngriffsfeld(angriff,natAnzahl,"natuerlichAnzahl",1,6));
-        anzahlLabel.appendChild(natAnzahl);
 
-        const typLabel=document.createElement("label");
-        typLabel.innerHTML="<span>Natürlicher Angriff</span>";
-        const typ=document.createElement("select");
-        [["primaer","Primär"],["sekundaer","Sekundär"]].forEach(([wert,text])=>{
-          const option=document.createElement("option");
-          option.value=wert;
-          option.textContent=text;
-          option.selected=angriff.natuerlichTyp===wert;
-          typ.appendChild(option);
-        });
-        typ.addEventListener("change",()=>{
-          angriff.natuerlichTyp=typ.value==="sekundaer"?"sekundaer":"primaer";
-          speichereCharaktere();
-          aktualisiereAngriffeAnsicht();
-        });
-        typLabel.appendChild(typ);
-        felder.append(anzahlLabel,typLabel);
-      }
 
       const loeschen = document.createElement("button");
       loeschen.type = "button";

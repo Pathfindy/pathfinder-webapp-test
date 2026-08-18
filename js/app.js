@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.41.0";
+const APP_VERSION="0.41.2";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -142,6 +142,14 @@ function speichereCharaktere(){
    localStorage.setItem(STORAGE_KEYS.aktiverCharakter,aktiverCharakterId);
  }
 }
+
+function speichereCharaktereSofort(){
+ speichereCharaktere();
+}
+
+window.addEventListener("pagehide",speichereCharaktereSofort);
+window.addEventListener("beforeunload",speichereCharaktereSofort);
+
 
 function findeCharakter(id){
  return charaktere.find(charakter=>charakter.id===id)||null;
@@ -323,6 +331,7 @@ function erstelleCharakter(name){
 
 function waehleCharakter(id){
  if(!findeCharakter(id)) return false;
+ speichereCharaktere();
  aktiverCharakterId=id;
  speichereCharaktere();
  rendereCharaktere();
@@ -1365,6 +1374,18 @@ function rendereSonderoptionenFuerEffekt(effekt,info){
    select.addEventListener("change",event=>{
      event.stopPropagation();
      setzeEffektOptionenFuerCharakter(effekt.id,{modus:select.value});
+
+     // Commit 41.2: Sondereffekt beibehalten.
+     // "Alle" braucht keine Angriffsauswahl; "Einzeln" darf genau ein Ziel verwenden.
+     if(effekt.sonderlogik==="maechtige-magische-faenge"){
+       if(select.value==="alle"){
+         setzeAngriffszieleFuerEffekt(effekt,[]);
+       }else{
+         const aktuell=angriffszieleFuerEffekt(effekt);
+         if(aktuell.length>1) setzeAngriffszieleFuerEffekt(effekt,[aktuell[0]]);
+       }
+     }
+
      baueEffektliste();
      if(typeof berechneWerte==="function") berechneWerte();
    });
@@ -1551,45 +1572,66 @@ function baueEffektliste(){
    if(effekt.angriffZuweisbar && angriffsModus==="einer"){
      const zuweisung=document.createElement("div");
      zuweisung.className="effekt-angriffsziel-30 effekt-angriffsziele-41";
-     const beschriftung=document.createElement("span");
-     const maximal=effekt.sonderlogik==="maechtige-magische-faenge"?1:EFFEKT_ANGRIFFSZIELE_MAX;
-     beschriftung.textContent=maximal===1?"Angriff":"Angriffe (max. 3)";
-     zuweisung.appendChild(beschriftung);
 
-     const auswahl=document.createElement("div");
-     auswahl.className="effekt-angriffsziele-auswahl-41";
-     const aktiv=new Set(angriffszieleFuerEffekt(effekt));
-
-     EFFEKT_ANGRIFFSZIELE.forEach(wert=>{
-       const labelZiel=document.createElement("label");
-       labelZiel.className="effekt-angriffsziel-option-41";
-       const checkbox=document.createElement("input");
-       checkbox.type="checkbox";
-       checkbox.value=wert;
-       checkbox.checked=aktiv.has(wert);
-       checkbox.setAttribute("aria-label",`${effekt.name}: ${wert}`);
-       checkbox.addEventListener("click",event=>event.stopPropagation());
-       checkbox.addEventListener("change",event=>{
+     if(effekt.sonderlogik==="maechtige-magische-faenge"){
+       const beschriftung=document.createElement("span");
+       beschriftung.textContent="Angriff";
+       const selectZiel=document.createElement("select");
+       selectZiel.setAttribute("aria-label",`${effekt.name}: betroffenen Angriff wählen`);
+       ["-",...EFFEKT_ANGRIFFSZIELE].forEach(wert=>{
+         const option=document.createElement("option");
+         option.value=wert;
+         option.textContent=wert;
+         selectZiel.appendChild(option);
+       });
+       selectZiel.value=angriffszielFuerEffekt(effekt);
+       selectZiel.addEventListener("click",event=>event.stopPropagation());
+       selectZiel.addEventListener("change",event=>{
          event.stopPropagation();
-         let neu=new Set(angriffszieleFuerEffekt(effekt));
-         if(checkbox.checked){
-           if(maximal===1) neu=new Set([wert]);
-           else if(neu.size<maximal) neu.add(wert);
-           else checkbox.checked=false;
-         }else{
-           neu.delete(wert);
-         }
-         setzeAngriffszieleFuerEffekt(effekt,[...neu]);
-         baueEffektliste();
+         setzeAngriffszielFuerEffekt(effekt,selectZiel.value);
          if(typeof berechneWerte==="function") berechneWerte();
        });
-       const text=document.createElement("span");
-       text.textContent=wert;
-       labelZiel.append(checkbox,text);
-       auswahl.appendChild(labelZiel);
-     });
+       zuweisung.append(beschriftung,selectZiel);
+     }else{
+       const beschriftung=document.createElement("span");
+       beschriftung.textContent="Angriffe (max. 3)";
+       zuweisung.appendChild(beschriftung);
 
-     zuweisung.appendChild(auswahl);
+       const auswahl=document.createElement("div");
+       auswahl.className="effekt-angriffsziele-auswahl-41";
+       const aktiv=new Set(angriffszieleFuerEffekt(effekt));
+
+       EFFEKT_ANGRIFFSZIELE.forEach(wert=>{
+         const labelZiel=document.createElement("label");
+         labelZiel.className="effekt-angriffsziel-option-41";
+         const checkbox=document.createElement("input");
+         checkbox.type="checkbox";
+         checkbox.value=wert;
+         checkbox.checked=aktiv.has(wert);
+         checkbox.setAttribute("aria-label",`${effekt.name}: ${wert}`);
+         checkbox.addEventListener("click",event=>event.stopPropagation());
+         checkbox.addEventListener("change",event=>{
+           event.stopPropagation();
+           const neu=new Set(angriffszieleFuerEffekt(effekt));
+           if(checkbox.checked){
+             if(neu.size<EFFEKT_ANGRIFFSZIELE_MAX) neu.add(wert);
+             else checkbox.checked=false;
+           }else{
+             neu.delete(wert);
+           }
+           setzeAngriffszieleFuerEffekt(effekt,[...neu]);
+           baueEffektliste();
+           if(typeof berechneWerte==="function") berechneWerte();
+         });
+         const text=document.createElement("span");
+         text.textContent=wert;
+         labelZiel.append(checkbox,text);
+         auswahl.appendChild(labelZiel);
+       });
+
+       zuweisung.appendChild(auswahl);
+     }
+
      info.appendChild(zuweisung);
    }
 
