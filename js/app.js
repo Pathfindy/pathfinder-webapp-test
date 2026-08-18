@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.41.3";
+const APP_VERSION="0.41.4";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -1372,6 +1372,7 @@ function rendereSonderoptionenFuerEffekt(effekt,info){
 
  const box=document.createElement("div");
  box.className="effekt-sonderoptionen";
+ box.hidden=false;
 
  if(effekt.sonderlogik==="maechtige-magische-faenge"){
    const optionen=effektOptionenFuerCharakter(effekt.id);
@@ -1520,6 +1521,9 @@ function baueEffektliste(){
    info.className="effekt-info";
    info.innerHTML=`<div class="effekt-name">${effekt.name}</div><div class="effekt-kategorie">${effekt.kategorie}</div>`;
 
+   // Commit 41.4: Sondereinstellungen direkt im Effektbanner anzeigen.
+   rendereSonderoptionenFuerEffekt(effekt,info);
+
    if(effekt.stufenlogik?.aktiv){
      const stufenBox=document.createElement("div");
      stufenBox.className="effekt-stufenbox";
@@ -1563,8 +1567,6 @@ function baueEffektliste(){
      info.appendChild(stufenBox);
      aktualisiereEffektStufenAnzeige(effekt,stufenBox);
    }
-
-   rendereSonderoptionenFuerEffekt(effekt,info);
 
    if(effekt.nutzerBonus?.aktiv){
      const box=document.createElement("div");
