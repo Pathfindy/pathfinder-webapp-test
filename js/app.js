@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.41.2";
+const APP_VERSION="0.41.3";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -257,6 +257,7 @@ function setzeAktiveKampagne(name){
  if(kandidaten.length && !kandidaten.some(charakter=>charakter.id===aktiverCharakterId)){
    aktiverCharakterId=kandidaten[0].id;
    speichereCharaktere();
+   setzeStandardEffektFilterFuerCharakter(aktiverCharakterId);
    ladeStatusFuerCharakter(aktiverCharakterId);
    baueEffektliste();
  }
@@ -334,6 +335,7 @@ function waehleCharakter(id){
  speichereCharaktere();
  aktiverCharakterId=id;
  speichereCharaktere();
+ setzeStandardEffektFilterFuerCharakter(id);
  rendereCharaktere();
  aktualisiereAktivenCharakterHinweis();
  baueEffektliste();
@@ -664,6 +666,16 @@ function speichereEffektFilterFuerCharakter(filter,charakterId=aktiverCharakterI
  };
  speichereJson(STORAGE_KEYS.charakterEffektFilter,alle);
  return true;
+}
+
+function setzeStandardEffektFilterFuerCharakter(charakterId=aktiverCharakterId){
+ if(!charakterId) return false;
+ return speichereEffektFilterFuerCharakter({
+   kategorien:null,
+   suche:"",
+   nurAktiv:false,
+   nurFavoriten:false
+ },charakterId);
 }
 
 function ladeAlleEffektStufen(){
@@ -1341,10 +1353,16 @@ function setzeNutzerBonusWertFuerEffekt(effektId,wert){
  return true;
 }
 
+
+function maechtigeMagischeFaengeModus(effekt,charakterId=aktiverCharakterId){
+ if(effekt?.sonderlogik!=="maechtige-magische-faenge") return "";
+ const optionen=effektOptionenFuerCharakter(effekt.id,charakterId);
+ return optionen.modus==="einzeln"?"einzeln":"alle";
+}
+
 function effektAngriffsModus(effekt){
  if(effekt?.sonderlogik==="maechtige-magische-faenge"){
-   const optionen=effektOptionenFuerCharakter(effekt.id);
-   return optionen.modus==="einzeln"?"einer":"alle";
+   return maechtigeMagischeFaengeModus(effekt)==="einzeln"?"einer":"alle";
  }
  return effekt?.angriffZuweisbar?"einer":"alle";
 }
@@ -1357,6 +1375,7 @@ function rendereSonderoptionenFuerEffekt(effekt,info){
 
  if(effekt.sonderlogik==="maechtige-magische-faenge"){
    const optionen=effektOptionenFuerCharakter(effekt.id);
+   const modusAktuell=maechtigeMagischeFaengeModus(effekt);
    const label=document.createElement("label");
    label.appendChild(document.createTextNode("Anwendung "));
    const select=document.createElement("select");
@@ -1369,7 +1388,7 @@ function rendereSonderoptionenFuerEffekt(effekt,info){
      option.textContent=text;
      select.appendChild(option);
    });
-   select.value=optionen.modus==="einzeln"?"einzeln":"alle";
+   select.value=modusAktuell;
    select.addEventListener("click",event=>event.stopPropagation());
    select.addEventListener("change",event=>{
      event.stopPropagation();
@@ -1382,7 +1401,11 @@ function rendereSonderoptionenFuerEffekt(effekt,info){
          setzeAngriffszieleFuerEffekt(effekt,[]);
        }else{
          const aktuell=angriffszieleFuerEffekt(effekt);
-         if(aktuell.length>1) setzeAngriffszieleFuerEffekt(effekt,[aktuell[0]]);
+         if(aktuell.length>1){
+           setzeAngriffszieleFuerEffekt(effekt,[aktuell[0]]);
+         }else if(aktuell.length===0){
+           setzeAngriffszieleFuerEffekt(effekt,["A1"]);
+         }
        }
      }
 
