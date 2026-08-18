@@ -1,128 +1,129 @@
-// Commit 41.1: stabile Wisch-Navigation zwischen Hauptseiten
+// Commit 41.5: stabile Wisch-Navigation in sichtbarer Menü-Reihenfolge
 (() => {
   "use strict";
 
-  const REIHENFOLGE = ["dashboard","effekte","charakterwerte","leben","charaktere","admin"];
-  const BUTTONS = {
-    dashboard: "btnDashboard",
-    effekte: "btnEffekte",
-    charakterwerte: "btnCharakterwerte",
-    leben: "btnLeben",
-    charaktere: "btnCharaktere",
-    admin: "btnAdmin"
-  };
-  const MIN_DISTANZ = 65;
-  const MAX_DAUER = 800;
-  const VERHAELTNIS = 1.35;
+  // Commit 21 ordnet die Menübuttons genau in dieser sichtbaren Reihenfolge an.
+  const REIHENFOLGE = [
+    { seite: "charaktere", button: "btnCharaktere" },
+    { seite: "charakterwerte", button: "btnCharakterwerte" },
+    { seite: "leben", button: "btnLeben" },
+    { seite: "effekte", button: "btnEffekte" },
+    { seite: "dashboard", button: "btnDashboard" },
+    { seite: "admin", button: "btnAdmin" }
+  ];
+
+  const MIN_DISTANZ = 70;
+  const MAX_DAUER = 900;
+  const HORIZONTAL_FAKTOR = 1.4;
 
   let startX = 0;
   let startY = 0;
   let startZeit = 0;
-  let startSeite = "";
-  let startZiel = null;
-  let aktiv = false;
+  let startIndex = -1;
+  let gestureAktiv = false;
 
-  function sichtbareSeite() {
-    for (const name of REIHENFOLGE) {
-      const element = typeof seiten !== "undefined" ? seiten[name] : null;
-      if (element && !element.hidden && getComputedStyle(element).display !== "none") return name;
-    }
-    return "dashboard";
+  function istSichtbar(element) {
+    if (!element) return false;
+    const stil = getComputedStyle(element);
+    return stil.display !== "none" && stil.visibility !== "hidden";
   }
 
-  function istBedienelement(element) {
+  function aktuellerIndex() {
+    // Nicht "seiten" aus app.js benutzen: Kampf und Leben werden von
+    // späteren Commit-Dateien ergänzt und fehlen dort.
+    return REIHENFOLGE.findIndex(eintrag =>
+      istSichtbar(document.getElementById(eintrag.seite))
+    );
+  }
+
+  function istBedienbereich(element) {
     return !!element?.closest?.(
       "input, textarea, select, option, button, a, label, dialog, " +
       "[contenteditable='true'], .bonus-klickbar, .angriff-karte"
     );
   }
 
-  function horizontalScrollbarerVorfahre(element) {
+  function hatHorizontalenScroll(element) {
     let aktuell = element;
     while (aktuell && aktuell !== document.body) {
       const stil = getComputedStyle(aktuell);
       if (
         ["auto","scroll"].includes(stil.overflowX) &&
-        aktuell.scrollWidth > aktuell.clientWidth + 3
-      ) return aktuell;
+        aktuell.scrollWidth > aktuell.clientWidth + 4
+      ) return true;
       aktuell = aktuell.parentElement;
     }
-    return null;
+    return false;
   }
 
-  function aktiviereSeite(name) {
-    const buttonId = BUTTONS[name];
-    const button = buttonId ? document.getElementById(buttonId) : null;
+  function wechsleZu(index) {
+    if (index < 0 || index >= REIHENFOLGE.length) return;
+    const eintrag = REIHENFOLGE[index];
+    const button = document.getElementById(eintrag.button);
 
-    // Immer denselben Weg wie die vorhandene Menü-Navigation verwenden.
+    // Genau denselben Handler wie bei einem echten Klick auf den Menübutton verwenden.
     if (button) {
       button.click();
-      return;
+    } else if (typeof zeigeSeite === "function") {
+      zeigeSeite(eintrag.seite);
     }
-
-    if (typeof zeigeSeite === "function") zeigeSeite(name);
   }
 
-  function initialisiereSwipe() {
+  function initialisiere() {
     const main = document.querySelector("main");
-    if (!main || main.dataset.swipe411) return;
-    main.dataset.swipe411 = "1";
+    if (!main || main.dataset.swipe415) return;
+    main.dataset.swipe415 = "1";
 
     main.addEventListener("touchstart", event => {
-      aktiv = false;
-      if (event.touches.length !== 1) return;
+      gestureAktiv = false;
+      startIndex = -1;
 
+      if (event.touches.length !== 1) return;
       const ziel = event.target;
-      if (istBedienelement(ziel) || horizontalScrollbarerVorfahre(ziel)) return;
+      if (istBedienbereich(ziel) || hatHorizontalenScroll(ziel)) return;
+
+      const index = aktuellerIndex();
+      if (index < 0) return;
 
       const touch = event.touches[0];
       startX = touch.clientX;
       startY = touch.clientY;
       startZeit = Date.now();
-      startSeite = sichtbareSeite();
-      startZiel = ziel;
-      aktiv = true;
+      startIndex = index;
+      gestureAktiv = true;
     }, { passive: true });
 
     main.addEventListener("touchcancel", () => {
-      aktiv = false;
-      startZiel = null;
+      gestureAktiv = false;
+      startIndex = -1;
     }, { passive: true });
 
     main.addEventListener("touchend", event => {
-      if (!aktiv || !startZiel || event.changedTouches.length !== 1) {
-        aktiv = false;
+      if (!gestureAktiv || startIndex < 0 || event.changedTouches.length !== 1) {
+        gestureAktiv = false;
         return;
       }
 
-      aktiv = false;
+      gestureAktiv = false;
       const touch = event.changedTouches[0];
       const dx = touch.clientX - startX;
       const dy = touch.clientY - startY;
       const dauer = Date.now() - startZeit;
 
-      startZiel = null;
-
       if (dauer > MAX_DAUER) return;
       if (Math.abs(dx) < MIN_DISTANZ) return;
-      if (Math.abs(dx) < Math.abs(dy) * VERHAELTNIS) return;
+      if (Math.abs(dx) < Math.abs(dy) * HORIZONTAL_FAKTOR) return;
 
-      // Nur von der Seite wechseln, auf der die Geste begonnen hat.
-      const index = REIHENFOLGE.indexOf(startSeite);
-      if (index < 0) return;
-
-      // Finger nach links = in der Menüfolge nach rechts / nächste Seite.
-      // Finger nach rechts = in der Menüfolge nach links / vorherige Seite.
-      const zielIndex = dx < 0 ? index + 1 : index - 1;
-      if (zielIndex < 0 || zielIndex >= REIHENFOLGE.length) return;
-
-      aktiviereSeite(REIHENFOLGE[zielIndex]);
+      // Finger nach links -> nächster Button rechts in der sichtbaren Menüleiste.
+      // Finger nach rechts -> vorheriger Button links in der sichtbaren Menüleiste.
+      const zielIndex = dx < 0 ? startIndex + 1 : startIndex - 1;
+      wechsleZu(zielIndex);
     }, { passive: true });
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initialisiereSwipe, { once: true });
+    document.addEventListener("DOMContentLoaded", initialisiere, { once: true });
   } else {
-    initialisiereSwipe();
+    initialisiere();
   }
 })();

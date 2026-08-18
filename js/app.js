@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.41.4";
+const APP_VERSION="0.41.5";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -846,6 +846,13 @@ function normalisiereStufenlogik(logik={}){
 
 function normalisiereEffekt(effekt={}){
  const standard=!!effekt.standard;
+ const effektName=String(effekt.name||"").trim();
+ const erzwungeneSonderlogik=
+   effektName==="Mächtige magische Fänge"
+     ?"maechtige-magische-faenge"
+     :effektName==="Heftiger Angriff"
+       ?"heftiger-angriff"
+       :"";
  const stufenlogik=normalisiereStufenlogik(effekt.stufenlogik);
  const roheBoni=Array.isArray(effekt.boni)?effekt.boni:[];
  let boni=roheBoni.map(bonus=>{
@@ -866,17 +873,22 @@ function normalisiereEffekt(effekt={}){
    id:effekt.id||(standard?standardEffektId(effekt):neueEffektId()),
    standard,
    aktiv:!!effekt.aktiv,
-   name:effekt.name||"",
+   name:effektName,
    kategorie:normalisiereKategorie(effekt.kategorie),
    beschreibung:effekt.beschreibung||"",
    quelle:effekt.quelle||"",
    angriffZuweisbar:!!effekt.angriffZuweisbar,
-   sonderlogik:["heftiger-angriff","maechtige-magische-faenge"].includes(effekt.sonderlogik)?effekt.sonderlogik:"",
+   sonderlogik:erzwungeneSonderlogik ||
+     (["heftiger-angriff","maechtige-magische-faenge"].includes(effekt.sonderlogik)?effekt.sonderlogik:""),
    nutzerBonus:{
      aktiv:!!effekt?.nutzerBonus?.aktiv,
-     min:Number.isFinite(Number(effekt?.nutzerBonus?.min))?Math.trunc(Number(effekt.nutzerBonus.min)):1,
-     max:Number.isFinite(Number(effekt?.nutzerBonus?.max))?Math.trunc(Number(effekt.nutzerBonus.max)):10,
-     standard:Number.isFinite(Number(effekt?.nutzerBonus?.standard))?Math.trunc(Number(effekt.nutzerBonus.standard)):1
+     // Commit 41.5: Die globale Nutzereingabe ist verbindlich +1 bis +10.
+     // Dadurch können alte Admin-Overrides mit max=5 die Auswahl nicht mehr zurücksetzen.
+     min:1,
+     max:10,
+     standard:Number.isFinite(Number(effekt?.nutzerBonus?.standard))
+       ?Math.max(1,Math.min(10,Math.trunc(Number(effekt.nutzerBonus.standard))))
+       :1
    },
    stufenlogik,
    boni
@@ -1329,9 +1341,11 @@ function aktualisiereEffektStufenAnzeige(effekt,container){
 function nutzerBonusWertFuerEffekt(effekt){
  const konfig=effekt?.nutzerBonus||{};
  const optionen=effektOptionenFuerCharakter(effekt?.id);
- const min=Number.isFinite(Number(konfig.min))?Number(konfig.min):1;
- const max=Number.isFinite(Number(konfig.max))?Number(konfig.max):10;
- const standard=Number.isFinite(Number(konfig.standard))?Number(konfig.standard):min;
+ const min=1;
+ const max=10;
+ const standard=Number.isFinite(Number(konfig.standard))
+   ?Math.max(min,Math.min(max,Number(konfig.standard)))
+   :min;
  const roh=Number(optionen.nutzerBonusWert);
  const wert=Number.isFinite(roh)?roh:standard;
  return Math.max(Math.min(wert,Math.max(min,max)),Math.min(min,max));
@@ -1340,10 +1354,10 @@ function nutzerBonusWertFuerEffekt(effekt){
 function setzeNutzerBonusWertFuerEffekt(effektId,wert){
  const effekt=findeEffekt(effektId);
  if(!effekt?.nutzerBonus?.aktiv) return false;
- const min=Number.isFinite(Number(effekt.nutzerBonus.min))?Number(effekt.nutzerBonus.min):1;
- const max=Number.isFinite(Number(effekt.nutzerBonus.max))?Number(effekt.nutzerBonus.max):10;
- const unten=Math.min(min,max);
- const oben=Math.max(min,max);
+ const min=1;
+ const max=10;
+ const unten=min;
+ const oben=max;
  const sicher=Math.max(unten,Math.min(oben,Math.trunc(Number(wert)||1)));
  if(!setzeEffektOptionenFuerCharakter(effektId,{nutzerBonusWert:sicher})) return false;
 
@@ -1574,8 +1588,8 @@ function baueEffektliste(){
      const label=document.createElement("label");
      label.appendChild(document.createTextNode("Bonus "));
      const select=document.createElement("select");
-     const min=Math.min(Number(effekt.nutzerBonus.min)||1,Number(effekt.nutzerBonus.max)||10);
-     const max=Math.max(Number(effekt.nutzerBonus.min)||1,Number(effekt.nutzerBonus.max)||10);
+     const min=1;
+     const max=10;
      for(let wert=min;wert<=max;wert++){
        const option=document.createElement("option");
        option.value=String(wert);
