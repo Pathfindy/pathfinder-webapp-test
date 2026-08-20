@@ -9,6 +9,7 @@
     { seite: "leben", button: "btnLeben" },
     { seite: "effekte", button: "btnEffekte" },
     { seite: "dashboard", button: "btnDashboard" },
+    { seite: "vermoegen", button: "btnVermoegen" },
     { seite: "admin", button: "btnAdmin" }
   ];
 
