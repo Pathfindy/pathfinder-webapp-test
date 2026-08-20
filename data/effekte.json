@@ -981,16 +981,16 @@
   {
     "id": "standard-admin-c714ccc7-71df-4ac5-ae7a-24ff6b0632b8",
     "name": "GAB (Dynamik)",
-    "kategorie": "Sonstige",
+    "kategorie": "Charakterwerte",
     "aktiv": false,
     "beschreibung": "GAB-Dynamik für Angriffe, KMB und KMV. Ändert man den GAB im Charakter werden die Angriffe, KMB und KMV automatisch entsprechend angepasst.",
     "quelle": "",
     "angriffZuweisbar": false,
     "nutzerBonus": {
       "aktiv": false,
-      "min": 1,
-      "max": 10,
-      "standard": 1
+      "min": -5,
+      "max": 17,
+      "standard": 0
     },
     "stufenlogik": {
       "aktiv": true,
@@ -3682,6 +3682,59 @@
     "dauer": "1 Min./Stufe"
   },
   {
+    "id": "standard-admin-435e60e4-812c-4124-8da8-ff8ea32b9010",
+    "name": "ST: Stärke (Attribut)",
+    "kategorie": "Charakterwerte",
+    "aktiv": false,
+    "beschreibung": "",
+    "quelle": "",
+    "angriffZuweisbar": false,
+    "nutzerBonus": {
+      "aktiv": true,
+      "min": -5,
+      "max": 17,
+      "standard": 0
+    },
+    "stufenlogik": {
+      "aktiv": false,
+      "bezug": "charakter",
+      "klasse": "",
+      "bereiche": []
+    },
+    "boni": [
+      {
+        "ziel": "Angriff Nah",
+        "bonusart": "Modifikator Attribut",
+        "wert": 1,
+        "wertQuelle": "fest",
+        "stufenFaktor": 1
+      },
+      {
+        "ziel": "Schaden Nah",
+        "bonusart": "Modifikator Attribut",
+        "wert": 1,
+        "wertQuelle": "fest",
+        "stufenFaktor": 1
+      },
+      {
+        "ziel": "KMB",
+        "bonusart": "Modifikator Attribut",
+        "wert": 1,
+        "wertQuelle": "fest",
+        "stufenFaktor": 1
+      },
+      {
+        "ziel": "KMV",
+        "bonusart": "Modifikator Attribut",
+        "wert": 1,
+        "wertQuelle": "fest",
+        "stufenFaktor": 1
+      }
+    ],
+    "gebiet": "",
+    "dauer": ""
+  },
+  {
     "id": "standard-admin-08ed045d-59a5-475b-aa28-8815e355d181",
     "name": "Standarte von Damien (9m Reichweite)",
     "kategorie": "Ausrüstung",
@@ -3733,59 +3786,6 @@
     ],
     "gebiet": "Sicht",
     "dauer": "in Reichweite"
-  },
-  {
-    "id": "standard-admin-435e60e4-812c-4124-8da8-ff8ea32b9010",
-    "name": "Stärke (Attribut)",
-    "kategorie": "Sonstige",
-    "aktiv": false,
-    "beschreibung": "",
-    "quelle": "",
-    "angriffZuweisbar": false,
-    "nutzerBonus": {
-      "aktiv": true,
-      "min": 1,
-      "max": 10,
-      "standard": 1
-    },
-    "stufenlogik": {
-      "aktiv": false,
-      "bezug": "charakter",
-      "klasse": "",
-      "bereiche": []
-    },
-    "boni": [
-      {
-        "ziel": "Angriff Nah",
-        "bonusart": "Modifikator Attribut",
-        "wert": 0,
-        "wertQuelle": "fest",
-        "stufenFaktor": 1
-      },
-      {
-        "ziel": "Schaden Nah",
-        "bonusart": "Modifikator Attribut",
-        "wert": 0,
-        "wertQuelle": "fest",
-        "stufenFaktor": 1
-      },
-      {
-        "ziel": "KMB",
-        "bonusart": "Modifikator Attribut",
-        "wert": 0,
-        "wertQuelle": "fest",
-        "stufenFaktor": 1
-      },
-      {
-        "ziel": "KMV",
-        "bonusart": "Modifikator Attribut",
-        "wert": 0,
-        "wertQuelle": "fest",
-        "stufenFaktor": 1
-      }
-    ],
-    "gebiet": "",
-    "dauer": ""
   },
   {
     "id": "standard-admin-a1a48c7a-e2e7-41a7-bb3d-cb417d784423",
@@ -4189,12 +4189,51 @@
     "dauer": "1 Runde"
   },
   {
-    "id": "standard-admin-1769b8e5-4a1f-448d-b1fe-c40448c29f3f",
-    "name": "Waffe (Magisch)",
+    "id": "standard-admin-dc78e34e-32b1-4e33-aa9f-b0b36f51a276",
+    "name": "Waffe (Meisterarbeit)",
     "kategorie": "Ausrüstung",
     "aktiv": false,
-    "beschreibung": "Kurzschwert, Langschwert, Bastardschwert, Zweihänder, Krummsäbel, ....",
-    "quelle": "",
+    "beschreibung": "Nah- oder Fernkampfwaffe",
+    "quelle": "GRW ab S.142",
+    "angriffZuweisbar": true,
+    "nutzerBonus": {
+      "aktiv": false,
+      "min": 1,
+      "max": 10,
+      "standard": 1
+    },
+    "stufenlogik": {
+      "aktiv": false,
+      "bezug": "charakter",
+      "klasse": "",
+      "bereiche": []
+    },
+    "boni": [
+      {
+        "ziel": "Angriff Nah",
+        "bonusart": "Namenlos",
+        "wert": 1,
+        "wertQuelle": "fest",
+        "stufenFaktor": 1
+      },
+      {
+        "ziel": "Angriff Fern",
+        "bonusart": "Namenlos",
+        "wert": 1,
+        "wertQuelle": "fest",
+        "stufenFaktor": 1
+      }
+    ],
+    "gebiet": "selbst",
+    "dauer": "getragen"
+  },
+  {
+    "id": "standard-admin-1769b8e5-4a1f-448d-b1fe-c40448c29f3f",
+    "name": "Waffe 1 (Magisch)",
+    "kategorie": "Ausrüstung",
+    "aktiv": false,
+    "beschreibung": "Nah- oder Fernkampfwaffe",
+    "quelle": "GRW ab S.142",
     "angriffZuweisbar": true,
     "nutzerBonus": {
       "aktiv": true,
@@ -4232,45 +4271,6 @@
       },
       {
         "ziel": "Schaden Fern",
-        "bonusart": "Namenlos",
-        "wert": 1,
-        "wertQuelle": "fest",
-        "stufenFaktor": 1
-      }
-    ],
-    "gebiet": "selbst",
-    "dauer": "getragen"
-  },
-  {
-    "id": "standard-admin-dc78e34e-32b1-4e33-aa9f-b0b36f51a276",
-    "name": "Waffe (Meisterarbeit)",
-    "kategorie": "Ausrüstung",
-    "aktiv": false,
-    "beschreibung": "Kurzschwert, Langschwert, Bastardschwert, Zweihänder, Krummsäbel, ....",
-    "quelle": "",
-    "angriffZuweisbar": true,
-    "nutzerBonus": {
-      "aktiv": false,
-      "min": 1,
-      "max": 10,
-      "standard": 1
-    },
-    "stufenlogik": {
-      "aktiv": false,
-      "bezug": "charakter",
-      "klasse": "",
-      "bereiche": []
-    },
-    "boni": [
-      {
-        "ziel": "Angriff Nah",
-        "bonusart": "Namenlos",
-        "wert": 1,
-        "wertQuelle": "fest",
-        "stufenFaktor": 1
-      },
-      {
-        "ziel": "Angriff Fern",
         "bonusart": "Namenlos",
         "wert": 1,
         "wertQuelle": "fest",
