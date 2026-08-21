@@ -485,6 +485,80 @@
 
         klassenBereich.append(klassenListe, klasseNeu);
 
+        const attributeBereich=document.createElement("details");
+        attributeBereich.className="charakter-attribute-44";
+        const attributeTitel=document.createElement("summary");
+        attributeTitel.textContent="Attribute";
+        attributeBereich.appendChild(attributeTitel);
+
+        const attributeTabelle=document.createElement("div");
+        attributeTabelle.className="charakter-attribute-tabelle-44";
+
+        const attributeKopf=document.createElement("div");
+        attributeKopf.className="charakter-attribut-zeile-44 charakter-attribut-kopf-44";
+        ["Attribut","Grundwert","Aktueller Wert","Modifikator"].forEach(text=>{
+          const span=document.createElement("span");
+          span.textContent=text;
+          attributeKopf.appendChild(span);
+        });
+        attributeTabelle.appendChild(attributeKopf);
+
+        const attributLangnamen={
+          ST:"Stärke",GE:"Geschicklichkeit",KO:"Konstitution",
+          IN:"Intelligenz",WE:"Weisheit",CH:"Charisma"
+        };
+
+        (typeof PF_ATTRIBUTE!=="undefined"?PF_ATTRIBUTE:["ST","GE","KO","IN","WE","CH"]).forEach(key=>{
+          const zeile=document.createElement("div");
+          zeile.className="charakter-attribut-zeile-44";
+
+          const name=document.createElement("strong");
+          name.textContent=key;
+          name.title=attributLangnamen[key]||key;
+
+          const grund=document.createElement("select");
+          grund.setAttribute("aria-label",`${name.title} Grundwert`);
+          for(let wert=1;wert<=40;wert++){
+            const option=document.createElement("option");
+            option.value=String(wert);
+            option.textContent=String(wert);
+            grund.appendChild(option);
+          }
+          grund.value=String(
+            typeof attributGrundwert==="function"
+              ?attributGrundwert(charakter,key)
+              :Number(charakter.attribute?.[key]||10)
+          );
+
+          const aktuell=document.createElement("output");
+          aktuell.className="charakter-attribut-aktuell-44";
+          const aktuellerWert=typeof attributAktuellerWert==="function"
+            ?attributAktuellerWert(charakter,key)
+            :Number(grund.value);
+          aktuell.value=String(aktuellerWert);
+          aktuell.textContent=String(aktuellerWert);
+
+          const mod=document.createElement("output");
+          mod.className="charakter-attribut-mod-44";
+          const modWert=typeof attributModifikatorAusWert==="function"
+            ?attributModifikatorAusWert(aktuellerWert)
+            :Math.floor((aktuellerWert-10)/2);
+          mod.value=String(modWert);
+          mod.textContent=modWert>=0?`+${modWert}`:String(modWert);
+
+          grund.addEventListener("change",()=>{
+            if(typeof setzeCharakterAttribut==="function"){
+              setzeCharakterAttribut(charakter.id,key,grund.value);
+            }
+          });
+
+          zeile.append(name,grund,aktuell,mod);
+          attributeTabelle.appendChild(zeile);
+        });
+
+        attributeBereich.appendChild(attributeTabelle);
+        klassenBereich.appendChild(attributeBereich);
+
         const gabZeile = document.createElement("label");
         gabZeile.className = "charakter-gab-zeile";
         const gabText = document.createElement("span");
@@ -509,7 +583,7 @@
 
         const gabHinweis = document.createElement("p");
         gabHinweis.className = "charakter-gab-hinweis";
-        gabHinweis.textContent = "GAB nur für GAB-abhängige Effekte. Wird nicht bei der Berechnung des Angriffswerts berücksichtigt.";
+        gabHinweis.textContent = "GAB-Wert hat Einfluss auf GAB-abhängige Effekte und beeinflusst deine Angriffswerte.";
         klassenBereich.appendChild(gabHinweis);
 
         const notiz = document.createElement("textarea");
