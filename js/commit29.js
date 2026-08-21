@@ -187,6 +187,61 @@
     localStorage.setItem(KAMPAGNEN_OFFEN_KEY, JSON.stringify([...set]));
   }
 
+  function attributDetailDialog442(){
+    let dialog=document.getElementById("attributDetailDialog442");
+    if(dialog) return dialog;
+    dialog=document.createElement("dialog");
+    dialog.id="attributDetailDialog442";
+    dialog.className="bonus-detail-dialog";
+    dialog.innerHTML=`<div class="bonus-detail-kopf">
+      <h3 id="attributDetailTitel442">Attribut</h3>
+      <button type="button" aria-label="Schließen">×</button>
+    </div><div id="attributDetailInhalt442"></div>`;
+    document.body.appendChild(dialog);
+    dialog.querySelector("button").addEventListener("click",()=>dialog.close());
+    return dialog;
+  }
+
+  function zeigeAttributDetails442(charakter,key){
+    if(!charakter) return;
+    const lang={ST:"Stärke",GE:"Geschicklichkeit",KO:"Konstitution",IN:"Intelligenz",WE:"Weisheit",CH:"Charisma"};
+    const grund=typeof attributGrundwert==="function"?attributGrundwert(charakter,key):10;
+    const aktuell=typeof attributAktuellerWert==="function"?attributAktuellerWert(charakter,key):grund;
+    const mod=typeof attributModifikatorAusWert==="function"?attributModifikatorAusWert(aktuell):Math.floor((aktuell-10)/2);
+    const ziel=`Attribut ${key}`;
+    const boni=typeof sammleAktiveBoni==="function"
+      ?sammleAktiveBoni(typeof effekte!=="undefined"?effekte:[]).filter(b=>b.ziel===ziel)
+      :[];
+
+    const dialog=attributDetailDialog442();
+    dialog.querySelector("#attributDetailTitel442").textContent=`${key}: ${lang[key]||key}`;
+    const inhalt=dialog.querySelector("#attributDetailInhalt442");
+    inhalt.innerHTML="";
+    const summe=document.createElement("p");
+    summe.className="bonus-detail-summe";
+    const bonusSumme=aktuell-grund;
+    const fmt=n=>Number(n)>=0?`+${Number(n)}`:String(Number(n));
+    summe.textContent=`Grundwert ${grund} + Boni ${fmt(bonusSumme)} = ${aktuell} · Modifikator ${fmt(mod)}`;
+    inhalt.appendChild(summe);
+
+    if(!boni.length){
+      const leer=document.createElement("p");
+      leer.textContent="Keine aktiven Boni auf dieses Attribut.";
+      inhalt.appendChild(leer);
+    }else{
+      const liste=document.createElement("div");
+      liste.className="bonus-detail-liste";
+      boni.forEach(b=>{
+        const zeile=document.createElement("div");
+        zeile.className="bonus-detail-zeile";
+        zeile.innerHTML=`<strong>${fmt(b.wert)}</strong><span>${b.bonusart}</span><span>${b.effektName||"Unbenannter Effekt"}</span>`;
+        liste.appendChild(zeile);
+      });
+      inhalt.appendChild(liste);
+    }
+    dialog.showModal();
+  }
+
   function aktualisiereAttributeAnsicht44(charakterId = aktiverCharakterId) {
     const charakter = typeof findeCharakter === "function"
       ? findeCharakter(charakterId)
@@ -573,8 +628,10 @@
               :Number(charakter.attribute?.[key]||10)
           );
 
-          const aktuell=document.createElement("output");
+          const aktuell=document.createElement("button");
+          aktuell.type="button";
           aktuell.className="charakter-attribut-aktuell-44";
+          aktuell.title="Berechnung des aktuellen Attributswerts anzeigen";
           const aktuellerWert=typeof attributAktuellerWert==="function"
             ?attributAktuellerWert(charakter,key)
             :Number(grund.value);
@@ -594,6 +651,8 @@
               setzeCharakterAttribut(charakter.id,key,grund.value);
             }
           });
+
+          aktuell.addEventListener("click",()=>zeigeAttributDetails442(charakter,key));
 
           zeile.append(name,grund,aktuell,mod);
           attributeTabelle.appendChild(zeile);
