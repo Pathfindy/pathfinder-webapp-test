@@ -167,3 +167,7 @@
  .charakter-attribut-zeile-44{grid-template-columns:48px 72px minmax(82px,1fr) 76px;gap:4px}
  .charakter-attribut-kopf-44{font-size:.62rem}
 }
+
+/* Commit 44.2 – aktueller Attributswert ist anklickbar */
+button.charakter-attribut-aktuell-44{cursor:pointer}
+button.charakter-attribut-aktuell-44:hover{background:#dfe7f0}
