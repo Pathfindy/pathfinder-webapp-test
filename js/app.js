@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.44.0";
+const APP_VERSION="0.44.1";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -130,8 +130,10 @@ function setzeCharakterAttribut(id,key,wert){
  charakter.attribute=normalisiereAttribute(charakter.attribute);
  charakter.attribute[key]=Math.max(1,Math.min(40,Math.trunc(Number(wert)||10)));
  speichereCharaktere();
- if(typeof window.rendereKampagnenBaum==="function") window.rendereKampagnenBaum();
  if(typeof berechneWerte==="function") berechneWerte();
+ if(typeof window.aktualisiereAttributeAnsicht44==="function"){
+   window.aktualisiereAttributeAnsicht44(id);
+ }
  return true;
 }
 

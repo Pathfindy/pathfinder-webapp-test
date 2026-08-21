@@ -187,6 +187,46 @@
     localStorage.setItem(KAMPAGNEN_OFFEN_KEY, JSON.stringify([...set]));
   }
 
+  function aktualisiereAttributeAnsicht44(charakterId = aktiverCharakterId) {
+    const charakter = typeof findeCharakter === "function"
+      ? findeCharakter(charakterId)
+      : null;
+    if (!charakter) return;
+
+    document.querySelectorAll(
+      `.charakter-attribut-zeile-44[data-charakter-id="${CSS.escape(String(charakter.id))}"][data-attribut-key]`
+    ).forEach(zeile => {
+      const key = zeile.dataset.attributKey;
+      const grund = zeile.querySelector(".charakter-attribut-grund-44");
+      const aktuell = zeile.querySelector(".charakter-attribut-aktuell-44");
+      const mod = zeile.querySelector(".charakter-attribut-mod-44");
+
+      const grundwert = typeof attributGrundwert === "function"
+        ? attributGrundwert(charakter, key)
+        : Number(charakter.attribute?.[key] || 10);
+      const aktuellerWert = typeof attributAktuellerWert === "function"
+        ? attributAktuellerWert(charakter, key)
+        : grundwert;
+      const modWert = typeof attributModifikatorAusWert === "function"
+        ? attributModifikatorAusWert(aktuellerWert)
+        : Math.floor((aktuellerWert - 10) / 2);
+
+      if (grund && document.activeElement !== grund) {
+        grund.value = String(grundwert);
+      }
+      if (aktuell) {
+        aktuell.value = String(aktuellerWert);
+        aktuell.textContent = String(aktuellerWert);
+      }
+      if (mod) {
+        mod.value = String(modWert);
+        mod.textContent = modWert >= 0 ? `+${modWert}` : String(modWert);
+      }
+    });
+  }
+
+  window.aktualisiereAttributeAnsicht44 = aktualisiereAttributeAnsicht44;
+
   function rendereKampagnenBaum() {
     const container = document.getElementById("kampagnenBaum");
     if (!container || typeof charaktere === "undefined") return;
@@ -511,12 +551,15 @@
         (typeof PF_ATTRIBUTE!=="undefined"?PF_ATTRIBUTE:["ST","GE","KO","IN","WE","CH"]).forEach(key=>{
           const zeile=document.createElement("div");
           zeile.className="charakter-attribut-zeile-44";
+          zeile.dataset.attributKey=key;
+          zeile.dataset.charakterId=charakter.id;
 
           const name=document.createElement("strong");
           name.textContent=key;
           name.title=attributLangnamen[key]||key;
 
           const grund=document.createElement("select");
+          grund.className="charakter-attribut-grund-44";
           grund.setAttribute("aria-label",`${name.title} Grundwert`);
           for(let wert=1;wert<=40;wert++){
             const option=document.createElement("option");
