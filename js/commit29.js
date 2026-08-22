@@ -242,6 +242,22 @@
     dialog.showModal();
   }
 
+  function aktualisiereGroesseAnsicht45(charakterId = aktiverCharakterId) {
+    const charakter = typeof findeCharakter === "function"
+      ? findeCharakter(charakterId)
+      : null;
+    if (!charakter) return;
+    document.querySelectorAll(".charakter-groesse-select-45").forEach(select=>{
+      if(String(select.dataset.charakterId)!==String(charakter.id)) return;
+      const wert=typeof charakterGroesse==="function"
+        ?charakterGroesse(charakter)
+        :(charakter.groesse||"Mittelgroß");
+      if(document.activeElement!==select) select.value=wert;
+    });
+  }
+
+  window.aktualisiereGroesseAnsicht45 = aktualisiereGroesseAnsicht45;
+
   function aktualisiereAttributeAnsicht44(charakterId = aktiverCharakterId) {
     const charakter = typeof findeCharakter === "function"
       ? findeCharakter(charakterId)
@@ -681,7 +697,48 @@
         gabFeld.addEventListener("input", speichereGab);
         gabFeld.addEventListener("change", speichereGab);
         gabZeile.append(gabText, gabFeld);
-        klassenBereich.appendChild(gabZeile);
+        const groesseZeile45=document.createElement("label");
+        groesseZeile45.className="charakter-groesse-zeile-45";
+
+        const groesseText45=document.createElement("span");
+        groesseText45.textContent="Größe";
+
+        const groesseSelect45=document.createElement("select");
+        groesseSelect45.className="charakter-groesse-select-45";
+        groesseSelect45.dataset.charakterId=charakter.id;
+
+        const groessenListe45=typeof PF_GROESSEN!=="undefined"
+          ?PF_GROESSEN
+          :["Mini","Winzig","Sehr klein","Klein","Mittelgroß","Groß","Riesig","Gigantisch","Kolossal"];
+
+        groessenListe45.forEach(groesse=>{
+          const option=document.createElement("option");
+          option.value=groesse;
+          option.textContent=groesse;
+          groesseSelect45.appendChild(option);
+        });
+
+        groesseSelect45.value=typeof charakterGroesse==="function"
+          ?charakterGroesse(charakter)
+          :(charakter.groesse||"Mittelgroß");
+
+        groesseSelect45.addEventListener("change",()=>{
+          if(typeof setzeCharakterGroesse==="function"){
+            setzeCharakterGroesse(charakter.id,groesseSelect45.value);
+          }
+        });
+
+        groesseZeile45.append(groesseText45,groesseSelect45);
+
+        const gabGroesseZeile45=document.createElement("div");
+        gabGroesseZeile45.className="charakter-gab-groesse-zeile-45";
+        gabGroesseZeile45.append(gabZeile,groesseZeile45);
+        klassenBereich.appendChild(gabGroesseZeile45);
+
+        const groesseHinweis45=document.createElement("p");
+        groesseHinweis45.className="charakter-groesse-hinweis-45";
+        groesseHinweis45.textContent="Größe beeinflusst Angriff Nah/Fern, Rüstungsklasse, KMB und KMV.";
+        klassenBereich.appendChild(groesseHinweis45);
 
         const gabHinweis = document.createElement("p");
         gabHinweis.className = "charakter-gab-hinweis";
