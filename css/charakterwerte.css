@@ -457,3 +457,161 @@ nav {
     font-size:.75rem;
   }
 }
+
+
+/* Commit 48 – Angriffswert wie Haupt-RK hervorheben */
+.angriff-ergebnis .angriff-ergebnis-haupt-48{
+  background:#d6e4f2;
+  border:1px solid #7899bd;
+  color:#173b63;
+  box-shadow:0 1px 2px rgba(30,58,95,.08);
+}
+.angriff-ergebnis .angriff-ergebnis-haupt-48 span{
+  color:#173b63;
+  font-size:.9rem;
+  font-weight:800;
+}
+.angriff-ergebnis .angriff-ergebnis-haupt-48 strong{
+  color:#173b63;
+  font-size:1.22rem;
+  font-weight:850;
+}
+
+
+/* Commit 49 – Fernkampf-Stärkeregeln */
+.angriff-optionen-46 input[type="radio"]{
+  width:20px;
+  height:20px;
+  margin:0;
+  flex:0 0 auto;
+}
+.komposit-auslegung-49{
+  grid-column:1 / -1;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 88px;
+  align-items:center;
+  gap:8px;
+  padding:6px 8px;
+  border-radius:8px;
+  background:#eef3f8;
+  font-size:.82rem;
+  font-weight:700;
+}
+.komposit-auslegung-49 input{
+  width:100%;
+  min-height:34px;
+  text-align:center;
+}
+
+
+/* Commit 49.1 – neutrale Fernkampfwaffe + kompakte Komposit-Auslegung */
+.komposit-auslegung-49{
+  display:inline-grid !important;
+  grid-template-columns:auto 72px !important;
+  width:auto !important;
+  justify-self:start;
+  justify-content:start;
+  gap:6px !important;
+  padding:4px 6px !important;
+}
+.komposit-auslegung-49 input{
+  min-height:32px !important;
+  width:72px !important;
+}
+@media(max-width:520px){
+  .komposit-auslegung-49{
+    grid-template-columns:auto 66px !important;
+  }
+  .komposit-auslegung-49 input{
+    width:66px !important;
+  }
+}
+
+
+/* Commit 51 – Reichweiteabzüge & kritischer Schaden */
+.angriff-schnellzeile-51{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px 14px;
+  margin:7px 0 6px;
+  padding:6px 8px;
+  border:1px solid #d5dde6;
+  border-radius:8px;
+  background:#f5f8fb;
+}
+.angriff-reichweite-51,
+.angriff-krit-gruppe-51{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+  font-size:.78rem;
+  font-weight:700;
+  color:#334d68;
+}
+.angriff-reichweite-51 select{
+  min-height:30px;
+  width:auto;
+  padding:3px 7px;
+  border:1px solid #b7c3d0;
+  border-radius:7px;
+  background:#fff;
+  font:inherit;
+}
+.angriff-krit-gruppe-51{
+  margin-left:auto;
+}
+.angriff-krit-button-51{
+  min-width:42px;
+  min-height:30px;
+  padding:3px 8px;
+  border:1px solid #9eabb9;
+  border-radius:7px;
+  background:#eef1f4;
+  color:#34475b;
+  font:inherit;
+  font-size:.76rem;
+  font-weight:800;
+  cursor:pointer;
+}
+.angriff-krit-button-51.aktiv{
+  background:#713c46;
+  border-color:#542832;
+  color:#fff;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+}
+.angriff-schaden-krit-51{
+  background:#f1d9dd !important;
+  border-color:#a56672 !important;
+  color:#57242e !important;
+}
+.angriff-schaden-krit-51 strong{
+  color:#57242e !important;
+}
+.krit-totenkopf-51{
+  display:inline-block;
+  margin-left:3px;
+  font-size:1em;
+  line-height:1;
+  vertical-align:-.05em;
+}
+@media(max-width:600px){
+  .angriff-schnellzeile-51{
+    gap:6px 9px;
+    padding:5px 6px;
+  }
+  .angriff-reichweite-51,
+  .angriff-krit-gruppe-51{
+    font-size:.72rem;
+  }
+  .angriff-krit-gruppe-51{
+    margin-left:0;
+  }
+  .angriff-krit-button-51{
+    min-width:38px;
+    min-height:28px;
+    padding:3px 6px;
+    font-size:.7rem;
+  }
+}

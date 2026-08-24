@@ -761,3 +761,236 @@ nav {
 .flinke-manoever-431{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;margin:4px 0 7px;padding:6px 8px;border-radius:7px;background:#eef3f8}
 .flinke-manoever-431 input[type="checkbox"]{width:20px;height:20px;margin:0;flex:0 0 auto}
 .flinke-manoever-431 span{font-weight:700}
+
+
+/* Commit 47.1 – körperlose Berührung im effektiven Bonus-Editor */
+.bonus-koerperlos-47{
+  grid-column:1 / -1;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center;
+  gap:7px;
+  width:auto !important;
+  padding:5px 7px;
+  margin-top:2px;
+  border-radius:7px;
+  background:#eef3f8;
+  font-size:.78rem;
+  font-weight:700;
+}
+.bonus-koerperlos-47 input[type="checkbox"]{
+  width:19px;
+  height:19px;
+  margin:0;
+  flex:0 0 auto;
+}
+
+
+/* Commit 47.2 – körperlose Berührung Checkbox linksbündig */
+.bonus-koerperlos-47{
+  justify-content:flex-start !important;
+  align-self:start;
+  justify-self:start;
+  text-align:left;
+  padding-left:2px !important;
+  background:transparent !important;
+}
+.bonus-koerperlos-47 input[type="checkbox"]{
+  margin-left:0 !important;
+}
+
+
+/* Commit 48 – stapelbare Bonusarten im Effekteditor leicht hervorheben */
+.bonusart-auswahl-stapelbar-48{
+  background:#edf5ff !important;
+  border-color:#91aac7 !important;
+}
+.bonusart-stapelbar-48{
+  background:#edf5ff;
+  font-weight:700;
+}
+
+
+/* Commit 50.2 – schnelles Löschen der Effektsuche */
+.effekt-suche-502{
+  position:relative;
+  width:100%;
+  margin-bottom:12px;
+}
+.effekt-suche-502 #suche{
+  margin-bottom:0;
+  padding-left:36px;
+}
+.effekt-suche-loeschen-502{
+  position:absolute;
+  z-index:2;
+  left:7px;
+  top:50%;
+  transform:translateY(-50%);
+  display:grid;
+  place-items:center;
+  width:24px;
+  height:24px;
+  padding:0;
+  border:0;
+  border-radius:50%;
+  background:#dfe5ec;
+  color:#41556b;
+  font:700 18px/1 Arial,Helvetica,sans-serif;
+  cursor:pointer;
+  opacity:.28;
+}
+.effekt-suche-loeschen-502.sichtbar{
+  opacity:1;
+}
+.effekt-suche-loeschen-502:hover,
+.effekt-suche-loeschen-502:focus-visible{
+  background:#cbd6e2;
+  color:#173b63;
+}
+
+
+/* Commit 50.3 – vereinheitlichte Kopfzeilen */
+header, nav{
+  position:static !important;
+  top:auto !important;
+}
+
+/* Nur die globale "Aktiver Charakter"-Zeile bleibt sticky. */
+.aktiver-charakter-hinweis,
+#aktiverCharakterLeiste,
+.aktiver-charakter-leiste,
+.charakter-global-leiste,
+.global-charakter-leiste{
+  position:sticky;
+  top:0;
+  z-index:980;
+  background:#f4f6f8;
+}
+
+/* Effekt: Suche & Filter einklappbar */
+.effekt-suche-filter-503{
+  margin:8px 0 10px;
+  border:1px solid #c7d1dc;
+  border-radius:9px;
+  background:#f7f9fb;
+  overflow:hidden;
+}
+.effekt-suche-filter-503 > summary{
+  padding:7px 10px;
+  cursor:pointer;
+  color:#1e3a5f;
+  font-weight:750;
+  user-select:none;
+}
+.effekt-suche-filter-503[open] > summary{
+  border-bottom:1px solid #d8e0e8;
+}
+.effekt-suche-zeile-503{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 38px;
+  gap:6px;
+  align-items:center;
+  padding:8px 8px 0;
+}
+.effekt-suche-zeile-503 #suche{
+  width:100%;
+  margin:0 !important;
+  padding:9px 10px !important;
+}
+.effekt-suche-loeschen-502{
+  position:static !important;
+  transform:none !important;
+  width:36px !important;
+  height:36px !important;
+  opacity:1 !important;
+  border-radius:8px !important;
+  background:#1e3a5f !important;
+  color:#fff !important;
+  font-size:20px !important;
+  font-weight:800 !important;
+}
+.effekt-suche-loeschen-502:hover,
+.effekt-suche-loeschen-502:focus-visible{
+  background:#294f7a !important;
+  color:#fff !important;
+}
+.effekt-suche-filter-503 .effekt-filter{
+  margin-top:8px;
+  padding:0 8px;
+}
+.effekt-suche-filter-503 .filter-ergebnis{
+  margin:6px 8px 8px;
+}
+
+
+/* Commit 50.4 – EINHEITLICHE Kopfzeile auf allen Seiten
+   Der App-Titel scrollt weg. Menü + Aktiver Charakter bleiben zusammen stehen. */
+header{
+  position:static !important;
+  top:auto !important;
+}
+
+nav{
+  position:sticky !important;
+  top:0 !important;
+  z-index:1000 !important;
+  background:#fff;
+}
+
+.globale-charakterleiste{
+  position:sticky !important;
+  top:var(--pf-nav-hoehe, 48px) !important;
+  z-index:990 !important;
+  margin:0 !important;
+}
+
+/* Effektseite: DER GESAMTE Block Suche & Filter ist die dritte Kopfzeile. */
+#effekte .effekt-suche-filter-503{
+  position:sticky;
+  top:var(--pf-kopf-sticky-hoehe, 99px);
+  z-index:980;
+  margin:0 0 10px !important;
+  background:#f7f9fb;
+  box-shadow:0 2px 5px rgba(30,58,95,.10);
+}
+
+/* Suchfeld und X bilden eine gemeinsame, klar erkennbare Zeile. */
+#effekte .effekt-suche-zeile-503{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 38px !important;
+  gap:6px !important;
+  align-items:center !important;
+  padding:8px !important;
+}
+#effekte .effekt-suche-zeile-503 #suche{
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:9px 10px !important;
+}
+#effekte .effekt-suche-zeile-503 .effekt-suche-loeschen-502{
+  display:grid !important;
+  place-items:center !important;
+  position:static !important;
+  inset:auto !important;
+  transform:none !important;
+  width:36px !important;
+  min-width:36px !important;
+  height:36px !important;
+  margin:0 !important;
+  padding:0 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  border:0 !important;
+  border-radius:8px !important;
+  background:#1e3a5f !important;
+  color:#fff !important;
+  font:800 20px/1 Arial,Helvetica,sans-serif !important;
+}
+
+/* Der alte Commit-25-Werkzeugblock darf Suche/Filter nicht mehr darstellen. */
+#effektWerkzeugleiste25{
+  display:none !important;
+}
