@@ -1,7 +1,7 @@
 // Das azlantische Helferlein der Boni
 // app.js
 // Version 0.32
-const APP_VERSION="0.46.0";
+const APP_VERSION="0.51.0";
 
 const seiten={
  dashboard:document.getElementById("dashboard"),
@@ -945,7 +945,8 @@ function normalisiereBonus(bonus={}){
    wertQuelle:["stufenwert","nutzerwert"].includes(bonus.wertQuelle)?bonus.wertQuelle:"fest",
    stufenFaktor:Number.isFinite(Number(bonus.stufenFaktor))
      ?Math.max(-10,Math.min(10,Math.trunc(Number(bonus.stufenFaktor))))
-     :1
+     :1,
+   wirktGegenKoerperloseBeruehrung:!!bonus.wirktGegenKoerperloseBeruehrung
  };
 }
 
@@ -2232,12 +2233,33 @@ function rendereBonusEditor(){
    const ziel=document.createElement("select");
    ziel.setAttribute("aria-label",`Ziel der Bonuszeile ${index+1}`);
    ziel.append(...erzeugeOptionen(PF_BONUS_ZIELE,bonus.ziel));
-   ziel.addEventListener("change",event=>aktualisiereBonus(index,"ziel",event.target.value));
+   ziel.addEventListener("change",event=>{
+     aktualisiereBonus(index,"ziel",event.target.value);
+     rendereBonusEditor();
+   });
 
    const bonusart=document.createElement("select");
    bonusart.setAttribute("aria-label",`Bonusart der Bonuszeile ${index+1}`);
-   bonusart.append(...erzeugeOptionen(PF_BONUSARTEN,bonus.bonusart));
-   bonusart.addEventListener("change",event=>aktualisiereBonus(index,"bonusart",event.target.value));
+   const bonusartOptionen48=erzeugeOptionen(PF_BONUSARTEN,bonus.bonusart);
+   const stapelbareArten48=typeof STAPELBARE_BONUSARTEN!=="undefined"
+     ?STAPELBARE_BONUSARTEN:new Set();
+   bonusartOptionen48.forEach(option=>{
+     const norm=normalisiereBonusart(option.value);
+     if(stapelbareArten48.has(norm)){
+       option.classList.add("bonusart-stapelbar-48");
+       option.textContent=`● ${option.textContent}`;
+       option.title="Stapelbare Bonusart";
+     }
+   });
+   bonusart.append(...bonusartOptionen48);
+   bonusart.classList.toggle(
+     "bonusart-auswahl-stapelbar-48",
+     stapelbareArten48.has(normalisiereBonusart(bonus.bonusart))
+   );
+   bonusart.addEventListener("change",event=>{
+     aktualisiereBonus(index,"bonusart",event.target.value);
+     rendereBonusEditor();
+   });
 
    const wertQuelle=document.createElement("select");
    wertQuelle.className="bonus-wertquelle";
@@ -2298,6 +2320,23 @@ function rendereBonusEditor(){
    entfernen.addEventListener("click",()=>entferneBonuszeile(index));
 
    zeile.append(ziel,bonusart,wertQuelle,faktor,wert,entfernen);
+
+   if(bonus.ziel==="Rüstungsklasse" &&
+      ["Rüstung","Schild"].includes(normalisiereBonusart(bonus.bonusart))){
+     const koerperlos=document.createElement("label");
+     koerperlos.className="bonus-koerperlos-47";
+     const koerperlosInput=document.createElement("input");
+     koerperlosInput.type="checkbox";
+     koerperlosInput.checked=!!bonus.wirktGegenKoerperloseBeruehrung;
+     const koerperlosText=document.createElement("span");
+     koerperlosText.textContent="Wirkt gegen körperlose Berührung";
+     koerperlos.append(koerperlosInput,koerperlosText);
+     koerperlosInput.addEventListener("change",()=>{
+       aktualisiereBonus(index,"wirktGegenKoerperloseBeruehrung",koerperlosInput.checked);
+     });
+     zeile.appendChild(koerperlos);
+   }
+
    container.appendChild(zeile);
  });
 }

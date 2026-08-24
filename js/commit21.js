@@ -140,15 +140,36 @@
       const ziel = document.createElement("select");
       ziel.setAttribute("aria-label", `Ziel der Bonuszeile ${index + 1}`);
       ziel.append(...erzeugeOptionen(PF_BONUS_ZIELE, bonus.ziel));
-      ziel.addEventListener("change", event =>
-        aktualisiereBonus(index, "ziel", event.target.value));
+      ziel.addEventListener("change", event => {
+        aktualisiereBonus(index, "ziel", event.target.value);
+        rendereBonusEditor();
+      });
 
       const bonusart = document.createElement("select");
       bonusart.setAttribute("aria-label", `Bonusart der Bonuszeile ${index + 1}`);
-      bonusart.append(...erzeugeOptionen(
-        BONUSARTEN, normalisiereBonusart(bonus.bonusart)));
-      bonusart.addEventListener("change", event =>
-        aktualisiereBonus(index, "bonusart", event.target.value));
+      const bonusartOptionen=erzeugeOptionen(
+        BONUSARTEN, normalisiereBonusart(bonus.bonusart));
+      const stapelbareArten=typeof STAPELBARE_BONUSARTEN!=="undefined"
+        ?STAPELBARE_BONUSARTEN
+        :new Set();
+      bonusartOptionen.forEach(option=>{
+        const norm=normalisiereBonusart(option.value);
+        if(stapelbareArten.has(norm)){
+          option.classList.add("bonusart-stapelbar-48");
+          option.textContent=`● ${option.textContent}`;
+          option.title="Stapelbare Bonusart";
+        }
+      });
+      bonusart.append(...bonusartOptionen);
+      const bonusartNormAktuell=normalisiereBonusart(bonus.bonusart);
+      bonusart.classList.toggle(
+        "bonusart-auswahl-stapelbar-48",
+        stapelbareArten.has(bonusartNormAktuell)
+      );
+      bonusart.addEventListener("change", event => {
+        aktualisiereBonus(index, "bonusart", event.target.value);
+        rendereBonusEditor();
+      });
 
       const wertQuelle = document.createElement("select");
       wertQuelle.className = "bonus-wertquelle";
@@ -223,6 +244,39 @@
       entfernen.addEventListener("click", () => entferneBonuszeile(index));
 
       zeile.append(ziel, bonusart, wertQuelle, faktor, wert, entfernen);
+
+      const bonusartNorm=normalisiereBonusart(bonus.bonusart);
+      if (
+        bonus.ziel === "Rüstungsklasse" &&
+        ["Rüstung","Schild"].includes(bonusartNorm)
+      ) {
+        const koerperlos = document.createElement("label");
+        koerperlos.className = "bonus-koerperlos-47";
+
+        const koerperlosInput = document.createElement("input");
+        koerperlosInput.type = "checkbox";
+        koerperlosInput.checked = !!bonus.wirktGegenKoerperloseBeruehrung;
+        koerperlosInput.setAttribute(
+          "aria-label",
+          `Bonuszeile ${index + 1}: Wirkt gegen körperlose Berührung`
+        );
+
+        const koerperlosText = document.createElement("span");
+        koerperlosText.textContent = "Wirkt gegen körperlose Berührung";
+
+        koerperlos.append(koerperlosInput, koerperlosText);
+
+        koerperlosInput.addEventListener("change", () => {
+          aktualisiereBonus(
+            index,
+            "wirktGegenKoerperloseBeruehrung",
+            koerperlosInput.checked
+          );
+        });
+
+        zeile.appendChild(koerperlos);
+      }
+
       container.appendChild(zeile);
     });
   };

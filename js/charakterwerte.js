@@ -51,6 +51,20 @@
       verbesserterZweiwaffenkampf: !!angriff.verbesserterZweiwaffenkampf,
       mehrfachangriff: !!angriff.mehrfachangriff,
       einzigerNatuerlicherAngriff: !!angriff.einzigerNatuerlicherAngriff,
+      fernkampfWaffentyp:["","bogen","kompositbogen","wurfwaffe"].includes(angriff.fernkampfWaffentyp)
+        ?angriff.fernkampfWaffentyp
+        :"",
+      kompositStaerkeauslegung: Math.max(
+        0,
+        Math.min(20, ganzeZahl(angriff.kompositStaerkeauslegung, 0, 20))
+      ),
+      reichweitenMultiplikator: Math.max(
+        1,
+        Math.min(10, ganzeZahl(angriff.reichweitenMultiplikator, 1, 10))
+      ),
+      kritMultiplikator: [1,2,3,4].includes(Number(angriff.kritMultiplikator))
+        ? Number(angriff.kritMultiplikator)
+        : 1,
       wuerfelAnzahl: ganzeZahl(angriff.wuerfelAnzahl, 0, 20),
       wuerfelSeiten,
       schadenModifikator: optionaleGanzeZahl(angriff.schadenModifikator, -999, 999),
@@ -167,10 +181,26 @@
   }
 
   function staerkeSchadenModifikator46(angriff, charakter=aktiverCharakter()) {
-    if(!angriff || angriff.art==="Fern") return 0;
+    if(!angriff) return 0;
     const st=charakter && typeof attributModifikator==="function"
       ?Number(attributModifikator(charakter,"ST")||0)
       :nativerAttributModifikator("ST");
+
+    if(angriff.art==="Fern"){
+      switch(angriff.fernkampfWaffentyp){
+        case "wurfwaffe":
+          return st;
+        case "kompositbogen":{
+          if(st<0) return st;
+          const auslegung=Math.max(0,Number(angriff.kompositStaerkeauslegung)||0);
+          return Math.min(st,auslegung);
+        }
+        case "bogen":
+          return st<0?st:0;
+        default:
+          return 0;
+      }
+    }
 
     switch(angriff.modus){
       case "zweithand":
@@ -190,11 +220,31 @@
     }
   }
 
-  function angriffsGrundMalus46(angriff) {
-    if(angriff?.modus==="sekundaer"){
-      return angriff.mehrfachangriff ? -2 : -5;
+  function kompositbogenAngriffsmalus49(angriff,charakter=aktiverCharakter()){
+    if(!angriff || angriff.art!=="Fern" || angriff.fernkampfWaffentyp!=="kompositbogen"){
+      return 0;
     }
-    return 0;
+    const st=charakter && typeof attributModifikator==="function"
+      ?Number(attributModifikator(charakter,"ST")||0)
+      :nativerAttributModifikator("ST");
+    const auslegung=Math.max(0,Number(angriff.kompositStaerkeauslegung)||0);
+    return st<auslegung ? -2 : 0;
+  }
+
+  function reichweitenAbzug51(angriff) {
+    if(!angriff || angriff.art!=="Fern") return 0;
+    const faktor=Math.max(1,Math.min(10,Number(angriff.reichweitenMultiplikator)||1));
+    return faktor<=1 ? 0 : -2*(faktor-1);
+  }
+
+  function angriffsGrundMalus46(angriff) {
+    let malus=0;
+    if(angriff?.modus==="sekundaer"){
+      malus += angriff.mehrfachangriff ? -2 : -5;
+    }
+    malus += kompositbogenAngriffsmalus49(angriff);
+    malus += reichweitenAbzug51(angriff);
+    return malus;
   }
 
   function angriffsBonus(angriff, boni = aktuelleBonuswerte(), angriffsIndex = 0) {
@@ -223,6 +273,13 @@
     if (!wuerfel) return String(modifikator);
     if (modifikator === 0) return wuerfel;
     return `${wuerfel}${vorzeichen(modifikator)}`;
+  }
+
+  function kritischerSchadenText51(angriff, normalText) {
+    const mult=[2,3,4].includes(Number(angriff?.kritMultiplikator))
+      ?Number(angriff.kritMultiplikator)
+      :1;
+    return mult===1 ? normalText : `${mult}×(${normalText})`;
   }
 
   function aktualisiereTrefferpunkteAnsicht() {
@@ -425,10 +482,73 @@
       const gesamtAngriff = angriff.grundAngriff + angriffsBonus(angriff, boni, index);
       const folge=angriffsfolge(angriff,charakter,gesamtAngriff);
       const angriffsText=formatiereAngriffsfolge(folge);
+      const normalSchadenText=formatiereSchaden(angriff, boni);
+      const kritAktiv=[2,3,4].includes(Number(angriff.kritMultiplikator));
+      const schadenText=kritischerSchadenText51(angriff, normalSchadenText);
       ergebnis.innerHTML = `
-        <div><span>Angriff</span><strong>${angriffsText}</strong></div>
-        <div><span>Schaden</span><strong>${formatiereSchaden(angriff, boni)}</strong></div>
+        <div class="angriff-ergebnis-haupt-48"><span>Angriff</span><strong>${angriffsText}</strong></div>
+        <div class="${kritAktiv ? "angriff-schaden-krit-51" : ""}">
+          <span>Schaden${kritAktiv ? ' <span class="krit-totenkopf-51" aria-hidden="true">☠</span>' : ""}</span>
+          <strong>${schadenText}</strong>
+        </div>
       `;
+
+      const kampfSchnell51=document.createElement("div");
+      kampfSchnell51.className="angriff-schnellzeile-51";
+
+      if(angriff.art==="Fern"){
+        const reichLabel=document.createElement("label");
+        reichLabel.className="angriff-reichweite-51";
+        const reichText=document.createElement("span");
+        reichText.textContent="Reichweiteabzüge:";
+        const reichSelect=document.createElement("select");
+        reichSelect.setAttribute("aria-label",`Reichweite für ${angriff.name}`);
+        const reichOption=document.createElement("option");
+        reichOption.value="1";
+        reichOption.textContent="x1 (0)";
+        reichSelect.appendChild(reichOption);
+        for(let faktor=2;faktor<=10;faktor++){
+          const option=document.createElement("option");
+          option.value=String(faktor);
+          option.textContent=`x${faktor} (${vorzeichen(-2*(faktor-1))})`;
+          reichSelect.appendChild(option);
+        }
+        reichSelect.value=String(Math.max(1,Math.min(10,Number(angriff.reichweitenMultiplikator)||1)));
+        reichSelect.addEventListener("change",()=>{
+          angriff.reichweitenMultiplikator=Number(reichSelect.value)||1;
+          speichereCharaktere();
+          aktualisiereAngriffeAnsicht();
+        });
+        reichLabel.append(reichText,reichSelect);
+        kampfSchnell51.appendChild(reichLabel);
+      }
+
+      const kritGruppe=document.createElement("div");
+      kritGruppe.className="angriff-krit-gruppe-51";
+      const kritText=document.createElement("span");
+      kritText.textContent="Krit.:";
+      kritGruppe.appendChild(kritText);
+      [2,3,4].forEach(mult=>{
+        const button=document.createElement("button");
+        button.type="button";
+        button.className="angriff-krit-button-51";
+        button.classList.toggle("aktiv",Number(angriff.kritMultiplikator)===mult);
+        button.textContent=`x${mult}`;
+        button.setAttribute(
+          "aria-label",
+          Number(angriff.kritMultiplikator)===mult
+            ?`Kritischen Schaden x${mult} ausschalten`
+            :`Kritischen Schaden x${mult} anzeigen`
+        );
+        button.addEventListener("click",()=>{
+          angriff.kritMultiplikator=
+            Number(angriff.kritMultiplikator)===mult ? 1 : mult;
+          speichereCharaktere();
+          aktualisiereAngriffeAnsicht();
+        });
+        kritGruppe.appendChild(button);
+      });
+      kampfSchnell51.appendChild(kritGruppe);
 
       const notiz = document.createElement("textarea");
       notiz.className = "angriff-notiz";
@@ -557,10 +677,37 @@
         return label;
       }
 
-      optionen46.appendChild(checkboxOption46("Waffenfinesse","waffenfinesse"));
+      if(angriff.art==="Fern"){
+        function fernkampfTypOption49(text,wert){
+          const label=document.createElement("label");
+          label.className="angriff-option-46";
+          const input=document.createElement("input");
+          input.type="radio";
+          input.name=`fernkampf-typ-${index}`;
+          input.value=wert;
+          input.checked=(angriff.fernkampfWaffentyp||"")===wert;
+          const span=document.createElement("span");
+          span.textContent=text;
+          label.append(input,span);
+          input.addEventListener("change",()=>{
+            if(!input.checked) return;
+            angriff.fernkampfWaffentyp=wert;
+            speichereCharaktere();
+            aktualisiereAngriffeAnsicht();
+          });
+          return label;
+        }
 
-      if(angriff.modus==="haupthand" || angriff.modus==="haupthand_zusatz"){
-        optionen46.appendChild(checkboxOption46("Waffe zweihändig","waffeZweihand"));
+        optionen46.appendChild(fernkampfTypOption49("Ohne Sonderregel",""));
+        optionen46.appendChild(fernkampfTypOption49("Bogen","bogen"));
+        optionen46.appendChild(fernkampfTypOption49("Kompositbogen","kompositbogen"));
+        optionen46.appendChild(fernkampfTypOption49("Wurfwaffe","wurfwaffe"));
+      }else{
+        optionen46.appendChild(checkboxOption46("Waffenfinesse","waffenfinesse"));
+
+        if(angriff.modus==="haupthand" || angriff.modus==="haupthand_zusatz"){
+          optionen46.appendChild(checkboxOption46("Waffe zweihändig","waffeZweihand"));
+        }
       }
 
       if(angriff.modus==="zweithand"){
@@ -582,6 +729,42 @@
 
       felder.appendChild(optionen46);
 
+      if(angriff.art==="Fern" && angriff.fernkampfWaffentyp==="kompositbogen"){
+        const auslegungZeile=document.createElement("label");
+        auslegungZeile.className="komposit-auslegung-49";
+        const auslegungText=document.createElement("span");
+        auslegungText.textContent="Stärkeauslegung";
+        const auslegungInput=document.createElement("input");
+        auslegungInput.type="number";
+        auslegungInput.min="0";
+        auslegungInput.max="20";
+        auslegungInput.step="1";
+        auslegungInput.inputMode="numeric";
+        auslegungInput.value=String(Math.max(0,Number(angriff.kompositStaerkeauslegung)||0));
+        auslegungInput.setAttribute("aria-label","Stärkeauslegung des Kompositbogens");
+        auslegungInput.addEventListener("change",()=>{
+          angriff.kompositStaerkeauslegung=Math.max(
+            0,
+            Math.min(20,Math.trunc(Number(auslegungInput.value)||0))
+          );
+          auslegungInput.value=String(angriff.kompositStaerkeauslegung);
+          speichereCharaktere();
+          aktualisiereAngriffeAnsicht();
+        });
+        auslegungZeile.append(auslegungText,auslegungInput);
+        felder.appendChild(auslegungZeile);
+
+        const kompositInfo=document.createElement("div");
+        kompositInfo.className="angriff-iterativ-info-41";
+        const malus=kompositbogenAngriffsmalus49(angriff,charakter);
+        const schadenSt=staerkeSchadenModifikator46(angriff,charakter);
+        kompositInfo.textContent=
+          `Kompositbogen: ST auf Schaden ${vorzeichen(schadenSt)} ` +
+          `(max. +${angriff.kompositStaerkeauslegung})` +
+          (malus ? " · Angriff −2 (ST unter Auslegung)" : "");
+        felder.appendChild(kompositInfo);
+      }
+
       if(angriff.modus==="haupthand_zusatz"){
         const folgeInfo=document.createElement("div");
         folgeInfo.className="angriff-iterativ-info-41";
@@ -591,6 +774,24 @@
           ?`GAB ${vorzeichen(gab)} → 1 Angriff`
           :`GAB ${vorzeichen(gab)} → ${anzahlIter} Angriffe mit −5-Schritten`;
         felder.appendChild(folgeInfo);
+      }
+
+      if(angriff.art==="Fern" && angriff.fernkampfWaffentyp==="bogen"){
+        const info=document.createElement("div");
+        info.className="angriff-iterativ-info-41";
+        const st=nativerAttributModifikator("ST");
+        info.textContent=st<0
+          ?`Bogen: Stärke-Malus ${vorzeichen(st)} auf Schaden`
+          :"Bogen: positiver Stärke-Modifikator wird nicht auf Schaden addiert";
+        felder.appendChild(info);
+      }
+
+      if(angriff.art==="Fern" && angriff.fernkampfWaffentyp==="wurfwaffe"){
+        const info=document.createElement("div");
+        info.className="angriff-iterativ-info-41";
+        const st=nativerAttributModifikator("ST");
+        info.textContent=`Wurfwaffe: voller ST-Modifikator ${vorzeichen(st)} auf Schaden`;
+        felder.appendChild(info);
       }
 
       if(angriff.modus==="zweithand"){
@@ -643,7 +844,7 @@
         speichereCharaktere();
       });
 
-      karte.append(kopf, ergebnis, notiz, details);
+      karte.append(kopf, ergebnis, kampfSchnell51, notiz, details);
       angriffeListe.appendChild(karte);
     });
   }
@@ -742,6 +943,8 @@
   window.angriffsAttributKey46 = angriffsAttributKey46;
   window.staerkeSchadenModifikator46 = staerkeSchadenModifikator46;
   window.angriffsGrundMalus46 = angriffsGrundMalus46;
+  window.reichweitenAbzug51 = reichweitenAbzug51;
+  window.kompositbogenAngriffsmalus49 = kompositbogenAngriffsmalus49;
   window.aktualisiereAngriffeAnsicht = aktualisiereAngriffeAnsicht;
   window.aktualisiereTrefferpunkteAnsicht = aktualisiereTrefferpunkteAnsicht;
   aktualisiereTrefferpunkteAnsicht();
