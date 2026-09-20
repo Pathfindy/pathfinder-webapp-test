@@ -615,3 +615,15 @@ nav {
     font-size:.7rem;
   }
 }
+
+/* Commit 51.1 – Reichweitenrechner */
+.angriff-schnellzeile-51{align-items:flex-end}
+.angriff-reichweite-grid-511{flex:1 1 650px;display:grid;grid-template-columns:minmax(190px,1.25fr) minmax(120px,.8fr) minmax(135px,.85fr) minmax(145px,1fr);gap:7px;align-items:end}
+.angriff-reichweite-feld-511{display:grid;gap:3px;min-width:0;color:#334d68;font-size:.72rem;font-weight:750}
+.angriff-reichweite-feld-511>input,.angriff-reichweite-feld-511>select,.angriff-reichweite-inputeinheit-511 input,.angriff-reichweite-inputeinheit-511 select{min-width:0;width:100%;min-height:31px;margin:0;padding:4px 6px;border:1px solid #b7c3d0;border-radius:7px;background:#fff;font:inherit;color:#263d55}
+.angriff-reichweite-inputeinheit-511{display:grid;grid-template-columns:minmax(70px,1fr) minmax(72px,.9fr);gap:4px}
+.angriff-reichweite-amplitude-511{display:grid;gap:3px;min-width:0;font-size:.72rem;color:#334d68}
+.angriff-reichweite-amplitude-511 strong{display:flex;align-items:center;min-height:31px;padding:4px 7px;border:1px solid #b7c3d0;border-radius:7px;background:#eaf0f6;color:#173b63;white-space:nowrap}
+.angriff-reichweite-amplitude-511.ausserhalb strong{background:#f1d9dd;border-color:#a56672;color:#57242e}
+@media(max-width:850px){.angriff-reichweite-grid-511{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.angriff-reichweite-grid-511{grid-template-columns:1fr}}
