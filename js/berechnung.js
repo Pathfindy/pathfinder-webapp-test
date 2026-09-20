@@ -20,7 +20,8 @@ function normalisiereBerechnungsBonusart(bonusart) {
         "Unbekannt": "Namenlos",
         "Natürlich": "Natürliche Rüstung",
         "Natürliche": "Natürliche Rüstung",
-        "Natür. Rüstung": "Natürliche Rüstung"
+        "Natür. Rüstung": "Natürliche Rüstung",
+        "Attributs Modifikator": "Namenlos"
     };
     return migration[wert] || wert;
 }
@@ -32,7 +33,11 @@ function normalisiereBerechnungsBonus(bonus = {}) {
         ziel: typeof bonus.ziel === "string" ? bonus.ziel.trim() : "",
         bonusart: normalisiereBerechnungsBonusart(bonus.bonusart),
         wert: Number.isFinite(wert) ? wert : 0,
-        wertQuelle: ["stufenwert","nutzerwert"].includes(bonus.wertQuelle) ? bonus.wertQuelle : "fest",
+        wertQuelle: ["stufenwert","nutzerwert","attributmod","klassenstufe"].includes(bonus.wertQuelle) ? bonus.wertQuelle : "fest",
+        attributQuelle: ["ST","GE","KO","IN","WE","CH"].includes(String(bonus.attributQuelle||"").toUpperCase())
+            ? String(bonus.attributQuelle).toUpperCase()
+            : "CH",
+        klassenQuelle: typeof bonus.klassenQuelle === "string" ? bonus.klassenQuelle.trim() : "",
         stufenFaktor: Number.isFinite(Number(bonus.stufenFaktor)) ? Number(bonus.stufenFaktor) : 1,
         wirktGegenKoerperloseBeruehrung: !!bonus.wirktGegenKoerperloseBeruehrung
     };
@@ -43,6 +48,12 @@ function effektOptionenBerechnung(effekt){
         ? effektOptionenFuerCharakter(effekt?.id)
         : {};
 }
+
+// Commit 52.2: Schutz vor rekursiver Auswertung dynamischer Attributquellen.
+// attributModifikator() berücksichtigt aktive Attributseffekte und ruft dafür
+// berechneBonusErgebnis() auf. Ohne Schutz würde eine Bonuszeile mit
+// Wertquelle „Attribut-Mod.“ sich dabei selbst erneut auswerten.
+const DYNAMISCHE_ATTRIBUT_QUELLEN_GUARD_522 = new Set();
 
 function dynamischerBonuswert(effekt, bonus, normalisiert) {
     if (!effekt || !bonus) return normalisiert.wert;
@@ -60,6 +71,35 @@ function dynamischerBonuswert(effekt, bonus, normalisiert) {
             return nutzerBonusWertFuerEffekt(effekt);
         }
         return 1;
+    }
+
+    if (normalisiert.wertQuelle === "attributmod") {
+        const charakter = typeof aktiverCharakter === "function" ? aktiverCharakter() : null;
+        const key = normalisiert.attributQuelle || "CH";
+        if (!charakter || typeof attributModifikator !== "function") return 0;
+
+        // attributModifikator -> attributAktuellerWert -> berechneBonusErgebnis
+        // kann dieselbe dynamische Bonuszeile erneut erreichen. In diesem
+        // inneren Durchlauf wird genau diese Attributquelle deshalb mit 0
+        // behandelt; reguläre aktive Attributboni werden weiterhin berechnet.
+        if (DYNAMISCHE_ATTRIBUT_QUELLEN_GUARD_522.has(key)) return 0;
+        DYNAMISCHE_ATTRIBUT_QUELLEN_GUARD_522.add(key);
+        try {
+            const wert = Number(attributModifikator(charakter, key));
+            return Number.isFinite(wert) ? wert : 0;
+        } finally {
+            DYNAMISCHE_ATTRIBUT_QUELLEN_GUARD_522.delete(key);
+        }
+    }
+
+    if (normalisiert.wertQuelle === "klassenstufe") {
+        const charakter = typeof aktiverCharakter === "function" ? aktiverCharakter() : null;
+        const klasse = normalisiert.klassenQuelle || "";
+        if (charakter && klasse && typeof charakterKlassenstufe === "function") {
+            const wert = Number(charakterKlassenstufe(charakter, klasse));
+            return Number.isFinite(wert) ? wert : 0;
+        }
+        return 0;
     }
 
     if (effekt.sonderlogik === "heftiger-angriff") {

@@ -38,7 +38,8 @@
       "Ausweich": "Ausweichen",
       "Natürlich": "Natürliche Rüstung",
       "Natürliche": "Natürliche Rüstung",
-      "Natür. Rüstung": "Natürliche Rüstung"
+      "Natür. Rüstung": "Natürliche Rüstung",
+      "Attributs Modifikator": "Namenlos"
     };
     return migration[wert] || wert;
   };
@@ -174,9 +175,9 @@
       const wertQuelle = document.createElement("select");
       wertQuelle.className = "bonus-wertquelle";
       wertQuelle.title =
-        "Fest = eingetragener Wert; Stufenwert = Wert aus der Stufen-/GAB-Logik";
+        "Fest = eingetragener Wert; Stufenwert = Wert aus der Stufen-/GAB-Logik; Attribut-Mod. = aktueller Modifikator eines Attributs; Klassenstufe = aktuelle Stufe der gewählten Klasse";
       wertQuelle.setAttribute("aria-label", `Wertquelle der Bonuszeile ${index + 1}`);
-      [["fest", "Fest"], ["stufenwert", "Stufenwert"]].forEach(([value, text]) => {
+      [["fest", "Fest"], ["stufenwert", "Stufenwert"], ["attributmod", "Attribut-Mod."], ["klassenstufe", "Klassenstufe"]].forEach(([value, text]) => {
         const option = document.createElement("option");
         option.value = value;
         option.textContent = text;
@@ -194,6 +195,13 @@
           Number(editorState.entwurf.boni[index].wert) === 0
         ) {
           aktualisiereBonus(index, "wert", 1);
+        }
+        if (neueQuelle === "attributmod" && !editorState.entwurf.boni[index].attributQuelle) {
+          aktualisiereBonus(index, "attributQuelle", "CH");
+        }
+        if (neueQuelle === "klassenstufe" && !editorState.entwurf.boni[index].klassenQuelle) {
+          const ersteKlasse=Array.isArray(PF_KLASSEN) && PF_KLASSEN.length ? PF_KLASSEN[0] : "";
+          aktualisiereBonus(index, "klassenQuelle", ersteKlasse);
         }
         rendereBonusEditor();
       });
@@ -230,6 +238,39 @@
         wert.disabled = true;
         wert.title =
           "Die Höhe kommt aus der Stufen-/GAB-Logik. Das Vorzeichen richtet sich nach dem Grundwert.";
+      } else if (bonus.wertQuelle === "attributmod") {
+        [["ST","Stärke (ST)"],["GE","Geschicklichkeit (GE)"],["KO","Konstitution (KO)"],
+         ["IN","Intelligenz (IN)"],["WE","Weisheit (WE)"],["CH","Charisma (CH)"]]
+          .forEach(([key,text])=>{
+            const option=document.createElement("option");
+            option.value=key;
+            option.textContent=text;
+            option.selected=(bonus.attributQuelle||"CH")===key;
+            wert.appendChild(option);
+          });
+        wert.title="Verwendet den aktuellen Attributsmodifikator des gewählten Attributs.";
+        wert.addEventListener("change",event=>
+          aktualisiereBonus(index,"attributQuelle",event.target.value));
+      } else if (bonus.wertQuelle === "klassenstufe") {
+        const klassen=Array.isArray(PF_KLASSEN) ? PF_KLASSEN : [];
+        const aktuell=bonus.klassenQuelle||"";
+        klassen.forEach(klasse=>{
+          const option=document.createElement("option");
+          option.value=klasse;
+          option.textContent=klasse;
+          option.selected=aktuell===klasse;
+          wert.appendChild(option);
+        });
+        if(aktuell && !klassen.includes(aktuell)){
+          const option=document.createElement("option");
+          option.value=aktuell;
+          option.textContent=aktuell;
+          option.selected=true;
+          wert.appendChild(option);
+        }
+        wert.title="Verwendet die aktuelle Stufe der gewählten Klasse.";
+        wert.addEventListener("change",event=>
+          aktualisiereBonus(index,"klassenQuelle",event.target.value));
       } else {
         wert.append(...erzeugeOptionen(PF_BONUSWERTE, bonus.wert));
         wert.addEventListener("change", event =>
