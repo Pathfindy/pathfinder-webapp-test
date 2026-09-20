@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="css/commit30.css?v=30">
     <link rel="stylesheet" href="css/leben.css?v=53">
     <link rel="stylesheet" href="css/vermoegen.css?v=42">
-    <link rel="stylesheet" href="css/zeit.css?v=54.3">
+    <link rel="stylesheet" href="css/zeit.css?v=54.4">
     
     <meta name="theme-color" content="#1e3a5f">
     <link rel="stylesheet" href="css/commit50.css?v=50.4">
@@ -31,7 +31,7 @@
 
 <header>
 
-    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.54.3</span></h1>
+    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.54.4</span></h1>
 
 </header>
 
@@ -291,14 +291,14 @@
     <!-- Zeit                      -->
     <!-- ========================= -->
     <section id="zeit" class="page">
-      <div class="seitenkopf"><div><h2>Zeit</h2><p>Kampfrunden der aktiven Kampagne</p></div></div>
+      <div class="seitenkopf"><div><h2>Zeit</h2></div></div>
       <section class="zeit-runde-54">
         <div class="zeit-runde-label-54">Aktuelle Runde</div>
         <output id="zeitRunde" class="zeit-runde-wert-54">0</output>
         <div class="zeit-runde-aktionen-54"><button type="button" id="btnZeitVorherigeRunde">− nochmal zurück</button><button type="button" id="btnZeitNaechsteRunde" class="zeit-naechste-runde-54">+ Nächste Runde</button><button type="button" id="btnZeitReset">Kampf beendet</button></div>
       </section>
       <section class="zeit-karte-54"><h3>Initiative</h3><div id="zeitInitiativeListe"></div><div class="zeit-neu-54"><select id="zeitTeilnehmerCharakter"><option value="">Freier Eintrag</option></select><input id="zeitTeilnehmerName" maxlength="80" placeholder="Gegner / NSC / Name"><input id="zeitTeilnehmerRang" type="number" min="0" max="40" placeholder="Initiative"><button type="button" id="btnZeitTeilnehmer">+ Teilnehmer</button></div></section>
-      <section class="zeit-karte-54"><h3>Effekte der aktiven Kampagne</h3><p class="zeit-hinweis-54">Aktive Effekte mit kurzer Kampfdauer. Die konkrete Dauer wird beim Start manuell in Runden eingetragen.</p><div id="zeitEffektListe"></div></section>
+      <section class="zeit-karte-54"><h3>Effekte</h3><div id="zeitEffektListe"></div></section>
       <section class="zeit-karte-54"><h3>Freie Effekte</h3><div id="zeitFreieEffekte"></div><div class="zeit-frei-neu-54"><input id="zeitFreierName" maxlength="100" placeholder="Effektname"><select id="zeitFreierZiel"><option value="">Freies Ziel</option></select><input id="zeitFreierZielText" maxlength="80" placeholder="Ziel / Notiz"><input id="zeitFreierDauer" type="number" min="1" max="9999" placeholder="Dauer (Runden)"><input id="zeitFreierStart" type="number" min="0" max="9999" placeholder="Startrunde"><button type="button" id="btnZeitFreierEffekt">+ Freier Effekt</button></div></section>
     </section>
 
@@ -498,7 +498,7 @@ Stufenabhängigen Wert verwenden
 </dialog>
 
 <script src="js/commit50.js?v=50.4"></script>
-<script src="js/zeit.js?v=54.3"></script>
+<script src="js/zeit.js?v=54.4"></script>
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 # COMMIT-054 – Seite „Zeit“
 
-Version: **v0.54.3**
+Version: **v0.54.4**
 
 ## Ziel
 
@@ -40,3 +40,13 @@ Zusätzlich wurden die Cache-Versionen der geänderten JavaScript-/CSS-Dateien a
 - Im Initiative-Bereich heißt das Eingabefeld nun „Initiative“; der erklärende Sortiertext wurde entfernt.
 - Bei aktiven Kampagneneffekten wird die konkrete Dauer nicht mehr aus der Stufe des betroffenen Charakters berechnet. Sie wird beim Start des Timers manuell in Runden eingegeben.
 - Abgelaufene App-Effekttimer werden vollständig gegraut dargestellt.
+
+
+### v0.54.4
+
+- Abgelaufene Effekte erhalten nun explizit graue Schrift statt nur reduzierter Deckkraft.
+- Initiative-Aktionen (hoch/runter/löschen) bleiben auf Mobilgeräten neben dem Namen, solange ausreichend Breite vorhanden ist; erst bei sehr schmalen Displays wechseln sie in die nächste Zeile.
+- „+ Nächste Runde“ ist dunkelblau mit weißer, normalgewichtiger Schrift.
+- Effektlaufzeiten können alternativ als Runden, Zauberstufe × 1 Runde, Zauberstufe × 1 Minute oder Minuten eingegeben werden. Minuten werden mit 10 Runden pro Minute umgerechnet.
+- Die Unterzeile „Kampfrunden der aktiven Kampagne“ wurde entfernt.
+- Der Hinweistext im Effektbereich wurde entfernt und die Überschrift lautet jetzt „Effekte“.
