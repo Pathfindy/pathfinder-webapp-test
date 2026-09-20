@@ -8,6 +8,7 @@ const seiten={
  effekte:document.getElementById("effekte"),
  charakterwerte:document.getElementById("charakterwerte"),
  leben:document.getElementById("leben"),
+ zeit:document.getElementById("zeit"),
  vermoegen:document.getElementById("vermoegen"),
  charaktere:document.getElementById("charaktere"),
  admin:document.getElementById("admin")

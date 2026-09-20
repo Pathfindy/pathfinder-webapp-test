@@ -26,7 +26,11 @@
   document.getElementById("btnZeitReset").onclick=()=>{if(!confirm("Kampf zurücksetzen? Runde, Initiative, freie Effekte und gestartete Timer werden gelöscht. Aktive Charaktereffekte bleiben erhalten."))return;save(blank());render()};
   document.getElementById("btnZeitTeilnehmer").onclick=()=>{const st=state(),sel=document.getElementById("zeitTeilnehmerCharakter"),free=document.getElementById("zeitTeilnehmerName"),rank=document.getElementById("zeitTeilnehmerRang");const ch=chars().find(c=>c.id===sel.value),name=(ch?.name||free.value||"").trim();if(!name||rank.value==="")return;st.seq=(st.seq||0)+1;st.initiative.push({id:uid(),name,rang:Math.max(0,Math.min(40,Number(rank.value)||0)),order:st.seq});save(st);free.value="";rank.value="";render()};
   document.getElementById("btnZeitFreierEffekt").onclick=()=>{const st=state(),n=document.getElementById("zeitFreierName"),sel=document.getElementById("zeitFreierZiel"),zt=document.getElementById("zeitFreierZielText"),d=document.getElementById("zeitFreierDauer"),sr=document.getElementById("zeitFreierStart");const name=n.value.trim(),dauer=Math.max(1,Number(d.value)||0);if(!name||!dauer)return;const ch=chars().find(c=>c.id===sel.value);st.freie.push({id:uid(),name,ziel:(ch?.name||zt.value||"").trim(),dauer,start:sr.value===""?st.runde:Math.max(0,Number(sr.value)||0)});save(st);n.value=zt.value=d.value=sr.value="";render()};
-  const oldShow=window.zeigeSeite||zeigeSeite;zeigeSeite=function(name){oldShow(name);if(name==="zeit"){page.style.display="block";render()}document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));const map={charaktere:"btnCharaktere",charakterwerte:"btnCharakterwerte",leben:"btnLeben",effekte:"btnEffekte",zeit:"btnZeit",vermoegen:"btnVermoegen",admin:"btnAdmin"};document.getElementById(map[name])?.classList.add("active")};
+  const oldShow=zeigeSeite;
+  zeigeSeite=function(name){
+    oldShow(name);
+    if(name==="zeit") render();
+  };
   btn.onclick=()=>zeigeSeite("zeit");
   document.getElementById("btnDashboard")?.remove();
   const nav=document.querySelector("nav"), admin=document.getElementById("btnAdmin");if(nav&&admin)nav.insertBefore(btn,document.getElementById("btnVermoegen"));
