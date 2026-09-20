@@ -8,7 +8,7 @@
     { seite: "charakterwerte", button: "btnCharakterwerte" },
     { seite: "leben", button: "btnLeben" },
     { seite: "effekte", button: "btnEffekte" },
-    { seite: "zeit", button: "btnZeit" },
+    { seite: "dashboard", button: "btnDashboard" },
     { seite: "vermoegen", button: "btnVermoegen" },
     { seite: "admin", button: "btnAdmin" }
   ];
