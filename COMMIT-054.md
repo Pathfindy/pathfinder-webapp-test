@@ -1,6 +1,6 @@
 # COMMIT-054 – Seite „Zeit“
 
-Version: **v0.54.2**
+Version: **v0.54.3**
 
 ## Ziel
 
@@ -31,3 +31,12 @@ Der Dashboard-Button bleibt nun als unsichtbares Kompatibilitätselement im DOM.
 Architektur funktionsfähig, während Dashboard für den Nutzer weiterhin ausgeblendet ist.
 
 Zusätzlich wurden die Cache-Versionen der geänderten JavaScript-/CSS-Dateien auf 54.2 angehoben.
+
+### v0.54.3
+
+- „+ Nächste Runde“ wird optisch hervorgehoben.
+- Neuer Button „− nochmal zurück“ reduziert die aktuelle Runde bis minimal Runde 0.
+- „Zurücksetzen“ heißt nun „Kampf beendet“; die bestehende Lösch-/Reset-Funktion bleibt erhalten.
+- Im Initiative-Bereich heißt das Eingabefeld nun „Initiative“; der erklärende Sortiertext wurde entfernt.
+- Bei aktiven Kampagneneffekten wird die konkrete Dauer nicht mehr aus der Stufe des betroffenen Charakters berechnet. Sie wird beim Start des Timers manuell in Runden eingegeben.
+- Abgelaufene App-Effekttimer werden vollständig gegraut dargestellt.
