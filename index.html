@@ -21,7 +21,6 @@
     <link rel="stylesheet" href="css/commit30.css?v=30">
     <link rel="stylesheet" href="css/leben.css?v=53">
     <link rel="stylesheet" href="css/vermoegen.css?v=42">
-    <link rel="stylesheet" href="css/zeit.css?v=54">
     
     <meta name="theme-color" content="#1e3a5f">
     <link rel="stylesheet" href="css/commit50.css?v=50.4">
@@ -31,16 +30,16 @@
 
 <header>
 
-    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.54.0</span></h1>
+    <h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.53.0</span></h1>
 
 </header>
 
 <nav>
 
+    <button id="btnDashboard">Dashboard</button>
     <button id="btnEffekte">Effekte</button>
     <button id="btnCharakterwerte">Kampf</button>
     <button id="btnLeben">Leben</button>
-    <button id="btnZeit">Zeit</button>
     <button id="btnVermoegen">Vermögen</button>
     <button id="btnCharaktere">Charaktere</button>
     <button id="btnAdmin">Admin</button>
@@ -286,21 +285,6 @@
 
 
     <!-- ========================= -->
-    <!-- Zeit                      -->
-    <!-- ========================= -->
-    <section id="zeit" class="page">
-      <div class="seitenkopf"><div><h2>Zeit</h2><p>Kampfrunden der aktiven Kampagne</p></div></div>
-      <section class="zeit-runde-54">
-        <div class="zeit-runde-label-54">Aktuelle Runde</div>
-        <output id="zeitRunde" class="zeit-runde-wert-54">0</output>
-        <div class="zeit-runde-aktionen-54"><button type="button" id="btnZeitNaechsteRunde">+ Nächste Runde</button><button type="button" id="btnZeitReset">↺ Zurücksetzen</button></div>
-      </section>
-      <section class="zeit-karte-54"><h3>Initiative</h3><p class="zeit-hinweis-54">Ränge 0–40 werden automatisch absteigend sortiert. Bei Gleichstand kann die Reihenfolge mit den Pfeilen geändert werden.</p><div id="zeitInitiativeListe"></div><div class="zeit-neu-54"><select id="zeitTeilnehmerCharakter"><option value="">Freier Eintrag</option></select><input id="zeitTeilnehmerName" maxlength="80" placeholder="Gegner / NSC / Name"><input id="zeitTeilnehmerRang" type="number" min="0" max="40" placeholder="Rang"><button type="button" id="btnZeitTeilnehmer">+ Teilnehmer</button></div></section>
-      <section class="zeit-karte-54"><h3>Effekte der aktiven Kampagne</h3><p class="zeit-hinweis-54">Aktive Effekte mit einer Dauer von mindestens 2 Runden bis maximal 10 Runden/Stufe. Start wahlweise jetzt oder in einer angegebenen Runde.</p><div id="zeitEffektListe"></div></section>
-      <section class="zeit-karte-54"><h3>Freie Effekte</h3><div id="zeitFreieEffekte"></div><div class="zeit-frei-neu-54"><input id="zeitFreierName" maxlength="100" placeholder="Effektname"><select id="zeitFreierZiel"><option value="">Freies Ziel</option></select><input id="zeitFreierZielText" maxlength="80" placeholder="Ziel / Notiz"><input id="zeitFreierDauer" type="number" min="1" max="9999" placeholder="Dauer (Runden)"><input id="zeitFreierStart" type="number" min="0" max="9999" placeholder="Startrunde"><button type="button" id="btnZeitFreierEffekt">+ Freier Effekt</button></div></section>
-    </section>
-
-    <!-- ========================= -->
     <!-- Vermögen                  -->
     <!-- ========================= -->
 
@@ -496,7 +480,6 @@ Stufenabhängigen Wert verwenden
 </dialog>
 
 <script src="js/commit50.js?v=50.4"></script>
-<script src="js/zeit.js?v=54"></script>
 </body>
 
 </html>
