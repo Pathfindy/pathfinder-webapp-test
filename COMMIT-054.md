@@ -1,6 +1,6 @@
 # COMMIT-054 – Seite „Zeit“
 
-Version: **v0.54.4**
+Version: **v0.54.5**
 
 ## Ziel
 
@@ -50,3 +50,11 @@ Zusätzlich wurden die Cache-Versionen der geänderten JavaScript-/CSS-Dateien a
 - Effektlaufzeiten können alternativ als Runden, Zauberstufe × 1 Runde, Zauberstufe × 1 Minute oder Minuten eingegeben werden. Minuten werden mit 10 Runden pro Minute umgerechnet.
 - Die Unterzeile „Kampfrunden der aktiven Kampagne“ wurde entfernt.
 - Der Hinweistext im Effektbereich wurde entfernt und die Überschrift lautet jetzt „Effekte“.
+
+
+### v0.54.5
+
+- Die Startrunde zählt als erste Wirkungsrunde. Beispiel: Start Runde 1, Dauer 16 Runden ⇒ Ende Runde 16.
+- Die Dauereingabe aktiver Effekte ist auf eine Zeile vereinfacht: „Dauer:“ | Wert | Einheit „Runden/Minuten“ | „Jetzt starten“ | optionale Startrunde | „Starten“. Minuten werden intern mit 10 Runden pro Minute gespeichert.
+- Effekte mit der Dauer „Nach Angabe SL“ werden ebenfalls auf der Zeitseite angeboten; die konkrete Dauer gibt der Nutzer selbst ein.
+- Auf der Effektseite zeigt ein aktiver, auf der Zeitseite behandelter Effekt den synchronen Timerstatus („Dauer noch N Runde(n)“, „Beginnt in N Runde(n)“ oder „Abgelaufen“). Das Ablaufen deaktiviert den Effekt weiterhin nicht automatisch.
