@@ -43,3 +43,58 @@
 .effekt-zeitstatus-54{margin-top:5px;font-size:.92em;font-weight:600;color:var(--text-color,#222)}
 .effekt-zeitstatus-abgelaufen-54{color:#8a8f98!important}
 @media(max-width:700px){.zeit-start-54{grid-template-columns:auto minmax(64px,90px) minmax(92px,115px) auto;}.zeit-start-54>span:nth-of-type(2){grid-column:1}.zeit-start-54 .zeit-start-runde-54{grid-column:2}.zeit-start-54 button:last-child{grid-column:3}}
+
+
+/* v0.54.6: Timerstatus auf Effektseite hervorheben */
+.zeit-status-effektseite-54,
+.effekt-zeitstatus-54,
+[data-zeitstatus-effekt] {
+  display: inline-block;
+  margin-top: .35rem;
+  padding: .3rem .55rem;
+  border-radius: .4rem;
+  background: #123b6d;
+  color: #fff !important;
+  font-weight: 400 !important;
+  line-height: 1.25;
+}
+
+/* v0.54.6: Initiative auf kleinen Displays ohne Überlagerungen */
+.zeit-init-54 {
+  display: grid;
+  grid-template-columns: minmax(3.7rem, 4.8rem) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .45rem;
+}
+.zeit-init-54 > input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.zeit-init-54 > span:not(.zeit-init-actions-54) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.zeit-init-actions-54 {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: .2rem;
+  justify-self: end;
+}
+.zeit-init-actions-54 button {
+  flex: 0 0 auto;
+  min-width: 2rem;
+  padding-left: .35rem;
+  padding-right: .35rem;
+}
+@media (max-width: 420px) {
+  .zeit-init-54 {
+    grid-template-columns: 3.7rem minmax(0, 1fr) auto;
+    gap: .3rem;
+  }
+  .zeit-init-actions-54 button {
+    min-width: 1.8rem;
+    padding-left: .25rem;
+    padding-right: .25rem;
+  }
+}
