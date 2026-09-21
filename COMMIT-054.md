@@ -58,3 +58,8 @@ Zusätzlich wurden die Cache-Versionen der geänderten JavaScript-/CSS-Dateien a
 - Die Dauereingabe aktiver Effekte ist auf eine Zeile vereinfacht: „Dauer:“ | Wert | Einheit „Runden/Minuten“ | „Jetzt starten“ | optionale Startrunde | „Starten“. Minuten werden intern mit 10 Runden pro Minute gespeichert.
 - Effekte mit der Dauer „Nach Angabe SL“ werden ebenfalls auf der Zeitseite angeboten; die konkrete Dauer gibt der Nutzer selbst ein.
 - Auf der Effektseite zeigt ein aktiver, auf der Zeitseite behandelter Effekt den synchronen Timerstatus („Dauer noch N Runde(n)“, „Beginnt in N Runde(n)“ oder „Abgelaufen“). Das Ablaufen deaktiviert den Effekt weiterhin nicht automatisch.
+
+
+## v0.54.6
+- Timerstatus auf der Effektseite dunkelblau mit weißer, nicht fetter Schrift hervorgehoben.
+- Initiative-Layout für Smartphones korrigiert: Initiative, Name und Aktionsbuttons erhalten getrennte Grid-Spalten; Namen und Eingabefelder überlagern sich nicht mehr.
