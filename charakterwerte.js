@@ -1,0 +1,1038 @@
+// Commit 24: Angriffe mit Notizen und getrenntem Schaden
+(() => {
+  const TP_MAX = 9999;
+  const ANGRIFF_MAX = 12;
+  const WUERFELSEITEN = [0, 3, 4, 6, 8, 10, 12, 20];
+
+  function ganzeZahl(wert, minimum = 0, maximum = TP_MAX) {
+    const zahl = Number(wert);
+    if (!Number.isFinite(zahl)) return minimum;
+    return Math.min(maximum, Math.max(minimum, Math.trunc(zahl)));
+  }
+
+  function optionaleGanzeZahl(wert, minimum = -999, maximum = 999) {
+    if (wert === "" || wert === null || typeof wert === "undefined") return null;
+    const zahl = Number(wert);
+    if (!Number.isFinite(zahl)) return null;
+    return Math.min(maximum, Math.max(minimum, Math.trunc(zahl)));
+  }
+
+  function vorzeichen(wert) {
+    const zahl = Number(wert);
+    const sicher = Number.isFinite(zahl) ? Math.trunc(zahl) : 0;
+    return sicher >= 0 ? `+${sicher}` : String(sicher);
+  }
+
+  function normalisiereAngriff(angriff = {}, index = 0) {
+    const wuerfelSeiten = WUERFELSEITEN.includes(Number(angriff.wuerfelSeiten))
+      ? Number(angriff.wuerfelSeiten)
+      : 8;
+
+    return {
+      id: typeof angriff.id === "string" && angriff.id
+        ? angriff.id
+        : `angriff-${Date.now()}-${index}-${Math.random().toString(36).slice(2)}`,
+      name: typeof angriff.name === "string" && angriff.name.trim()
+        ? angriff.name.trim()
+        : `Angriff ${index + 1}`,
+      art: angriff.art === "Fern" ? "Fern" : "Nah",
+      modus:(()=>{
+        const alt=String(angriff.modus||"");
+        if(alt==="iterativ") return "haupthand_zusatz";
+        if(alt==="einzeln") return "haupthand";
+        return ["haupthand","haupthand_zusatz","zweithand","primaer","sekundaer"].includes(alt)
+          ?alt
+          :"haupthand";
+      })(),
+      grundAngriff:
+        angriff.grundAngriff === "" || angriff.grundAngriff === null || typeof angriff.grundAngriff === "undefined"
+          ? 0
+          : ganzeZahl(angriff.grundAngriff, -999, 999),
+      waffenfinesse: !!angriff.waffenfinesse,
+      waffeZweihand: !!angriff.waffeZweihand,
+      doppelschnitt: !!angriff.doppelschnitt,
+      verbesserterZweiwaffenkampf: !!angriff.verbesserterZweiwaffenkampf,
+      mehrfachangriff: !!angriff.mehrfachangriff,
+      einzigerNatuerlicherAngriff: !!angriff.einzigerNatuerlicherAngriff,
+      fernkampfWaffentyp:["","bogen","kompositbogen","wurfwaffe"].includes(angriff.fernkampfWaffentyp)
+        ?angriff.fernkampfWaffentyp
+        :"",
+      kompositStaerkeauslegung: Math.max(
+        0,
+        Math.min(20, ganzeZahl(angriff.kompositStaerkeauslegung, 0, 20))
+      ),
+      grundreichweite: Math.max(0, Number(angriff.grundreichweite)||0),
+      reichweitenEinheit: ["m","ft","feld"].includes(angriff.reichweitenEinheit) ? angriff.reichweitenEinheit : "m",
+      zielentfernung: Math.max(0, Number(angriff.zielentfernung)||0),
+      reichweitenMultiplikator: Math.max(
+        1,
+        Math.min(10, ganzeZahl(angriff.reichweitenMultiplikator, 1, 10))
+      ),
+      kritMultiplikator: [1,2,3,4].includes(Number(angriff.kritMultiplikator))
+        ? Number(angriff.kritMultiplikator)
+        : 1,
+      wuerfelAnzahl: ganzeZahl(angriff.wuerfelAnzahl, 0, 20),
+      wuerfelSeiten,
+      schadenModifikator: optionaleGanzeZahl(angriff.schadenModifikator, -999, 999),
+      notiz: typeof angriff.notiz === "string" ? angriff.notiz : "",
+      detailsOffen: !!angriff.detailsOffen
+    };
+  }
+
+  function normalisiereKampfwerte(kampfwerte = {}) {
+    const rw = kampfwerte && typeof kampfwerte.rw === "object" ? kampfwerte.rw : {};
+    const angriffe = Array.isArray(kampfwerte?.angriffe)
+      ? kampfwerte.angriffe.slice(0, ANGRIFF_MAX).map(normalisiereAngriff)
+      : [];
+
+    return {
+      angriffe,
+      kmb: Number.isFinite(Number(kampfwerte?.kmb)) ? Number(kampfwerte.kmb) : 0,
+      kmv: Number.isFinite(Number(kampfwerte?.kmv)) ? Number(kampfwerte.kmv) : 0,
+      rk: Number.isFinite(Number(kampfwerte?.rk)) ? Number(kampfwerte.rk) : 0,
+      rw: {
+        zaehigkeit: Number.isFinite(Number(rw.zaehigkeit)) ? Number(rw.zaehigkeit) : 0,
+        reflex: Number.isFinite(Number(rw.reflex)) ? Number(rw.reflex) : 0,
+        wille: Number.isFinite(Number(rw.wille)) ? Number(rw.wille) : 0
+      }
+    };
+  }
+
+  const bisherigeNormalisierung = normalisiereCharakter;
+  normalisiereCharakter = function (charakter = {}) {
+    const basis = bisherigeNormalisierung(charakter);
+    const maxTp = ganzeZahl(charakter.maxTp);
+    const aktuelleTpRoh = Number(charakter.aktuelleTp);
+    const aktuelleTp = Number.isFinite(aktuelleTpRoh) ? Math.trunc(aktuelleTpRoh) : 0;
+
+    return {
+      ...basis,
+      maxTp,
+      aktuelleTp: Math.min(aktuelleTp, maxTp),
+      temporaereTp: ganzeZahl(charakter.temporaereTp),
+      kampfwerte: normalisiereKampfwerte(charakter.kampfwerte)
+    };
+  };
+
+  const seite = document.getElementById("charakterwerte");
+  const btnSeite = document.getElementById("btnCharakterwerte");
+  const maxTpFeld = document.getElementById("maxTp");
+  const aktuelleTpAusgabe = document.getElementById("aktuelleTp");
+  const erlittenerSchadenAusgabe = document.getElementById("erlittenerSchaden");
+  const temporaereTpFeld = document.getElementById("temporaereTp");
+  const schadenFeld = document.getElementById("schadenEingabe");
+  const heilungFeld = document.getElementById("heilungEingabe");
+  const meldung = document.getElementById("tpMeldung");
+  const angriffeListe = document.getElementById("angriffeListe");
+  const angriffeMeldung = document.getElementById("angriffeMeldung");
+  const btnAngriffHinzufuegen = document.getElementById("btnAngriffHinzufuegen");
+
+  if (!seite || !btnSeite) return;
+  seiten.charakterwerte = seite;
+
+  function zeigeMeldung(text = "", fehler = false) {
+    meldung.textContent = text;
+    meldung.classList.toggle("fehler", fehler);
+  }
+
+  function zeigeAngriffeMeldung(text = "", fehler = false) {
+    if (!angriffeMeldung) return;
+    angriffeMeldung.textContent = text;
+    angriffeMeldung.classList.toggle("fehler", fehler);
+  }
+
+  function tpFarbklasse(charakter) {
+    if (charakter.aktuelleTp <= 0 || charakter.maxTp <= 0) return "tp-rot";
+    const prozent = charakter.aktuelleTp / charakter.maxTp * 100;
+    if (prozent > 50) return "tp-gruen";
+    if (prozent >= 25) return "tp-gelb";
+    return "tp-orange";
+  }
+
+  function aktuelleBonuswerte() {
+    return typeof berechneBonusErgebnis === "function"
+      ? berechneBonusErgebnis(typeof effekte !== "undefined" ? effekte : [])
+      : {};
+  }
+
+  function nativerAttributModifikator(key) {
+    const charakter=aktiverCharakter();
+    return charakter && typeof attributModifikator==="function"
+      ? Number(attributModifikator(charakter,key)||0)
+      : 0;
+  }
+
+  function angriffsAttributKey46(angriff) {
+    return angriff?.waffenfinesse
+      ? "GE"
+      : (angriff?.art === "Fern" ? "GE" : "ST");
+  }
+
+  function halberStaerkeBonus46(wert) {
+    const st=Number(wert)||0;
+    // Stärke-Mali werden nie reduziert.
+    if(st<0) return st;
+    const halb=st*0.5;
+    // Pathfinder: mindestens +1, sobald ein positiver halber Bonus entsteht;
+    // danach abrunden: 0→0, 0,5→1, 1→1, 1,5→1, 2→2 ...
+    if(halb>0 && halb<1) return 1;
+    return Math.floor(halb);
+  }
+
+  function anderthalbStaerkeBonus46(wert) {
+    const st=Number(wert)||0;
+    // Mali werden nicht mit 1,5 vervielfacht.
+    if(st<0) return st;
+    return Math.floor(st*1.5);
+  }
+
+  function staerkeSchadenModifikator46(angriff, charakter=aktiverCharakter()) {
+    if(!angriff) return 0;
+    const st=charakter && typeof attributModifikator==="function"
+      ?Number(attributModifikator(charakter,"ST")||0)
+      :nativerAttributModifikator("ST");
+
+    if(angriff.art==="Fern"){
+      switch(angriff.fernkampfWaffentyp){
+        case "wurfwaffe":
+          return st;
+        case "kompositbogen":{
+          if(st<0) return st;
+          const auslegung=Math.max(0,Number(angriff.kompositStaerkeauslegung)||0);
+          return Math.min(st,auslegung);
+        }
+        case "bogen":
+          return st<0?st:0;
+        default:
+          return 0;
+      }
+    }
+
+    switch(angriff.modus){
+      case "zweithand":
+        return angriff.doppelschnitt ? st : halberStaerkeBonus46(st);
+      case "sekundaer":
+        return halberStaerkeBonus46(st);
+      case "primaer":
+        return angriff.einzigerNatuerlicherAngriff
+          ?anderthalbStaerkeBonus46(st)
+          :st;
+      case "haupthand":
+      case "haupthand_zusatz":
+      default:
+        return angriff.waffeZweihand
+          ?anderthalbStaerkeBonus46(st)
+          :st;
+    }
+  }
+
+  function kompositbogenAngriffsmalus49(angriff,charakter=aktiverCharakter()){
+    if(!angriff || angriff.art!=="Fern" || angriff.fernkampfWaffentyp!=="kompositbogen"){
+      return 0;
+    }
+    const st=charakter && typeof attributModifikator==="function"
+      ?Number(attributModifikator(charakter,"ST")||0)
+      :nativerAttributModifikator("ST");
+    const auslegung=Math.max(0,Number(angriff.kompositStaerkeauslegung)||0);
+    return st<auslegung ? -2 : 0;
+  }
+
+  const REICHWEITEN_EINHEITEN_511={
+    m:{label:"Meter",meter:1,kurz:"m"},
+    ft:{label:"Feet",meter:0.3,kurz:"ft"},
+    feld:{label:"Felder",meter:1.5,kurz:"Felder"}
+  };
+  function reichweiteInMeter511(wert,einheit){ return (Number(wert)||0)*(REICHWEITEN_EINHEITEN_511[einheit]?.meter||1); }
+  function reichweiteAusMeter511(wert,einheit){ return (Number(wert)||0)/(REICHWEITEN_EINHEITEN_511[einheit]?.meter||1); }
+  function rundeReichweite511(wert){
+    const n=Math.round((Number(wert)||0)*100)/100;
+    return Number.isInteger(n)?String(n):String(n).replace(".",",");
+  }
+  function reichweitenFaktorFuerZiel511(angriff){
+    const grund=Number(angriff?.grundreichweite)||0, ziel=Number(angriff?.zielentfernung)||0;
+    return grund>0 && ziel>0 ? Math.ceil(ziel/grund) : 1;
+  }
+  function reichweitenAmplitude511(angriff){
+    const grund=Number(angriff?.grundreichweite)||0;
+    if(grund<=0) return "–";
+    const faktor=Math.max(1,Math.min(10,Number(angriff?.reichweitenMultiplikator)||1));
+    const suffix=REICHWEITEN_EINHEITEN_511[angriff?.reichweitenEinheit||"m"]?.kurz||"";
+    const unten=grund*(faktor-1), oben=grund*faktor;
+    if(faktor===1) return `0–${rundeReichweite511(oben)} ${suffix}`;
+    const anfang=Number.isInteger(grund)&&Number.isInteger(unten) ? unten+1 : unten;
+    return `${rundeReichweite511(anfang)}–${rundeReichweite511(oben)} ${suffix}`;
+  }
+
+  function reichweitenAbzug51(angriff) {
+    if(!angriff || angriff.art!=="Fern") return 0;
+    const faktor=Math.max(1,Math.min(10,Number(angriff.reichweitenMultiplikator)||1));
+    return faktor<=1 ? 0 : -2*(faktor-1);
+  }
+
+  function angriffsGrundMalus46(angriff) {
+    let malus=0;
+    if(angriff?.modus==="sekundaer"){
+      malus += angriff.mehrfachangriff ? -2 : -5;
+    }
+    malus += kompositbogenAngriffsmalus49(angriff);
+    malus += reichweitenAbzug51(angriff);
+    return malus;
+  }
+
+  function angriffsBonus(angriff, boni = aktuelleBonuswerte(), angriffsIndex = 0) {
+    const ziel = angriff.art === "Fern" ? "Angriff Fern" : "Angriff Nah";
+    const attributKey = angriffsAttributKey46(angriff);
+    const groesse=typeof groessenModifikatorAngriffRk==="function"
+      ?Number(groessenModifikatorAngriffRk(aktiverCharakter())||0)
+      :0;
+    return Number(boni[ziel] ?? 0) + nativerAttributModifikator(attributKey) + groesse;
+  }
+
+  function schadenBonus(angriff, boni = aktuelleBonuswerte()) {
+    const ziel = angriff.art === "Fern" ? "Schaden Fern" : "Schaden Nah";
+    return Number(boni[ziel] ?? 0) +
+      Number(boni.Schaden ?? 0) +
+      staerkeSchadenModifikator46(angriff);
+  }
+
+  function formatiereSchaden(angriff, boni = aktuelleBonuswerte()) {
+    const grundwert = angriff.schadenModifikator === null ? 0 : angriff.schadenModifikator;
+    const modifikator = grundwert + schadenBonus(angriff, boni);
+    const wuerfel = angriff.wuerfelAnzahl > 0 && angriff.wuerfelSeiten > 0
+      ? `${angriff.wuerfelAnzahl}W${angriff.wuerfelSeiten}`
+      : "";
+
+    if (!wuerfel) return String(modifikator);
+    if (modifikator === 0) return wuerfel;
+    return `${wuerfel}${vorzeichen(modifikator)}`;
+  }
+
+  function kritischerSchadenText51(angriff, normalText) {
+    const mult=[2,3,4].includes(Number(angriff?.kritMultiplikator)) ? Number(angriff.kritMultiplikator) : 1;
+    if(mult===1) return normalText;
+    const match=String(normalText).trim().match(/^(\d+)W(\d+)([+-]\d+)?$/i);
+    if(!match) return `${mult}×(${normalText})`;
+    const anzahl=Number(match[1])*mult, seiten=match[2];
+    const bonus=match[3] ? Number(match[3])*mult : 0;
+    return `${anzahl}W${seiten}${bonus===0 ? "" : vorzeichen(bonus)}`;
+  }
+
+  function aktualisiereTrefferpunkteAnsicht() {
+    const charakter = aktiverCharakter();
+    const deaktiviert = !charakter;
+
+    maxTpFeld.disabled = deaktiviert;
+    temporaereTpFeld.disabled = deaktiviert;
+    schadenFeld.disabled = deaktiviert;
+    heilungFeld.disabled = deaktiviert;
+    document.getElementById("btnSchadenAnwenden").disabled = deaktiviert;
+    document.getElementById("btnHeilungAnwenden").disabled = deaktiviert;
+
+    if (!charakter) {
+      maxTpFeld.value = 0;
+      temporaereTpFeld.value = 0;
+      aktuelleTpAusgabe.value = 0;
+      aktuelleTpAusgabe.textContent = "0";
+      if (erlittenerSchadenAusgabe) {
+        erlittenerSchadenAusgabe.value = 0;
+        erlittenerSchadenAusgabe.textContent = "0";
+      }
+      return;
+    }
+
+    maxTpFeld.value = charakter.maxTp;
+    temporaereTpFeld.value = charakter.temporaereTp;
+    aktuelleTpAusgabe.value = charakter.aktuelleTp;
+    aktuelleTpAusgabe.textContent = String(charakter.aktuelleTp);
+    aktuelleTpAusgabe.className = tpFarbklasse(charakter);
+    if (erlittenerSchadenAusgabe) {
+      const schaden = Math.max(0, charakter.maxTp - charakter.aktuelleTp);
+      erlittenerSchadenAusgabe.value = schaden;
+      erlittenerSchadenAusgabe.textContent = String(schaden);
+    }
+  }
+
+  function speichereTpAenderung() {
+    speichereCharaktere();
+    aktualisiereTrefferpunkteAnsicht();
+  }
+
+  function liesAktionswert(feld) {
+    const wert = Number(feld.value);
+    if (!Number.isInteger(wert) || wert < 1 || wert > TP_MAX) {
+      zeigeMeldung("Bitte eine ganze Zahl zwischen 1 und 9999 eingeben.", true);
+      feld.focus();
+      return null;
+    }
+    return wert;
+  }
+
+  function anwendenSchaden() {
+    const charakter = aktiverCharakter();
+    const schaden = liesAktionswert(schadenFeld);
+    if (!charakter || schaden === null) return;
+
+    // Commit 37: Normaler Schaden läuft über die zentrale Lebenslogik.
+    // Dort wird ggf. Steinhaut berücksichtigt. Energieschaden hat eigene Felder.
+    if (typeof window.verarbeiteLebensSchaden === "function") {
+      const ergebnis = window.verarbeiteLebensSchaden(charakter, schaden);
+      schadenFeld.value = "";
+      zeigeMeldung(ergebnis?.meldung || `${schaden} Schaden angewendet.`);
+      speichereTpAenderung();
+      if (typeof window.rendereEnergieAnsicht === "function") {
+        window.rendereEnergieAnsicht();
+      }
+      return;
+    }
+
+    const vonTemp = Math.min(charakter.temporaereTp, schaden);
+    charakter.temporaereTp -= vonTemp;
+    charakter.aktuelleTp -= schaden - vonTemp;
+    schadenFeld.value = "";
+    zeigeMeldung(`${schaden} Schaden angewendet.`);
+    speichereTpAenderung();
+  }
+
+  function anwendenHeilung() {
+    const charakter = aktiverCharakter();
+    const heilung = liesAktionswert(heilungFeld);
+    if (!charakter || heilung === null) return;
+
+    charakter.aktuelleTp = Math.min(charakter.maxTp, charakter.aktuelleTp + heilung);
+    heilungFeld.value = "";
+    zeigeMeldung(`${heilung} Heilung angewendet.`);
+    speichereTpAenderung();
+  }
+
+  function speichereAngriffsfeld(angriff, feld, eigenschaft, minimum, maximum) {
+    const wert = ganzeZahl(feld.value, minimum, maximum);
+    angriff[eigenschaft] = wert;
+    feld.value = wert;
+    speichereCharaktere();
+    aktualisiereAngriffeAnsicht();
+  }
+
+  function erstelleZahlenfeld(wert, beschriftung, minimum, maximum) {
+    const feld = document.createElement("input");
+    feld.type = "number";
+    feld.value = wert;
+    feld.min = String(minimum);
+    feld.max = String(maximum);
+    feld.step = "1";
+    feld.inputMode = "numeric";
+    feld.setAttribute("aria-label", beschriftung);
+    return feld;
+  }
+
+  function anzahlIterativeAngriffe(charakter){
+    const gab=typeof charakterGAB==="function"
+      ?charakterGAB(charakter)
+      :Number(charakter?.gab||0);
+    if(gab>=16) return 4;
+    if(gab>=11) return 3;
+    if(gab>=6) return 2;
+    return 1;
+  }
+
+  function angriffsfolge(angriff,charakter,gesamtAngriff){
+    const basis=gesamtAngriff+angriffsGrundMalus46(angriff);
+
+    if(angriff.modus==="haupthand_zusatz"){
+      const anzahl=anzahlIterativeAngriffe(charakter);
+      return Array.from({length:anzahl},(_,index)=>basis-(index*5));
+    }
+
+    if(angriff.modus==="zweithand"){
+      const gab=typeof charakterGAB==="function"
+        ?charakterGAB(charakter)
+        :Number(charakter?.gab||0);
+      if(angriff.verbesserterZweiwaffenkampf && gab>=6){
+        return [basis,basis-5];
+      }
+    }
+
+    return [basis];
+  }
+
+  function formatiereAngriffsfolge(werte){
+    return werte.map(vorzeichen).join(" / ");
+  }
+
+  function aktualisiereAngriffeAnsicht() {
+    if (!angriffeListe || !btnAngriffHinzufuegen) return;
+
+    const charakter = aktiverCharakter();
+    angriffeListe.innerHTML = "";
+    btnAngriffHinzufuegen.disabled = !charakter || charakter.kampfwerte.angriffe.length >= ANGRIFF_MAX;
+
+    if (!charakter) {
+      angriffeListe.innerHTML = '<p class="angriffe-leer">Kein aktiver Charakter.</p>';
+      return;
+    }
+
+    const angriffe = charakter.kampfwerte.angriffe;
+    if (angriffe.length === 0) {
+      angriffeListe.innerHTML = '<p class="angriffe-leer">Noch keine Angriffe angelegt.</p>';
+      return;
+    }
+
+    const globaleBoni = aktuelleBonuswerte();
+
+    angriffe.forEach((angriff, index) => {
+      const boni = typeof berechneBonusErgebnisFuerAngriff === "function"
+        ? berechneBonusErgebnisFuerAngriff(
+            typeof effekte !== "undefined" ? effekte : [],
+            index
+          )
+        : globaleBoni;
+      const karte = document.createElement("article");
+      karte.className = "angriff-karte";
+
+      const kopf = document.createElement("div");
+      kopf.className = "angriff-kopf";
+
+      const name = document.createElement("input");
+      name.type = "text";
+      name.className = "angriff-name";
+      name.value = angriff.name;
+      name.maxLength = 60;
+      name.setAttribute("aria-label", `Name von Angriff ${index + 1}`);
+      name.addEventListener("change", () => {
+        angriff.name = name.value.trim() || `Angriff ${index + 1}`;
+        name.value = angriff.name;
+        speichereCharaktere();
+      });
+
+      const umschalten = document.createElement("button");
+      umschalten.type = "button";
+      umschalten.className = "angriff-toggle";
+      umschalten.textContent = "▾";
+      umschalten.setAttribute("aria-label", `${angriff.name} Details anzeigen`);
+      umschalten.setAttribute("aria-expanded", "false");
+
+      kopf.append(name, umschalten);
+
+      const ergebnis = document.createElement("div");
+      ergebnis.className = "angriff-ergebnis";
+      const gesamtAngriff = angriff.grundAngriff + angriffsBonus(angriff, boni, index);
+      const folge=angriffsfolge(angriff,charakter,gesamtAngriff);
+      const angriffsText=formatiereAngriffsfolge(folge);
+      const normalSchadenText=formatiereSchaden(angriff, boni);
+      const kritAktiv=[2,3,4].includes(Number(angriff.kritMultiplikator));
+      const schadenText=kritischerSchadenText51(angriff, normalSchadenText);
+      ergebnis.innerHTML = `
+        <div class="angriff-ergebnis-haupt-48"><span>Angriff</span><strong>${angriffsText}</strong></div>
+        <div class="${kritAktiv ? "angriff-schaden-krit-51" : ""}">
+          <span>Schaden${kritAktiv ? ' <span class="krit-totenkopf-51" aria-hidden="true">☠</span>' : ""}</span>
+          <strong>${schadenText}</strong>
+        </div>
+      `;
+
+      const kampfSchnell51=document.createElement("div");
+      kampfSchnell51.className="angriff-schnellzeile-51";
+
+      if(angriff.art==="Fern"){
+        const reichGrid=document.createElement("div");
+        reichGrid.className="angriff-reichweite-grid-511";
+
+        const grundWrap=document.createElement("label");
+        grundWrap.className="angriff-reichweite-feld-511";
+        grundWrap.innerHTML="<span>Grundreichweite</span>";
+        const grundZeile=document.createElement("div");
+        grundZeile.className="angriff-reichweite-inputeinheit-511";
+        const grundInput=document.createElement("input");
+        grundInput.type="number"; grundInput.min="0"; grundInput.step="0.1"; grundInput.inputMode="decimal";
+        grundInput.value=angriff.grundreichweite||""; grundInput.placeholder="z.B. 10";
+        const einheitSelect=document.createElement("select");
+        Object.entries(REICHWEITEN_EINHEITEN_511).forEach(([wert,daten])=>{
+          const option=document.createElement("option"); option.value=wert; option.textContent=daten.label; einheitSelect.appendChild(option);
+        });
+        einheitSelect.value=angriff.reichweitenEinheit||"m";
+        grundZeile.append(grundInput,einheitSelect); grundWrap.appendChild(grundZeile);
+
+        const zielWrap=document.createElement("label");
+        zielWrap.className="angriff-reichweite-feld-511"; zielWrap.innerHTML="<span>Zielentfernung</span>";
+        const zielInput=document.createElement("input");
+        zielInput.type="number"; zielInput.min="0"; zielInput.step="0.1"; zielInput.inputMode="decimal";
+        zielInput.value=angriff.zielentfernung||""; zielInput.placeholder="Entfernung";
+        zielWrap.appendChild(zielInput);
+
+        const reichLabel=document.createElement("label");
+        reichLabel.className="angriff-reichweite-feld-511";
+        const reichText=document.createElement("span"); reichText.textContent="Reichweiteabzüge";
+        const reichSelect=document.createElement("select");
+        for(let faktor=1;faktor<=10;faktor++){
+          const option=document.createElement("option"); option.value=String(faktor);
+          option.textContent=`x${faktor} (${faktor===1 ? "0" : vorzeichen(-2*(faktor-1))})`;
+          reichSelect.appendChild(option);
+        }
+        reichSelect.value=String(Math.max(1,Math.min(10,Number(angriff.reichweitenMultiplikator)||1)));
+        reichLabel.append(reichText,reichSelect);
+
+        const amplitude=document.createElement("div"); amplitude.className="angriff-reichweite-amplitude-511";
+        const ampTitel=document.createElement("span"); ampTitel.textContent="Reichweitenamplitude";
+        const ampWert=document.createElement("strong");
+        const setzeAmplitude=()=>{
+          const faktor=reichweitenFaktorFuerZiel511(angriff);
+          amplitude.classList.toggle("ausserhalb",faktor>10);
+          ampWert.textContent=faktor>10 ? "Außerhalb max. Reichweite" : reichweitenAmplitude511(angriff);
+        };
+        amplitude.append(ampTitel,ampWert);
+
+        grundInput.addEventListener("change",()=>{
+          angriff.grundreichweite=Math.max(0,Number(grundInput.value)||0);
+          const faktor=reichweitenFaktorFuerZiel511(angriff);
+          if(angriff.zielentfernung>0 && faktor<=10) angriff.reichweitenMultiplikator=Math.max(1,faktor);
+          speichereCharaktere(); aktualisiereAngriffeAnsicht();
+        });
+        zielInput.addEventListener("change",()=>{
+          angriff.zielentfernung=Math.max(0,Number(zielInput.value)||0);
+          const faktor=reichweitenFaktorFuerZiel511(angriff);
+          if(angriff.zielentfernung>0 && faktor<=10) angriff.reichweitenMultiplikator=Math.max(1,faktor);
+          speichereCharaktere(); aktualisiereAngriffeAnsicht();
+        });
+        einheitSelect.addEventListener("change",()=>{
+          const alt=angriff.reichweitenEinheit||"m", neu=einheitSelect.value;
+          if(alt!==neu){
+            angriff.grundreichweite=Math.round(reichweiteAusMeter511(reichweiteInMeter511(angriff.grundreichweite,alt),neu)*100)/100;
+            angriff.zielentfernung=Math.round(reichweiteAusMeter511(reichweiteInMeter511(angriff.zielentfernung,alt),neu)*100)/100;
+            angriff.reichweitenEinheit=neu;
+          }
+          speichereCharaktere(); aktualisiereAngriffeAnsicht();
+        });
+        reichSelect.addEventListener("change",()=>{
+          angriff.reichweitenMultiplikator=Number(reichSelect.value)||1;
+          speichereCharaktere(); aktualisiereAngriffeAnsicht();
+        });
+        setzeAmplitude();
+        reichGrid.append(grundWrap,zielWrap,reichLabel,amplitude);
+        kampfSchnell51.appendChild(reichGrid);
+      }
+
+      const kritGruppe=document.createElement("div");
+      kritGruppe.className="angriff-krit-gruppe-51";
+      const kritText=document.createElement("span");
+      kritText.textContent="Krit.:";
+      kritGruppe.appendChild(kritText);
+      [2,3,4].forEach(mult=>{
+        const button=document.createElement("button");
+        button.type="button";
+        button.className="angriff-krit-button-51";
+        button.classList.toggle("aktiv",Number(angriff.kritMultiplikator)===mult);
+        button.textContent=`x${mult}`;
+        button.setAttribute(
+          "aria-label",
+          Number(angriff.kritMultiplikator)===mult
+            ?`Kritischen Schaden x${mult} ausschalten`
+            :`Kritischen Schaden x${mult} anzeigen`
+        );
+        button.addEventListener("click",()=>{
+          angriff.kritMultiplikator=
+            Number(angriff.kritMultiplikator)===mult ? 1 : mult;
+          speichereCharaktere();
+          aktualisiereAngriffeAnsicht();
+        });
+        kritGruppe.appendChild(button);
+      });
+      kampfSchnell51.appendChild(kritGruppe);
+
+      const notiz = document.createElement("textarea");
+      notiz.className = "angriff-notiz";
+      notiz.value = angriff.notiz;
+      notiz.rows = 2;
+      notiz.placeholder = "Notiz zum Angriff";
+      notiz.setAttribute("aria-label", `Notiz zu ${angriff.name}`);
+      notiz.addEventListener("input", () => {
+        angriff.notiz = notiz.value;
+        speichereCharaktere();
+      });
+
+      const details = document.createElement("div");
+      details.className = "angriff-details";
+      details.hidden = !angriff.detailsOffen;
+      umschalten.textContent = angriff.detailsOffen ? "▴" : "▾";
+      umschalten.setAttribute("aria-expanded", String(angriff.detailsOffen));
+
+      const felder = document.createElement("div");
+      felder.className = "angriff-felder";
+
+      const modusLabel=document.createElement("label");
+      modusLabel.innerHTML="<span>Angriffsmodus</span>";
+      const modus=document.createElement("select");
+      [
+        ["haupthand","Haupthand"],
+        ["haupthand_zusatz","Haupth. + Zusatzangriffe"],
+        ["zweithand","Zweithand"],
+        ["primaer","Primärangriff"],
+        ["sekundaer","Sekundärangriff"]
+      ].forEach(([wert,text])=>{
+        const option=document.createElement("option");
+        option.value=wert;
+        option.textContent=text;
+        option.selected=angriff.modus===wert;
+        modus.appendChild(option);
+      });
+      modus.addEventListener("change",()=>{
+        angriff.modus=modus.value;
+        speichereCharaktere();
+        aktualisiereAngriffeAnsicht();
+      });
+      modusLabel.appendChild(modus);
+
+      const artLabel = document.createElement("label");
+      artLabel.innerHTML = "<span>Art</span>";
+      const art = document.createElement("select");
+      ["Nah", "Fern"].forEach(optionWert => {
+        const option = document.createElement("option");
+        option.value = optionWert;
+        option.textContent = optionWert;
+        option.selected = angriff.art === optionWert;
+        art.appendChild(option);
+      });
+      art.addEventListener("change", () => {
+        angriff.art = art.value === "Fern" ? "Fern" : "Nah";
+        speichereCharaktere();
+        aktualisiereAngriffeAnsicht();
+      });
+      artLabel.appendChild(art);
+
+      const grundLabel = document.createElement("label");
+      grundLabel.innerHTML = "<span>Manuelle Modi.</span>";
+      const grund = erstelleZahlenfeld(angriff.grundAngriff, "Manuelle Modi. Angriff", -999, 999);
+      grund.addEventListener("change", () => speichereAngriffsfeld(angriff, grund, "grundAngriff", -999, 999));
+      grundLabel.appendChild(grund);
+
+      const wuerfelLabel = document.createElement("label");
+      wuerfelLabel.innerHTML = "<span>Schadenswürfel</span>";
+      const wuerfelZeile = document.createElement("div");
+      wuerfelZeile.className = "wuerfel-zeile";
+      const anzahl = erstelleZahlenfeld(angriff.wuerfelAnzahl, "Anzahl Schadenswürfel", 0, 20);
+      const seiten = document.createElement("select");
+      WUERFELSEITEN.forEach(wert => {
+        const option = document.createElement("option");
+        option.value = String(wert);
+        option.textContent = wert === 0 ? "–" : `W${wert}`;
+        option.selected = angriff.wuerfelSeiten === wert;
+        seiten.appendChild(option);
+      });
+      anzahl.addEventListener("change", () => speichereAngriffsfeld(angriff, anzahl, "wuerfelAnzahl", 0, 20));
+      seiten.addEventListener("change", () => {
+        angriff.wuerfelSeiten = Number(seiten.value);
+        speichereCharaktere();
+        aktualisiereAngriffeAnsicht();
+      });
+      wuerfelZeile.append(anzahl, seiten);
+      wuerfelLabel.appendChild(wuerfelZeile);
+
+      const schadenLabel = document.createElement("label");
+      schadenLabel.innerHTML = "<span>Manuelle Modi.</span>";
+      const schaden = erstelleZahlenfeld(
+        angriff.schadenModifikator === null ? "" : angriff.schadenModifikator,
+        "Manuelle Modi. Schaden",
+        -999,
+        999
+      );
+      schaden.placeholder = "";
+      schaden.addEventListener("change", () => {
+        angriff.schadenModifikator = optionaleGanzeZahl(schaden.value, -999, 999);
+        schaden.value = angriff.schadenModifikator === null ? "" : angriff.schadenModifikator;
+        speichereCharaktere();
+        aktualisiereAngriffeAnsicht();
+      });
+      schadenLabel.appendChild(schaden);
+
+      felder.append(modusLabel, artLabel, grundLabel, wuerfelLabel, schadenLabel);
+
+      const optionen46=document.createElement("div");
+      optionen46.className="angriff-optionen-46";
+
+      function checkboxOption46(text,feld){
+        const label=document.createElement("label");
+        label.className="angriff-option-46";
+        const input=document.createElement("input");
+        input.type="checkbox";
+        input.checked=!!angriff[feld];
+        const span=document.createElement("span");
+        span.textContent=text;
+        label.append(input,span);
+        input.addEventListener("change",()=>{
+          angriff[feld]=input.checked;
+          speichereCharaktere();
+          aktualisiereAngriffeAnsicht();
+        });
+        return label;
+      }
+
+      if(angriff.art==="Fern"){
+        function fernkampfTypOption49(text,wert){
+          const label=document.createElement("label");
+          label.className="angriff-option-46";
+          const input=document.createElement("input");
+          input.type="radio";
+          input.name=`fernkampf-typ-${index}`;
+          input.value=wert;
+          input.checked=(angriff.fernkampfWaffentyp||"")===wert;
+          const span=document.createElement("span");
+          span.textContent=text;
+          label.append(input,span);
+          input.addEventListener("change",()=>{
+            if(!input.checked) return;
+            angriff.fernkampfWaffentyp=wert;
+            speichereCharaktere();
+            aktualisiereAngriffeAnsicht();
+          });
+          return label;
+        }
+
+        optionen46.appendChild(fernkampfTypOption49("Ohne Sonderregel",""));
+        optionen46.appendChild(fernkampfTypOption49("Bogen","bogen"));
+        optionen46.appendChild(fernkampfTypOption49("Kompositbogen","kompositbogen"));
+        optionen46.appendChild(fernkampfTypOption49("Wurfwaffe","wurfwaffe"));
+      }else{
+        optionen46.appendChild(checkboxOption46("Waffenfinesse","waffenfinesse"));
+
+        if(angriff.modus==="haupthand" || angriff.modus==="haupthand_zusatz"){
+          optionen46.appendChild(checkboxOption46("Waffe zweihändig","waffeZweihand"));
+        }
+      }
+
+      if(angriff.modus==="zweithand"){
+        optionen46.appendChild(checkboxOption46("Doppelschnitt","doppelschnitt"));
+        optionen46.appendChild(
+          checkboxOption46("Verbesserter Kampf mit zwei Waffen","verbesserterZweiwaffenkampf")
+        );
+      }
+
+      if(angriff.modus==="primaer"){
+        optionen46.appendChild(
+          checkboxOption46("Einziger natürlicher Angriff","einzigerNatuerlicherAngriff")
+        );
+      }
+
+      if(angriff.modus==="sekundaer"){
+        optionen46.appendChild(checkboxOption46("Mehrfachangriff","mehrfachangriff"));
+      }
+
+      felder.appendChild(optionen46);
+
+      if(angriff.art==="Fern" && angriff.fernkampfWaffentyp==="kompositbogen"){
+        const auslegungZeile=document.createElement("label");
+        auslegungZeile.className="komposit-auslegung-49";
+        const auslegungText=document.createElement("span");
+        auslegungText.textContent="Stärkeauslegung";
+        const auslegungInput=document.createElement("input");
+        auslegungInput.type="number";
+        auslegungInput.min="0";
+        auslegungInput.max="20";
+        auslegungInput.step="1";
+        auslegungInput.inputMode="numeric";
+        auslegungInput.value=String(Math.max(0,Number(angriff.kompositStaerkeauslegung)||0));
+        auslegungInput.setAttribute("aria-label","Stärkeauslegung des Kompositbogens");
+        auslegungInput.addEventListener("change",()=>{
+          angriff.kompositStaerkeauslegung=Math.max(
+            0,
+            Math.min(20,Math.trunc(Number(auslegungInput.value)||0))
+          );
+          auslegungInput.value=String(angriff.kompositStaerkeauslegung);
+          speichereCharaktere();
+          aktualisiereAngriffeAnsicht();
+        });
+        auslegungZeile.append(auslegungText,auslegungInput);
+        felder.appendChild(auslegungZeile);
+
+        const kompositInfo=document.createElement("div");
+        kompositInfo.className="angriff-iterativ-info-41";
+        const malus=kompositbogenAngriffsmalus49(angriff,charakter);
+        const schadenSt=staerkeSchadenModifikator46(angriff,charakter);
+        kompositInfo.textContent=
+          `Kompositbogen: ST auf Schaden ${vorzeichen(schadenSt)} ` +
+          `(max. +${angriff.kompositStaerkeauslegung})` +
+          (malus ? " · Angriff −2 (ST unter Auslegung)" : "");
+        felder.appendChild(kompositInfo);
+      }
+
+      if(angriff.modus==="haupthand_zusatz"){
+        const folgeInfo=document.createElement("div");
+        folgeInfo.className="angriff-iterativ-info-41";
+        const gab=typeof charakterGAB==="function"?charakterGAB(charakter):Number(charakter.gab||0);
+        const anzahlIter=anzahlIterativeAngriffe(charakter);
+        folgeInfo.textContent=anzahlIter===1
+          ?`GAB ${vorzeichen(gab)} → 1 Angriff`
+          :`GAB ${vorzeichen(gab)} → ${anzahlIter} Angriffe mit −5-Schritten`;
+        felder.appendChild(folgeInfo);
+      }
+
+      if(angriff.art==="Fern" && angriff.fernkampfWaffentyp==="bogen"){
+        const info=document.createElement("div");
+        info.className="angriff-iterativ-info-41";
+        const st=nativerAttributModifikator("ST");
+        info.textContent=st<0
+          ?`Bogen: Stärke-Malus ${vorzeichen(st)} auf Schaden`
+          :"Bogen: positiver Stärke-Modifikator wird nicht auf Schaden addiert";
+        felder.appendChild(info);
+      }
+
+      if(angriff.art==="Fern" && angriff.fernkampfWaffentyp==="wurfwaffe"){
+        const info=document.createElement("div");
+        info.className="angriff-iterativ-info-41";
+        const st=nativerAttributModifikator("ST");
+        info.textContent=`Wurfwaffe: voller ST-Modifikator ${vorzeichen(st)} auf Schaden`;
+        felder.appendChild(info);
+      }
+
+      if(angriff.modus==="zweithand"){
+        const info=document.createElement("div");
+        info.className="angriff-iterativ-info-41";
+        const gab=typeof charakterGAB==="function"?charakterGAB(charakter):Number(charakter.gab||0);
+        const st=staerkeSchadenModifikator46(angriff,charakter);
+        info.textContent=angriff.verbesserterZweiwaffenkampf && gab>=6
+          ?`Zweithand: ST-Schaden ${vorzeichen(st)} · 1 Zusatzangriff mit −5`
+          :`Zweithand: ST-Schaden ${vorzeichen(st)} · Angriffsmali über Grund-Angriff`;
+        felder.appendChild(info);
+      }
+
+      if(angriff.modus==="sekundaer"){
+        const info=document.createElement("div");
+        info.className="angriff-iterativ-info-41";
+        info.textContent=angriff.mehrfachangriff
+          ?"Sekundärangriff: Angriff −2 · halber ST-Modifikator auf Schaden"
+          :"Sekundärangriff: Angriff −5 · halber ST-Modifikator auf Schaden";
+        felder.appendChild(info);
+      }
+
+      if(angriff.modus==="primaer" && angriff.einzigerNatuerlicherAngriff){
+        const info=document.createElement("div");
+        info.className="angriff-iterativ-info-41";
+        info.textContent="Einziger natürlicher Angriff: 1,5 × ST-Modifikator auf Schaden";
+        felder.appendChild(info);
+      }
+
+      const loeschen = document.createElement("button");
+      loeschen.type = "button";
+      loeschen.className = "angriff-loeschen";
+      loeschen.textContent = "🗑 Löschen";
+      loeschen.setAttribute("aria-label", `${angriff.name} löschen`);
+      loeschen.addEventListener("click", () => {
+        charakter.kampfwerte.angriffe.splice(index, 1);
+        speichereCharaktere();
+        zeigeAngriffeMeldung("Angriff gelöscht.");
+        aktualisiereAngriffeAnsicht();
+      });
+
+      details.append(felder, loeschen);
+
+      umschalten.addEventListener("click", () => {
+        const oeffnen = details.hidden;
+        angriff.detailsOffen = oeffnen;
+        details.hidden = !oeffnen;
+        umschalten.textContent = oeffnen ? "▴" : "▾";
+        umschalten.setAttribute("aria-expanded", String(oeffnen));
+        speichereCharaktere();
+      });
+
+      karte.append(kopf, ergebnis, kampfSchnell51, notiz, details);
+      angriffeListe.appendChild(karte);
+    });
+  }
+
+  function fuegeAngriffHinzu() {
+    const charakter = aktiverCharakter();
+    if (!charakter) return;
+
+    if (charakter.kampfwerte.angriffe.length >= ANGRIFF_MAX) {
+      zeigeAngriffeMeldung(`Es können höchstens ${ANGRIFF_MAX} Angriffe angelegt werden.`, true);
+      return;
+    }
+
+    charakter.kampfwerte.angriffe.push(normalisiereAngriff({}, charakter.kampfwerte.angriffe.length));
+    speichereCharaktere();
+    zeigeAngriffeMeldung();
+    aktualisiereAngriffeAnsicht();
+  }
+
+  btnSeite.addEventListener("click", () => {
+    zeigeSeite("charakterwerte");
+    aktualisiereAngriffeAnsicht();
+  });
+
+  maxTpFeld.addEventListener("change", () => {
+    const charakter = aktiverCharakter();
+    if (!charakter) return;
+
+    const bisherigesMaximum = charakter.maxTp;
+    const neuesMaximum = ganzeZahl(maxTpFeld.value);
+    charakter.maxTp = neuesMaximum;
+
+    if (bisherigesMaximum === 0 && charakter.aktuelleTp === 0 && neuesMaximum > 0) {
+      charakter.aktuelleTp = neuesMaximum;
+    } else if (charakter.aktuelleTp > neuesMaximum) {
+      charakter.aktuelleTp = neuesMaximum;
+    }
+
+    maxTpFeld.value = neuesMaximum;
+    zeigeMeldung();
+    speichereTpAenderung();
+  });
+
+  temporaereTpFeld.addEventListener("change", () => {
+    const charakter = aktiverCharakter();
+    if (!charakter) return;
+    charakter.temporaereTp = ganzeZahl(temporaereTpFeld.value);
+    temporaereTpFeld.value = charakter.temporaereTp;
+    zeigeMeldung();
+    speichereTpAenderung();
+  });
+
+  document.getElementById("btnSchadenAnwenden").addEventListener("click", anwendenSchaden);
+  document.getElementById("btnHeilungAnwenden").addEventListener("click", anwendenHeilung);
+  btnAngriffHinzufuegen?.addEventListener("click", fuegeAngriffHinzu);
+
+  schadenFeld.addEventListener("keydown", event => {
+    if (event.key === "Enter") anwendenSchaden();
+  });
+  heilungFeld.addEventListener("keydown", event => {
+    if (event.key === "Enter") anwendenHeilung();
+  });
+
+  const bisherigeCharakterwahl = waehleCharakter;
+  waehleCharakter = function (id) {
+    const ergebnis = bisherigeCharakterwahl(id);
+    if (ergebnis) {
+      zeigeMeldung();
+      zeigeAngriffeMeldung();
+      aktualisiereTrefferpunkteAnsicht();
+      aktualisiereAngriffeAnsicht();
+    }
+    return ergebnis;
+  };
+
+  const bisherigesLoeschen = loescheCharakter;
+  loescheCharakter = function (id) {
+    const ergebnis = bisherigesLoeschen(id);
+    if (ergebnis) {
+      aktualisiereTrefferpunkteAnsicht();
+      aktualisiereAngriffeAnsicht();
+    }
+    return ergebnis;
+  };
+
+  if (typeof berechneWerte === "function") {
+    const bisherigeBerechnung = berechneWerte;
+    berechneWerte = function (...argumente) {
+      const ergebnis = bisherigeBerechnung(...argumente);
+      aktualisiereAngriffeAnsicht();
+      return ergebnis;
+    };
+    window.berechneWerte = berechneWerte;
+  }
+
+  window.angriffsAttributKey46 = angriffsAttributKey46;
+  window.staerkeSchadenModifikator46 = staerkeSchadenModifikator46;
+  window.angriffsGrundMalus46 = angriffsGrundMalus46;
+  window.reichweitenAbzug51 = reichweitenAbzug51;
+  window.kompositbogenAngriffsmalus49 = kompositbogenAngriffsmalus49;
+  window.aktualisiereAngriffeAnsicht = aktualisiereAngriffeAnsicht;
+  window.aktualisiereTrefferpunkteAnsicht = aktualisiereTrefferpunkteAnsicht;
+  aktualisiereTrefferpunkteAnsicht();
+  aktualisiereAngriffeAnsicht();
+})();
