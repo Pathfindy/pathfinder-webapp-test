@@ -29,3 +29,18 @@ Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete
 ## v0.55.2
 - Hotfix: `data/zauber.json` wieder in den Teststand aufgenommen. Ohne diese Datei war die Zauberdatenbank leer; dadurch wurden alle Grad-Schaltflächen als nicht verfügbar deaktiviert.
 - Grad 0–9 kann nun angeklickt und pro Charakter/Zauberklasse aktiviert bzw. deaktiviert werden, sofern der Grad in der Zauberdatenbank für die Klasse vorhanden ist.
+
+
+## v0.55.3
+- Aktivierbare Zaubergrade werden nun zusätzlich durch das aktuelle Bezugsattribut begrenzt: Zum Wirken eines Zaubers ist mindestens ein Attributswert von `10 + Zaubergrad` erforderlich. Beispiel: IN 12 erlaubt maximal Grad 2. Höhere Grade bleiben deaktiviert und bereits gespeicherte höhere Grade werden nicht angezeigt, solange das Attribut zu niedrig ist.
+- Die Begrenzung verwendet den aktuellen Attributswert inklusive der bereits von der App berechneten Attributsänderungen.
+- „ZR überwinden“ zeigt den vollständigen Wurf als `W20 + ZS` (zuzüglich eines ggf. hinterlegten ZR-Bonus) statt nur den Bonuswert.
+
+
+## v0.55.3
+- Zaubergrade sind nur noch bis zum durch das aktuelle Bezugsattribut erlaubten Grad aktivierbar (Mindestwert 10 + Zaubergrad).
+- „ZR überwinden“ zeigt den vollständigen Wurf `W20 + Zauberstufe`; „Konzentration“ zeigt `W20 + Zauberstufe + Attributsmodifikator`.
+- Quellen aus „Folianten: Zauber“ wurden ausschließlich vorhandenen Excel-/App-Zaubern zugeordnet. Die App-Datenbank wurde nicht um PDF-Zauber erweitert.
+- Spontane Zauberwirker können pro Grad gelernte/verfügbare Zauber markieren und auf diese filtern.
+- Vorbereitende Zauberwirker können Zauber vorbereiten, mehrfach vorbereiten und auf vorbereitete Zauber filtern.
+- Pro aktivem Grad gibt es ein Eingabefeld für Zauber pro Tag/Slots und eine Anzeige der noch freien/verfügbaren Anzahl.
