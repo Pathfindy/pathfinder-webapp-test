@@ -14,3 +14,14 @@ Version 0.55.0 startet die neue Zauberseite.
 - Reichweitenanzeige wählbar in Meter, Felder oder Feet (1 Feld = 1,5 m; 1 ft = 0,3 m), analog zur Kampfseite
 
 Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete/bekannte Zauber pro Charakter, Metamagie sowie weitere Klassenressourcen wie Energie fokussieren, Kampfrausch oder Bardenauftritt.
+
+
+## v0.55.1
+
+- Navigation: „Zauber“ steht nun zwischen „Effekte“ und „Zeit“, inklusive Wischreihenfolge.
+- Die separate oberste Zeile „Zauberklasse“ wurde entfernt.
+- Die aktive Zauberklasse wird direkt in „Zauberwirker-Einstellungen“ per Klick auf die Klasse gewählt; die aktive Klasse ist dunkelblau/weiß markiert.
+- Zaubergrade 0–9 lassen sich pro Charakter und Zauberklasse über die SG-Felder aktivieren/deaktivieren. Aktivierte Grade sind dunkelblau mit weißer Schrift.
+- Grade ohne Zauber in der importierten Datenbank sind deaktiviert.
+- Nur aktivierte Grade erscheinen darunter. Jeder Grad ist als einklappbares Banner umgesetzt; die Zauberliste wird erst beim Aufklappen sichtbar.
+- Die Suchfunktion filtert innerhalb der aktivierten Grade.
