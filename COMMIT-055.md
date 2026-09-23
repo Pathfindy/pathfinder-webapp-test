@@ -25,3 +25,7 @@ Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete
 - Grade ohne Zauber in der importierten Datenbank sind deaktiviert.
 - Nur aktivierte Grade erscheinen darunter. Jeder Grad ist als einklappbares Banner umgesetzt; die Zauberliste wird erst beim Aufklappen sichtbar.
 - Die Suchfunktion filtert innerhalb der aktivierten Grade.
+
+## v0.55.2
+- Hotfix: `data/zauber.json` wieder in den Teststand aufgenommen. Ohne diese Datei war die Zauberdatenbank leer; dadurch wurden alle Grad-Schaltflächen als nicht verfügbar deaktiviert.
+- Grad 0–9 kann nun angeklickt und pro Charakter/Zauberklasse aktiviert bzw. deaktiviert werden, sofern der Grad in der Zauberdatenbank für die Klasse vorhanden ist.
