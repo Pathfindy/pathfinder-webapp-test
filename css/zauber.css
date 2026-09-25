@@ -25,3 +25,10 @@
 .zauber-editor-klassen-554{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px}
 .zauber-editor-klassen-554 label{display:grid;grid-template-columns:minmax(0,1fr) 54px;align-items:center;gap:6px}
 @media(max-width:650px){.zauber-filter-mit-loeschen-554{grid-template-columns:minmax(0,1fr) 38px}.zauber-filter-mit-loeschen-554 #btnNeuerZauber554{grid-column:1/-1}.zauber-editor-grid-554{grid-template-columns:1fr}.zauber-slotkaestchen-554{flex-wrap:wrap}}
+
+/* v0.55.6 */
+.zauber-sg-55{font-weight:600}
+.zauber-meta-werte-556{display:flex;gap:.75rem 1.1rem;flex-wrap:wrap;align-items:baseline}
+.zauber-meta-werte-556>span{display:inline-flex;gap:.3rem;align-items:baseline}
+.zauber-dauer-556,.zauber-rw-556{font-weight:700;color:#1e3a5f}
+@media(max-width:600px){.zauber-meta-werte-556{display:grid;grid-template-columns:1fr;gap:.2rem}}
