@@ -55,3 +55,13 @@ Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete
 - Anzeige „Max. Zaubergrad“ entfernt.
 - Benutzer können eigene Zauber anlegen/bearbeiten; Standardzauber können im entsperrten Admin-Modus bearbeitet werden. Änderungen bleiben lokal gespeichert.
 - Berührungsangriff Nah (GAB + ST-Mod) und Fern (GAB + GE-Mod) ergänzen die Zauberwerte.
+
+
+## v0.55.5
+- Seite Zeit: Initiative auf Mobilgeräten korrigiert; Initiativwert und Teilnehmername liegen in getrennten Grid-Spalten und überlagern sich nicht mehr.
+- Zaubereinträge zeigen den Zaubergrad nicht nochmals im einzelnen Eintrag; der Grad ergibt sich aus dem übergeordneten Grad-Banner.
+- Die Schule wird im kompakten Zaubereintrag nicht mehr angezeigt.
+- Quellen werden als Kürzel dargestellt: GRW, EXP, ABR und ABR II, jeweils mit Seitenzahl.
+- Eindeutig berechenbare Wirkungsdauern werden zusätzlich anhand der aktuellen ZS in Kampfrunden ausgegeben. Sonderdauern bleiben unverändert.
+- Bei vorhandenen Rettungswürfen wird der aktuelle Zauber-SG in Klammern ergänzt.
+- Metamagie ist für einen folgenden Teil von Commit 55 vorgesehen; in v0.55.5 wird noch keine Slotgrad-/Metamagie-Logik eingeführt.
