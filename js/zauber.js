@@ -1,4 +1,4 @@
-// Commit 55.5: Zauberseite – kompakte Zauberinfos, Quellenkürzel, Dauer und RW-SG
+// Commit 55.7: Zauberseite – Dauer bis unter 1 Stunde/St in Runden, ab Stunde/St in Stunden
 (() => {
   "use strict";
   const page=document.getElementById("zauber"), btn=document.getElementById("btnZauber"), root=document.getElementById("zauberInhalt55");
@@ -58,7 +58,7 @@
     const merged=basis.map(z=>aender[z.id]?normZauber({...z,...aender[z.id],id:z.id}):z);
     daten={zauber:[...merged,...benutzer.map(normZauber),...adminNeu.map(z=>normZauber({...z,standard:true}))]};
   }
-  async function load(){if(basisDaten)return;try{const r=await fetch("data/zauber.json?v=55.5");if(!r.ok)throw new Error();basisDaten=await r.json()}catch{basisDaten={zauber:[]}}kombiniereDaten();}
+  async function load(){if(basisDaten)return;try{const r=await fetch("data/zauber.json?v=55.7");if(!r.ok)throw new Error();basisDaten=await r.json()}catch{basisDaten={zauber:[]}}kombiniereDaten();}
   function gradVorhanden(k,g){return (daten.zauber||[]).some(z=>Object.prototype.hasOwnProperty.call(z.klassen||{},k.name)&&Number(z.klassen[k.name])===Number(g));}
   function touchWert(fern=false){const c=ch(),gab=typeof charakterGAB==="function"?Number(charakterGAB(c)||0):Number(c?.gab||0),a=mod(c,fern?"GE":"ST");return gab+a;}
 
@@ -79,7 +79,7 @@
     const am=mod(c,x.attribut),aw=attrWert(c,x.attribut),konz=Number(x.zs||0)+am+Number(x.konzBonus||0),zr=Number(x.zs||0)+Number(x.zrBonus||0),mg=maxGrad(c,x),nah=touchWert(false),fern=touchWert(true);
     x.aktiveGrade=x.aktiveGrade.filter(g=>g<=mg);
     const box=document.createElement("section");box.className="zauber-karte-55";
-    box.innerHTML=`<div class="zauber-kopf-55"><h3>${esc(k.name)} ${Number(k.stufe||0)} · ZS ${Number(x.zs||0)} · ${x.attribut} ${aw} (${fmt(am)})</h3><label>Reichweite <select id="zauberEinheit55"><option value="m">Meter</option><option value="feld">Felder</option><option value="ft">Feet</option></select></label></div><div class="zauber-werte-55"><div class="zauber-wert-55">Konzentration<strong>W20 ${fmt(konz)}</strong><small>ZS ${fmt(Number(x.zs||0))} + ${x.attribut}-Mod ${fmt(am)}</small></div><div class="zauber-wert-55">ZR überwinden<strong>W20 ${fmt(zr)}</strong><small>Zauberstufe ${fmt(Number(x.zs||0))}</small></div><div class="zauber-wert-55">Berührung Nah<strong>W20 ${fmt(nah)}</strong><small>GAB + ST-Mod</small></div><div class="zauber-wert-55">Berührung Fern<strong>W20 ${fmt(fern)}</strong><small>GAB + GE-Mod</small></div></div><div class="zauber-sg-grid-55">${Array.from({length:10},(_,g)=>{const aktiv=x.aktiveGrade.includes(g),vorhanden=gradVorhanden(k,g),attributOk=g<=mg;return `<button type="button" class="zauber-sg-55${aktiv?" aktiv":""}" data-grad="${g}" ${vorhanden&&attributOk?"":"disabled"} aria-pressed="${aktiv}" title="${!vorhanden?"Für diese Klasse sind in der Datenbank keine Zauber dieses Grades vorhanden":!attributOk?`${x.attribut} ${aw}: Für Grad ${g} wird mindestens ${10+g} benötigt`:"Grad für diesen Charakter ein-/ausblenden"}">Grad ${g}<br><strong>SG ${10+g+am+Number(x.sgBonus||0)}</strong></button>`}).join("")}</div>`;
+    box.innerHTML=`<div class="zauber-kopf-55"><h3>${esc(k.name)} ${Number(k.stufe||0)} · ZS ${Number(x.zs||0)} · ${x.attribut} ${aw} (${fmt(am)})</h3><label>Reichweite <select id="zauberEinheit55"><option value="m">Meter</option><option value="feld">Felder</option><option value="ft">Feet</option></select></label></div><div class="zauber-werte-55"><div class="zauber-wert-55">Konzentration<strong>W20 ${fmt(konz)}</strong><small>ZS ${fmt(Number(x.zs||0))} + ${x.attribut}-Mod ${fmt(am)}</small></div><div class="zauber-wert-55">ZR überwinden<strong>W20 ${fmt(zr)}</strong><small>Zauberstufe ${fmt(Number(x.zs||0))}</small></div><div class="zauber-wert-55">Berührung Nah<strong>W20 ${fmt(nah)}</strong><small>GAB + ST-Mod</small></div><div class="zauber-wert-55">Berührung Fern<strong>W20 ${fmt(fern)}</strong><small>GAB + GE-Mod</small></div></div><div class="zauber-sg-grid-55">${Array.from({length:10},(_,g)=>{const aktiv=x.aktiveGrade.includes(g),vorhanden=gradVorhanden(k,g),attributOk=g<=mg;return `<button type="button" class="zauber-sg-55${aktiv?" aktiv":""}" data-grad="${g}" ${vorhanden&&attributOk?"":"disabled"} aria-pressed="${aktiv}" title="${!vorhanden?"Für diese Klasse sind in der Datenbank keine Zauber dieses Grades vorhanden":!attributOk?`${x.attribut} ${aw}: Für Grad ${g} wird mindestens ${10+g} benötigt`:"Grad für diesen Charakter ein-/ausblenden"}">Grad ${g}</button>`}).join("")}</div>`;
     root.append(box);const sel=box.querySelector('#zauberEinheit55');sel.value=einheit();sel.onchange=()=>{localStorage.setItem(EINHEIT_KEY,sel.value);render()};
     box.querySelectorAll('[data-grad]').forEach(b=>b.onclick=()=>{const g=Number(b.dataset.grad);if(g>mg)return;x.aktiveGrade=x.aktiveGrade.includes(g)?x.aktiveGrade.filter(v=>v!==g):[...x.aktiveGrade,g].sort((a,b)=>a-b);save();render()});
   }
@@ -99,13 +99,25 @@
     if((m=t.match(/^(\d+)Rd\+(\d*)Rd\/St$/i)))return Number(m[1])+Number(m[2]||1)*zs;
     return null;
   }
-  function dauerText(text,zs){const r=dauerRunden(text,zs);return r===null?String(text||""):`${text} (${r} Runde${r===1?"":"n"})`}
+  function dauerIstStundenProStufe(text){
+    const t=String(text||"").replace(/\s+/g,"").replace(/Stunden?/gi,"h").replace(/Std\.?/gi,"h");
+    return /^(?:\d*)h\/St$/i.test(t)||/^(?:\d*)Tag\/St$/i.test(t);
+  }
+  function formatDauerWert(text,runden){
+    const r=Math.max(0,Number(runden)||0);
+    if(dauerIstStundenProStufe(text)){
+      const stunden=r/600;
+      return `${runde(stunden)} Std.`;
+    }
+    return `${runde(r)} Runde${r===1?"":"n"}`;
+  }
+  function dauerText(text,zs){const r=dauerRunden(text,zs);return r===null?String(text||""):`${text} (${formatDauerWert(text,r)})`}
   function rwText(text,sg){const t=String(text||"").trim();if(!t)return "";const hatRw=!/^-$/.test(t)&&!/^kein/i.test(t);return hatRw?`${t} (SG ${sg})`:t}
   function zauberHtml(z,k,x,g){
     const sg=10+g+mod(ch(),x.attribut)+Number(x.sgBonus||0),source=quellenText(z),spontan=x.art==="spontan",gelernt=ids(x,g).includes(z.id),p=Number(prep(x,g)[z.id]||0),max=slotMax(x,g),used=prepAnzahl(x,g);
     const control=spontan?`<label class="zauber-lerncheck-55"><input type="checkbox" data-lern="${esc(z.id)}" ${gelernt?"checked":""}> gelernt / verfügbar</label>`:`<div class="zauber-prep-55"><label><input type="checkbox" data-prepcheck="${esc(z.id)}" ${p>0?"checked":""}> vorbereitet</label><button type="button" data-minus="${esc(z.id)}" ${p<=0?"disabled":""}>−</button><strong>${p}×</strong><button type="button" data-plus="${esc(z.id)}" ${max<=0||used>=max?"disabled":""}>+</button></div>`;
     const editierbar=!z.standard||adminAktiv();
-    return `<article class="zauber-eintrag-55" data-zauber-id="${esc(z.id)}"><div class="zauber-eintrag-kopf-55"><h4>${esc(z.name)}</h4><div class="zauber-eintrag-aktionen-554"><strong>SG ${sg}</strong>${editierbar?`<button type="button" data-edit="${esc(z.id)}" title="Zauber bearbeiten" aria-label="Zauber bearbeiten">✏️</button>`:""}</div></div>${control}<div class="zauber-meta-55">${source?`Quelle: ${esc(source)} · `:''}ZR-Wurf W20 ${fmt(Number(x.zs||0)+Number(x.zrBonus||0))}</div><div class="zauber-meta-55">Reichweite: <span class="zauber-reichweite-55">${esc(reichweiteText(z.reichweite,x.zs))}</span>${z.dauer?` · Dauer: ${esc(dauerText(z.dauer,Number(x.zs||0)))}`:''}${z.rettungswurf?` · RW: ${esc(rwText(z.rettungswurf,sg))}`:''}</div>${z.beschreibung?`<div class="zauber-beschreibung-55">${esc(z.beschreibung)}</div>`:''}</article>`;
+    return `<article class="zauber-eintrag-55" data-zauber-id="${esc(z.id)}"><div class="zauber-eintrag-kopf-55"><h4>${esc(z.name)}</h4><div class="zauber-eintrag-aktionen-554">${editierbar?`<button type="button" data-edit="${esc(z.id)}" title="Zauber bearbeiten" aria-label="Zauber bearbeiten">✏️</button>`:""}</div></div>${control}<div class="zauber-meta-55">${source?`Quelle: ${esc(source)} · `:''}ZR-Wurf W20 ${fmt(Number(x.zs||0)+Number(x.zrBonus||0))}</div><div class="zauber-meta-55 zauber-meta-werte-556"><span>Reichweite: <strong class="zauber-reichweite-55">${esc(reichweiteText(z.reichweite,x.zs))}</strong></span>${z.dauer?`<span>Dauer: <strong class="zauber-dauer-556">${esc(dauerText(z.dauer,Number(x.zs||0)))}</strong></span>`:''}${z.rettungswurf?`<span>RW: <strong class="zauber-rw-556">${esc(rwText(z.rettungswurf,sg))}</strong></span>`:''}</div>${z.beschreibung?`<div class="zauber-beschreibung-55">${esc(z.beschreibung)}</div>`:''}</article>`;
   }
 
   function renderGradListen(k,x){
