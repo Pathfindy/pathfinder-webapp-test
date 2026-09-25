@@ -6,3 +6,22 @@
 /* v0.55.3 */
 .zauber-wert-55 small{display:block;margin-top:2px;color:#667;font-size:.72rem}.zauber-gradstatus-55{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;font-weight:400}.zauber-gradstatus-55 label{display:inline-flex;align-items:center;gap:5px}.zauber-gradstatus-55 input[type="number"]{width:58px;min-height:30px;padding:3px 5px;border:1px solid #bbb;border-radius:6px}.zauber-lerncheck-55,.zauber-prep-55{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:.86rem}.zauber-prep-55 button{min-width:30px;min-height:28px;border:1px solid #b8c5d4;border-radius:6px;background:#eef3f8;color:#1e3a5f;font-weight:700}.zauber-prep-55 button:disabled{opacity:.4}.zauber-prep-55 strong{min-width:28px;text-align:center;color:#1e3a5f}.zauber-gradgruppe-55>summary{align-items:center}.zauber-gradgruppe-55>summary input{cursor:pointer}
 @media(max-width:700px){.zauber-gradgruppe-55>summary{align-items:flex-start;flex-direction:column}.zauber-gradstatus-55{justify-content:flex-start}}
+
+
+/* v0.55.4 */
+.zauber-filter-mit-loeschen-554{display:grid;grid-template-columns:minmax(0,1fr) 38px auto;gap:7px}
+.zauber-filter-mit-loeschen-554 input{width:100%;min-width:0}
+#btnZauberSucheLeeren554{visibility:hidden;min-width:38px;border:1px solid #b8c5d4;border-radius:8px;background:#eef3f8;color:#1e3a5f;font-size:1.25rem;line-height:1}
+#btnZauberSucheLeeren554.sichtbar{visibility:visible}
+.zauber-eintrag-aktionen-554{display:flex;align-items:center;gap:8px}
+.zauber-eintrag-aktionen-554 button{border:1px solid #b8c5d4;border-radius:6px;background:#eef3f8;padding:3px 6px}
+.zauber-slotkaestchen-554{display:inline-flex;gap:4px;align-items:center}
+.zauber-slot-554{width:28px;height:28px;padding:0;border:1px solid #8ca1b9;border-radius:5px;background:#fff;color:#1e3a5f;font-weight:700}
+.zauber-slot-554.verbraucht{background:#1e3a5f;color:#fff;border-color:#1e3a5f}
+.zauber-dialog-554{width:min(900px,94vw);max-height:90vh;overflow:auto;border:0;border-radius:12px;padding:18px}
+.zauber-editor-grid-554{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.zauber-editor-grid-554 label,.zauber-dialog-554>form>label{display:grid;gap:4px}
+.zauber-editor-grid-554 input,.zauber-dialog-554 textarea,.zauber-editor-klassen-554 input{min-height:36px;padding:6px;border:1px solid #bbb;border-radius:7px;box-sizing:border-box;width:100%}
+.zauber-editor-klassen-554{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px}
+.zauber-editor-klassen-554 label{display:grid;grid-template-columns:minmax(0,1fr) 54px;align-items:center;gap:6px}
+@media(max-width:650px){.zauber-filter-mit-loeschen-554{grid-template-columns:minmax(0,1fr) 38px}.zauber-filter-mit-loeschen-554 #btnNeuerZauber554{grid-column:1/-1}.zauber-editor-grid-554{grid-template-columns:1fr}.zauber-slotkaestchen-554{flex-wrap:wrap}}
