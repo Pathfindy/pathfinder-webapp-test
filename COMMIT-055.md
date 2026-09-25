@@ -44,3 +44,14 @@ Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete
 - Spontane Zauberwirker können pro Grad gelernte/verfügbare Zauber markieren und auf diese filtern.
 - Vorbereitende Zauberwirker können Zauber vorbereiten, mehrfach vorbereiten und auf vorbereitete Zauber filtern.
 - Pro aktivem Grad gibt es ein Eingabefeld für Zauber pro Tag/Slots und eine Anzeige der noch freien/verfügbaren Anzahl.
+
+
+## v0.55.4
+- Zaubersuche mit Löschbutton analog zur Effektseite.
+- Geöffnete Zaubergrad-Banner bleiben beim Lernen/Vorbereiten/Filtern geöffnet.
+- Zauberdatenbank auf Einträge mit zugeordnetem Regelwerk und Seitenzahl reduziert (nur 1.168 belegte PDF-Zuordnungen bleiben).
+- ZS folgt Änderungen der Klassenstufe automatisch, solange der Nutzer die ZS nicht bewusst manuell abweichend eingestellt hat.
+- Spontane Zauberwirker erhalten anklickbare Tages-Slot-Kästchen zum Verbrauchen/Wiederherstellen.
+- Anzeige „Max. Zaubergrad“ entfernt.
+- Benutzer können eigene Zauber anlegen/bearbeiten; Standardzauber können im entsperrten Admin-Modus bearbeitet werden. Änderungen bleiben lokal gespeichert.
+- Berührungsangriff Nah (GAB + ST-Mod) und Fern (GAB + GE-Mod) ergänzen die Zauberwerte.
