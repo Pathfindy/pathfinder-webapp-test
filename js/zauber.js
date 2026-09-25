@@ -1,4 +1,4 @@
-// Commit 55.4: Zauberseite – Suche, stabile Listen, Slots, ZS-Sync und Zauber-Editor
+// Commit 55.5: Zauberseite – kompakte Zauberinfos, Quellenkürzel, Dauer und RW-SG
 (() => {
   "use strict";
   const page=document.getElementById("zauber"), btn=document.getElementById("btnZauber"), root=document.getElementById("zauberInhalt55");
@@ -58,7 +58,7 @@
     const merged=basis.map(z=>aender[z.id]?normZauber({...z,...aender[z.id],id:z.id}):z);
     daten={zauber:[...merged,...benutzer.map(normZauber),...adminNeu.map(z=>normZauber({...z,standard:true}))]};
   }
-  async function load(){if(basisDaten)return;try{const r=await fetch("data/zauber.json?v=55.4");if(!r.ok)throw new Error();basisDaten=await r.json()}catch{basisDaten={zauber:[]}}kombiniereDaten();}
+  async function load(){if(basisDaten)return;try{const r=await fetch("data/zauber.json?v=55.5");if(!r.ok)throw new Error();basisDaten=await r.json()}catch{basisDaten={zauber:[]}}kombiniereDaten();}
   function gradVorhanden(k,g){return (daten.zauber||[]).some(z=>Object.prototype.hasOwnProperty.call(z.klassen||{},k.name)&&Number(z.klassen[k.name])===Number(g));}
   function touchWert(fern=false){const c=ch(),gab=typeof charakterGAB==="function"?Number(charakterGAB(c)||0):Number(c?.gab||0),a=mod(c,fern?"GE":"ST");return gab+a;}
 
@@ -84,12 +84,28 @@
     box.querySelectorAll('[data-grad]').forEach(b=>b.onclick=()=>{const g=Number(b.dataset.grad);if(g>mg)return;x.aktiveGrade=x.aktiveGrade.includes(g)?x.aktiveGrade.filter(v=>v!==g):[...x.aktiveGrade,g].sort((a,b)=>a-b);save();render()});
   }
 
-  function quellenText(z){return z.regelwerk&&z.seite?`${z.regelwerk}, S. ${z.seite}`:""}
+  const QUELLEN_KUERZEL={"Grundregelwerk":"GRW","Expertenregeln":"EXP","Ausbauregeln: Magie":"ABR","Ausbauregeln II: Kampf":"ABR II"};
+  function quellenText(z){if(!z.regelwerk||!z.seite)return "";return `${QUELLEN_KUERZEL[z.regelwerk]||z.regelwerk} S. ${z.seite}`}
+  function dauerRunden(text,zs){
+    const t=String(text||"").replace(/\s+/g,"").replace(/Min/g,"min"); if(!t)return null; let m;
+    if((m=t.match(/^(\d*)Rd\/St$/i)))return (Number(m[1]||1)*zs);
+    if((m=t.match(/^(\d*)Rd\/(\d+)St$/i)))return Number(m[1]||1)*Math.floor(zs/Number(m[2]));
+    if((m=t.match(/^(\d*)min\/St$/i)))return Number(m[1]||1)*10*zs;
+    if((m=t.match(/^(\d*)h\/St$/i)))return Number(m[1]||1)*600*zs;
+    if((m=t.match(/^(\d*)Tag\/St$/i)))return Number(m[1]||1)*14400*zs;
+    if((m=t.match(/^(\d+)Rd$/i)))return Number(m[1]);
+    if((m=t.match(/^(\d+)min$/i)))return Number(m[1])*10;
+    if((m=t.match(/^(\d+)h$/i)))return Number(m[1])*600;
+    if((m=t.match(/^(\d+)Rd\+(\d*)Rd\/St$/i)))return Number(m[1])+Number(m[2]||1)*zs;
+    return null;
+  }
+  function dauerText(text,zs){const r=dauerRunden(text,zs);return r===null?String(text||""):`${text} (${r} Runde${r===1?"":"n"})`}
+  function rwText(text,sg){const t=String(text||"").trim();if(!t)return "";const hatRw=!/^-$/.test(t)&&!/^kein/i.test(t);return hatRw?`${t} (SG ${sg})`:t}
   function zauberHtml(z,k,x,g){
     const sg=10+g+mod(ch(),x.attribut)+Number(x.sgBonus||0),source=quellenText(z),spontan=x.art==="spontan",gelernt=ids(x,g).includes(z.id),p=Number(prep(x,g)[z.id]||0),max=slotMax(x,g),used=prepAnzahl(x,g);
     const control=spontan?`<label class="zauber-lerncheck-55"><input type="checkbox" data-lern="${esc(z.id)}" ${gelernt?"checked":""}> gelernt / verfügbar</label>`:`<div class="zauber-prep-55"><label><input type="checkbox" data-prepcheck="${esc(z.id)}" ${p>0?"checked":""}> vorbereitet</label><button type="button" data-minus="${esc(z.id)}" ${p<=0?"disabled":""}>−</button><strong>${p}×</strong><button type="button" data-plus="${esc(z.id)}" ${max<=0||used>=max?"disabled":""}>+</button></div>`;
     const editierbar=!z.standard||adminAktiv();
-    return `<article class="zauber-eintrag-55" data-zauber-id="${esc(z.id)}"><div class="zauber-eintrag-kopf-55"><h4>${esc(z.name)} <small>Grad ${g}</small></h4><div class="zauber-eintrag-aktionen-554"><strong>SG ${sg}</strong>${editierbar?`<button type="button" data-edit="${esc(z.id)}" title="Zauber bearbeiten" aria-label="Zauber bearbeiten">✏️</button>`:""}</div></div>${control}<div class="zauber-meta-55">${esc(z.schule||'')}${source?` · Quelle: ${esc(source)}`:''} · ZR-Wurf W20 ${fmt(Number(x.zs||0)+Number(x.zrBonus||0))}</div><div class="zauber-meta-55">Reichweite: <span class="zauber-reichweite-55">${esc(reichweiteText(z.reichweite,x.zs))}</span>${z.dauer?` · Dauer: ${esc(z.dauer)}`:''}${z.rettungswurf?` · RW: ${esc(z.rettungswurf)}`:''}</div>${z.beschreibung?`<div class="zauber-beschreibung-55">${esc(z.beschreibung)}</div>`:''}</article>`;
+    return `<article class="zauber-eintrag-55" data-zauber-id="${esc(z.id)}"><div class="zauber-eintrag-kopf-55"><h4>${esc(z.name)}</h4><div class="zauber-eintrag-aktionen-554"><strong>SG ${sg}</strong>${editierbar?`<button type="button" data-edit="${esc(z.id)}" title="Zauber bearbeiten" aria-label="Zauber bearbeiten">✏️</button>`:""}</div></div>${control}<div class="zauber-meta-55">${source?`Quelle: ${esc(source)} · `:''}ZR-Wurf W20 ${fmt(Number(x.zs||0)+Number(x.zrBonus||0))}</div><div class="zauber-meta-55">Reichweite: <span class="zauber-reichweite-55">${esc(reichweiteText(z.reichweite,x.zs))}</span>${z.dauer?` · Dauer: ${esc(dauerText(z.dauer,Number(x.zs||0)))}`:''}${z.rettungswurf?` · RW: ${esc(rwText(z.rettungswurf,sg))}`:''}</div>${z.beschreibung?`<div class="zauber-beschreibung-55">${esc(z.beschreibung)}</div>`:''}</article>`;
   }
 
   function renderGradListen(k,x){
