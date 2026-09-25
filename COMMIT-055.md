@@ -65,3 +65,16 @@ Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete
 - Eindeutig berechenbare Wirkungsdauern werden zusätzlich anhand der aktuellen ZS in Kampfrunden ausgegeben. Sonderdauern bleiben unverändert.
 - Bei vorhandenen Rettungswürfen wird der aktuelle Zauber-SG in Klammern ergänzt.
 - Metamagie ist für einen folgenden Teil von Commit 55 vorgesehen; in v0.55.5 wird noch keine Slotgrad-/Metamagie-Logik eingeführt.
+
+
+## v0.55.6
+- Grad-Schaltflächen zeigen nur noch „Grad X“; der SG wird dort nicht mehr wiederholt.
+- Der separate SG direkt hinter dem Zaubernamen wurde entfernt.
+- Reichweite, Dauer und Rettungswurf werden im Zauberbanner gleichartig dargestellt; die jeweiligen Werte sind hervorgehoben.
+- Berechnete Wirkungsdauern werden passend skaliert: bis 10 Runden als Runden, darüber bis unter 60 Minuten als Minuten, ab 60 Minuten als Stunden. Die originale Dauerangabe bleibt zusätzlich sichtbar.
+
+
+## v0.55.7
+- Daueranzeige korrigiert: Berechenbare Zauberdauern unterhalb der Kategorie „1 Stunde/Stufe“ werden konsequent in Runden ausgegeben.
+- Dauern ab „1 Stunde/Stufe“ werden anhand der aktuellen ZS in Stunden ausgegeben. Damit bleibt z. B. „1 Min./Stufe“ auch bei hoher ZS eine Rundenanzeige.
+- v0.55.7 baut auf dem lokalen v0.55.6-Teststand auf; v0.55.6 musste dafür nicht zuvor im Repository vorhanden sein.
