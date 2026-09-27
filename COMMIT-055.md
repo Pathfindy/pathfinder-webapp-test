@@ -78,3 +78,14 @@ Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete
 - Daueranzeige korrigiert: Berechenbare Zauberdauern unterhalb der Kategorie „1 Stunde/Stufe“ werden konsequent in Runden ausgegeben.
 - Dauern ab „1 Stunde/Stufe“ werden anhand der aktuellen ZS in Stunden ausgegeben. Damit bleibt z. B. „1 Min./Stufe“ auch bei hoher ZS eine Rundenanzeige.
 - v0.55.7 baut auf dem lokalen v0.55.6-Teststand auf; v0.55.6 musste dafür nicht zuvor im Repository vorhanden sein.
+
+
+## v0.55.8
+- Metamagie-Grundsystem auf der Zauberseite ergänzt.
+- Umfang bewusst auf Metamagietalente aus GRW, EXP und ABR beschränkt.
+- Erlernte Metamagietalente werden charakterweit markiert; nur erlernte Talente stehen anschließend am einzelnen Zauber zur Auswahl.
+- Die konkrete Anwendung bleibt vom Besitz des Talents getrennt. Der Grundzauber in der Datenbank wird nicht verändert.
+- Slotgraderhöhung wird je gewählter Metamagie angezeigt und addiert. „Zaubergrad erhöhen“ wird als Sonderfall mit Erhöhung des effektiven Zaubergrads und damit des SG behandelt.
+- „Zauber ausdehnen“ verdoppelt automatisch die berechnete Dauer; „Zauberreichweite erhöhen“ verdoppelt automatisch berechenbare Reichweiten.
+- Weitere Metamagien aus GRW/EXP/ABR werden zunächst mit Slotänderung und Regelhinweis eingebunden, wenn ihre Wirkung nicht zuverlässig aus den vorhandenen Zauberdaten automatisiert werden kann.
+- Architektur vorbereitet für den nächsten Schritt: vorbereitete Zauberkopien bzw. spontane Wirkungen können später ihre konkrete Metamagie-Konfiguration getrennt speichern und an Effekte/Zeit übergeben.
