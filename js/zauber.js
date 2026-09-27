@@ -1,4 +1,4 @@
-// Commit 55.11: Zauberseite – Klassenfortschritt, Metamagie-Slots und Charakterpersistenz
+// Commit 55.12: Zauberseite – getrennte Auswahl/Aufklappen, mobile Klassenbuttons, sticky Gradbanner
 (() => {
   "use strict";
   const page=document.getElementById("zauber"), btn=document.getElementById("btnZauber"), root=document.getElementById("zauberInhalt55");
@@ -123,22 +123,23 @@
   function renderMetamagie(c){
     const box=document.createElement("section");box.className="zauber-karte-55 zauber-metamagie-558";
     const gelernt=new Set(metaErlernt(c));
-    box.innerHTML=`<details class="zauber-metamagie-details-559" ${metamagieOffen?"open":""}><summary><strong>Metamagie-Talente</strong><span>${gelernt.size} erlernt</span></summary><div class="zauber-hinweis-55">Quellen: GRW, EXP und ABR.</div><div class="zauber-metamagie-grid-558">${METAMAGIE.map(m=>`<label class="zauber-meta-talent-558${gelernt.has(m.id)?" aktiv":""}"><input type="checkbox" data-meta-lernen="${m.id}" ${gelernt.has(m.id)?"checked":""}><span><strong>${esc(m.name)}</strong><small>${m.quelle} · Slot +${m.slot==="variabel"?"variabel":m.slot}</small><em>${esc(m.hinweis)}</em></span></label>`).join("")}</div></details>`;
-    root.append(box);const details=box.querySelector('details');details.ontoggle=()=>{metamagieOffen=details.open};
+    box.innerHTML=`<div class="zauber-metamagie-kopf-5512"><strong>Metamagie-Talente</strong><span>${gelernt.size} erlernt</span><button type="button" class="zauber-toggle-5512" data-meta-toggle aria-expanded="${metamagieOffen}" aria-label="Metamagische Talente ${metamagieOffen?"zuklappen":"aufklappen"}">${metamagieOffen?"▴":"▾"}</button></div><div class="zauber-metamagie-inhalt-5512" ${metamagieOffen?"":"hidden"}><div class="zauber-hinweis-55">Quellen: GRW, EXP und ABR.</div><div class="zauber-metamagie-grid-558">${METAMAGIE.map(m=>`<label class="zauber-meta-talent-558${gelernt.has(m.id)?" aktiv":""}"><input type="checkbox" data-meta-lernen="${m.id}" ${gelernt.has(m.id)?"checked":""}><span><strong>${esc(m.name)}</strong><small>${m.quelle} · Slot +${m.slot==="variabel"?"variabel":m.slot}</small><em>${esc(m.hinweis)}</em></span></label>`).join("")}</div></div>`;
+    root.append(box);
+    box.querySelector('[data-meta-toggle]').onclick=()=>{metamagieOffen=!metamagieOffen;render()};
     box.querySelectorAll('[data-meta-lernen]').forEach(el=>el.onchange=()=>{metamagieOffen=true;const ids=new Set(metaErlernt(c));el.checked?ids.add(el.dataset.metaLernen):ids.delete(el.dataset.metaLernen);metaSetErlernt(c,[...ids]);render()});
   }
 
   function renderKlassen(c,klassen){
     const box=document.createElement("section");box.className="zauber-karte-55 zauber-klassenbox-5510";
     for(const k of klassen){
-      const x=config(c,k.name),details=document.createElement("details");details.className="zauber-klassendetails-5510"+(k.name===klasseAktiv?" aktiv":"");details.open=offeneKlassen.has(k.name);
-      details.innerHTML=`<summary><button type="button" class="zauber-klassenwahl-55" data-klasse aria-pressed="${k.name===klasseAktiv}">${esc(k.name)} ${Number(k.stufe||0)}</button><span>${x.attribut} · ${x.art} · ZS ${Number(x.zs||0)}</span></summary><div class="zauber-klassenzeile-55"><label>Attribut <select data-a>${["ST","GE","KO","IN","WE","CH"].map(a=>`<option ${a===x.attribut?"selected":""}>${a}</option>`).join("")}</select></label><label>Art <select data-art><option value="vorbereitet" ${x.art==="vorbereitet"?"selected":""}>vorbereitet</option><option value="spontan" ${x.art==="spontan"?"selected":""}>spontan</option></select></label><label>ZS <input data-zs type="number" min="0" max="99" value="${Number(x.zs||0)}"></label></div>`;
-      details.ontoggle=()=>{details.open?offeneKlassen.add(k.name):offeneKlassen.delete(k.name)};
-      details.querySelector('[data-klasse]').onclick=e=>{e.preventDefault();e.stopPropagation();klasseAktiv=k.name;offeneKlassen.add(k.name);render()};
-      details.querySelector('[data-a]').onchange=e=>{offeneKlassen.add(k.name);x.attribut=e.target.value;save();render()};
-      details.querySelector('[data-art]').onchange=e=>{offeneKlassen.add(k.name);x.art=e.target.value;save();render()};
-      details.querySelector('[data-zs]').onchange=e=>{offeneKlassen.add(k.name);x.zs=Math.max(0,Number(e.target.value)||0);x.zsAuto=x.zs===Number(k.stufe||0);x.letzteKlassenstufe=Number(k.stufe||0);save();render()};
-      box.append(details);
+      const x=config(c,k.name),panel=document.createElement("div"),offen=offeneKlassen.has(k.name);panel.className="zauber-klassendetails-5510"+(k.name===klasseAktiv?" aktiv":"");
+      panel.innerHTML=`<div class="zauber-klassenkopf-5512"><button type="button" class="zauber-klassenwahl-55" data-klasse aria-pressed="${k.name===klasseAktiv}" title="${esc(k.name)} als aktive Zauberklasse wählen"><span class="zauber-klassenname-5512">${esc(k.name)}</span><span class="zauber-klassenstufe-5512"> ${Number(k.stufe||0)}</span></button><span class="zauber-klasseninfo-5512">${x.attribut} · ${x.art} · ZS ${Number(x.zs||0)}</span><button type="button" class="zauber-toggle-5512" data-klasse-toggle aria-expanded="${offen}" aria-label="Einstellungen für ${esc(k.name)} ${offen?"zuklappen":"aufklappen"}">${offen?"▴":"▾"}</button></div><div class="zauber-klasseninhalt-5512" ${offen?"":"hidden"}><div class="zauber-klassenzeile-55"><label>Attribut <select data-a>${["ST","GE","KO","IN","WE","CH"].map(a=>`<option ${a===x.attribut?"selected":""}>${a}</option>`).join("")}</select></label><label>Art <select data-art><option value="vorbereitet" ${x.art==="vorbereitet"?"selected":""}>vorbereitet</option><option value="spontan" ${x.art==="spontan"?"selected":""}>spontan</option></select></label><label>ZS <input data-zs type="number" min="0" max="99" value="${Number(x.zs||0)}"></label></div></div>`;
+      panel.querySelector('[data-klasse]').onclick=()=>{klasseAktiv=k.name;render()};
+      panel.querySelector('[data-klasse-toggle]').onclick=()=>{offen?offeneKlassen.delete(k.name):offeneKlassen.add(k.name);render()};
+      panel.querySelector('[data-a]').onchange=e=>{offeneKlassen.add(k.name);x.attribut=e.target.value;save();render()};
+      panel.querySelector('[data-art]').onchange=e=>{offeneKlassen.add(k.name);x.art=e.target.value;save();render()};
+      panel.querySelector('[data-zs]').onchange=e=>{offeneKlassen.add(k.name);x.zs=Math.max(0,Number(e.target.value)||0);x.zsAuto=x.zs===Number(k.stufe||0);x.letzteKlassenstufe=Number(k.stufe||0);save();render()};
+      box.append(panel);
     }root.append(box);
   }
 
