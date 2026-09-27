@@ -39,3 +39,7 @@
 
 /* v0.55.9 */
 .zauber-metamagie-details-559>summary{display:flex;justify-content:space-between;gap:12px;align-items:center;cursor:pointer;color:#1e3a5f}.zauber-metamagie-details-559>summary span{font-weight:700}.zauber-metamagie-details-559[open]>summary{margin-bottom:6px}.zauber-detail-559{font-weight:700;color:#1e3a5f}.zauber-meta-werte-556{margin-top:7px}
+
+/* v0.55.10 */
+.zauber-klassenbox-5510{display:grid;gap:7px}.zauber-klassendetails-5510{border:1px solid #d7dce2;border-radius:9px;background:#f8fafc}.zauber-klassendetails-5510.aktiv{border-color:#1e3a5f}.zauber-klassendetails-5510>summary{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;padding:7px 9px}.zauber-klassendetails-5510>summary>span{font-size:.82rem;color:#667}.zauber-klassendetails-5510 .zauber-klassenzeile-55{padding:0 9px 9px}.zauber-gradmodus-5510{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:10px 0 6px;font-size:.84rem}.zauber-gradmodus-5510 small{color:#667}.zauber-prep-wrap-5510{display:grid;gap:3px;margin-top:6px}.zauber-prep-varianten-5510{color:#5c6673}.nicht-verfuegbar-5510{opacity:.5}.zauber-meta-ergebnis-558 strong{color:#1e3a5f}
+@media(max-width:650px){.zauber-klassendetails-5510>summary,.zauber-gradmodus-5510{align-items:flex-start;flex-direction:column}.zauber-klassendetails-5510>summary>span{padding-left:3px}}
