@@ -8,3 +8,10 @@
 - Audio ist für Commit 56 bewusst noch nicht Bestandteil.
 - Neues seitenbezogenes Farbsystem: Charaktere blau, Kampf rot, Leben grün, Effekte gelb/ocker, Zauber orange, Zeit violett, Vermögen gold, Admin grau.
 - Pathfinder-/Azlanti-Anmutung durch Serifenschrift, Pergamenttöne, dunkle Kopfzeile und bronzefarbene Akzente; Formulare bleiben aus Gründen der Lesbarkeit in einer UI-Schrift.
+
+## v0.56.1 – Startseite/Prolog Hotfix
+- Freigegebenes Storyboard in ein eigenes Startbild und 12 echte Szenenbilder getrennt; kein Verschieben eines Gesamtbildes mehr.
+- Startseiten-Schaltflächen `Prolog` und `Zur App` als echte HTML-Buttons über der freigegebenen Startgrafik.
+- Overlay-Sichtbarkeit korrigiert: `hidden` wird nicht mehr durch die Commit-56-CSS-Regeln überschrieben.
+- `Überspringen` und `Zur App` schließen den Prolog jetzt tatsächlich und wechseln zu `Charaktere`.
+- Prologbilder werden je Szene separat geladen und vollständig in das Bildfenster eingepasst.
