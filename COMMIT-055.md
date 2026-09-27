@@ -98,3 +98,14 @@ Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete
 - ZR wird pro Zauber als Ja/Nein geführt; bei Ja wird der ZR-Wurf W20 + ZS (+ Bonus) angezeigt. Fehlende ZR-Daten werden nicht geraten.
 - Reichweite zeigt zusätzlich die Kategorie Persönlich, Berührung, Nah, Mittel, Weit, Unbegrenzt oder Fest/Sonder.
 - Bestehende Zeitaufwand- und Komponenten-Codes werden für die Anzeige lesbar aufbereitet.
+
+
+## v0.55.10
+- Zauberklassen-Einstellungen ohne separate Überschrift; jede Klasse ist ausklappbar und bleibt beim Bearbeiten geöffnet.
+- Automatische Zaubergrad-Freischaltung nach Klassenstufe und PF1-Zauberprogression; Attributsgrenze bleibt zusätzlich wirksam. Automatik kann für manuelle Gradwahl abgeschaltet werden.
+- Metamagie wird nur angeboten, wenn der benötigte Slotgrad für den Charakter grundsätzlich verfügbar ist.
+- Vorbereitende Zauberwirker speichern konkrete Vorbereitungsinstanzen mit Metamagie und Ziel-Slotgrad; der höhere Slot wird automatisch belegt. Normale und metamagische Varianten desselben Zaubers können parallel vorbereitet werden.
+- Bestehende Vorbereitungen aus älteren Versionen werden als normale Vorbereitungsinstanzen migriert.
+- Spontane Zauberwirker erhalten weiterhin nur die Anzeige des benötigten Slotgrades; der tatsächliche Slotverbrauch bleibt bewusst manuell.
+- Zauberklassen-Konfiguration, gelernte Zauber, Slots, Vorbereitungen und Metamagie liegen am Charakterobjekt und sind damit Bestandteil des bestehenden vollständigen Charakterexports/-imports.
+- ZR-Anzeige pro Zauber bleibt Ja/Nein; bei Ja wird W20 + aktuelle ZS (+ ZR-Bonus) angezeigt.
