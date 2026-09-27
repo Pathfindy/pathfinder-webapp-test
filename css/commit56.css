@@ -1,0 +1,48 @@
+/* Commit 56 – Startseite, Prolog und seitenbezogenes Farbsystem */
+:root{--pf56-dark:#1e3a5f;--pf56-soft:#eaf1f8;--pf56-border:#b8c7d8}
+body{font-family:Georgia,"Times New Roman",serif;background:#f3efe7}
+input,select,textarea,button{font-family:Arial,Helvetica,sans-serif}
+header{background:linear-gradient(#2e2017,#1b120d);border-bottom:2px solid #9f7d45;color:#f3e4bc}
+.app-kopf-56{position:relative;display:flex;align-items:center;justify-content:center;min-height:32px}
+.app-kopf-56 h1{font-family:Georgia,"Times New Roman",serif;letter-spacing:.02em}
+.start-home-56{position:absolute;left:0;top:50%;transform:translateY(-50%);width:30px;height:30px;padding:0;border:1px solid #c29a55;border-radius:7px;background:#221812;color:#f4dfac;font-size:1.1rem;cursor:pointer}
+
+/* Seitenfarben */
+body.page-effekte-56{--pf56-dark:#8a6b00;--pf56-soft:#fff3b8;--pf56-border:#d8c36b}
+body.page-charakterwerte-56{--pf56-dark:#8f2424;--pf56-soft:#f7dada;--pf56-border:#dbaaaa}
+body.page-leben-56{--pf56-dark:#286b3f;--pf56-soft:#dff1e3;--pf56-border:#a9d0b3}
+body.page-zauber-56{--pf56-dark:#a84d0a;--pf56-soft:#f9e1cd;--pf56-border:#e0ad84}
+body.page-zeit-56{--pf56-dark:#633d83;--pf56-soft:#eadff2;--pf56-border:#c8afd9}
+body.page-vermoegen-56{--pf56-dark:#85630d;--pf56-soft:#f3e5ad;--pf56-border:#d9bd63}
+body.page-charaktere-56{--pf56-dark:#1e3a5f;--pf56-soft:#dfeaf5;--pf56-border:#a9bfd5}
+body.page-admin-56{--pf56-dark:#4e5358;--pf56-soft:#e6e8ea;--pf56-border:#c3c8cc}
+
+nav{background:#f5efe3!important;border-bottom:1px solid #bca987!important}
+nav button{background:var(--pf56-soft)!important;color:var(--pf56-dark)!important;border:1px solid var(--pf56-border)!important}
+nav button.active{background:var(--pf56-dark)!important;color:#fff!important;border-color:var(--pf56-dark)!important}
+main{background:linear-gradient(180deg,var(--pf56-soft),#f8f5ef 180px)}
+main .karte,main .effekt,main .admin-karte,main .vermoegen-karte,main .zeit-karte-54,main .zauber-karte-55,main .angriffe-bereich,main .tp-bereich,main .energie-bereich{border-color:var(--pf56-border)!important}
+main h2,main h3,main h4,.karte span,.effekt-boni-kurz,.zauber-reichweite-55,.zauber-dauer-556,.zauber-rw-556{color:var(--pf56-dark)!important}
+
+/* Startseite */
+.startseite-56{position:fixed;inset:0;z-index:5000;display:grid;place-items:center;padding:18px;background:#100d0b url('../assets/prolog-storyboard-56.png') center/cover no-repeat}
+.startseite-56::before{content:"";position:absolute;inset:0;background:rgba(10,8,6,.58)}
+.startseite-panel-56{position:relative;width:min(680px,94vw);padding:30px 22px;border:2px solid #b88a3d;border-radius:16px;background:rgba(24,18,14,.90);box-shadow:0 12px 40px #000;color:#f4e5bd;text-align:center}
+.startseite-panel-56 h1{font-size:clamp(2rem,6vw,4rem);line-height:1.02;text-shadow:0 2px 3px #000}
+.start-version-56{margin-top:6px;font-size:1rem;color:#d8c69b}
+.start-logo-56{display:block;width:min(520px,88%);max-height:170px;object-fit:contain;margin:24px auto 12px}
+.start-credit-56{margin:6px 0 18px;font-size:1.05rem}
+.start-aktionen-56{display:grid;gap:10px;max-width:340px;margin:auto}
+.start-aktionen-56 button,.prolog-steuerung-56 button{min-height:44px;border:1px solid #c4984d;border-radius:8px;background:#132a43;color:#fff3cf;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.start-aktionen-56 button:hover,.prolog-steuerung-56 button:hover{background:#1e3a5f}
+
+/* Prolog */
+.prolog-56{position:fixed;inset:0;z-index:5100;background:#0d0b09;display:grid;place-items:center;padding:10px}
+.prolog-rahmen-56{width:min(1100px,98vw);height:min(760px,96vh);display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;border:2px solid #9e7539;background:#17110d;color:#f2e4bd;box-shadow:0 0 35px #000;overflow:hidden}
+.prolog-kopf-56{display:flex;justify-content:space-between;gap:12px;padding:8px 12px;background:#0e0c0a;border-bottom:1px solid #9e7539}
+.prolog-bildfenster-56{position:relative;overflow:hidden;background:#000}
+.prolog-bildfenster-56 img{position:absolute;width:400%;height:300%;max-width:none;object-fit:fill;transition:transform .45s ease;image-rendering:auto}
+.prolog-text-56{padding:12px 16px;background:#e9d7ae;color:#261c12;border-top:1px solid #9e7539}
+.prolog-text-56 h2{margin:0 0 5px;color:#2d1e12!important;font-size:1.2rem}.prolog-text-56 p{margin:0;line-height:1.35;font-size:1rem}
+.prolog-steuerung-56{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;padding:9px;background:#120e0b}.prolog-steuerung-56 button:last-child{justify-self:stretch}
+@media(max-width:650px){.app-kopf-56{padding-left:34px}.startseite-panel-56{padding:22px 14px}.start-logo-56{margin-top:18px}.prolog-rahmen-56{height:98vh}.prolog-text-56{padding:9px 11px}.prolog-text-56 p{font-size:.88rem}.prolog-steuerung-56{grid-template-columns:1fr 1fr}.prolog-steuerung-56 #btnPrologUeberspringen56{grid-column:1/-1;grid-row:2}.start-home-56{left:2px}}
