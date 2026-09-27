@@ -1,4 +1,4 @@
-// Commit 56: Startseite, Prolog und seitenbezogenes Farbsystem
+// Commit 56.1: Startseite, Prolog und seitenbezogenes Farbsystem
 (() => {
   "use strict";
   const START=sessionStorage.getItem("pf56-session-gestartet")!=="1";
@@ -22,12 +22,12 @@
   function zeigeOverlay(el,an){if(!el)return;el.hidden=!an;el.setAttribute("aria-hidden",an?"false":"true")}
   function zurApp(){zeigeOverlay(start,false);zeigeOverlay(prolog,false);sessionStorage.setItem("pf56-session-gestartet","1");document.getElementById("btnCharaktere")?.click();window.scrollTo({top:0,behavior:"auto"})}
   function startseite(){zeigeOverlay(prolog,false);zeigeOverlay(start,true)}
-  function crop(i){
-    // Storyboard: 4 Spalten × 3 Reihen. Szene 12 ist die untere Abschlussleiste; die Positionen sind bewusst auf die gelieferten Bildbereiche zugeschnitten.
-    const pos=[[1,0],[2,0],[3,0],[0,1],[1,1],[2,1],[3,1],[0,2],[1,2],[2,2],[3,2],[1.5,2]];
-    const [x,y]=pos[i]||[0,0];bild.style.left="0";bild.style.top="0";bild.style.transform=`translate(${-x*25}%,${-y*(100/3)}%)`;
+  function bildFuerSzene(i){
+    const nr=String(i+1).padStart(2,"0");
+    bild.src=`assets/prolog56/${nr}.png`;
+    bild.alt=`Prologszene ${i+1}: ${szenen[i][0]}`;
   }
-  function render(){const s=szenen[idx];titel.textContent=s[0];text.textContent=s[1];zaehler.textContent=`${idx+1} / ${szenen.length}`;crop(idx);document.getElementById("btnPrologZurueck56").disabled=idx===0;document.getElementById("btnPrologWeiter56").textContent=idx===szenen.length-1?"Zur App ›":"Weiter ›"}
+  function render(){const s=szenen[idx];titel.textContent=s[0];text.textContent=s[1];zaehler.textContent=`${idx+1} / ${szenen.length}`;bildFuerSzene(idx);document.getElementById("btnPrologZurueck56").disabled=idx===0;document.getElementById("btnPrologWeiter56").textContent=idx===szenen.length-1?"Zur App ›":"Weiter ›"}
   function prologStart(){idx=0;zeigeOverlay(start,false);zeigeOverlay(prolog,true);render()}
   document.getElementById("btnStartseite56")?.addEventListener("click",startseite);
   document.getElementById("btnZurApp56")?.addEventListener("click",zurApp);
