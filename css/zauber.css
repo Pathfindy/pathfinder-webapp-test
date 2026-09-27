@@ -48,3 +48,15 @@
 /* v0.55.12 */
 .zauber-klassenkopf-5512,.zauber-metamagie-kopf-5512{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:7px 9px}.zauber-klasseninfo-5512,.zauber-metamagie-kopf-5512>span{font-size:.82rem;color:#667;text-align:right}.zauber-toggle-5512{width:34px;height:34px;border:1px solid #b8c5d4;border-radius:8px;background:#eef3f8;color:#1e3a5f;font:inherit;font-weight:800;cursor:pointer}.zauber-klassenwahl-55[aria-pressed="true"]{background:#1e3a5f;color:#fff;border-color:#1e3a5f}.zauber-klasseninhalt-5512,.zauber-metamagie-inhalt-5512{border-top:1px solid #eee;padding:0 9px 9px}.zauber-metamagie-kopf-5512{padding:0}.zauber-metamagie-inhalt-5512{padding:0;border-top:0;margin-top:7px}.zauber-gradgruppe-55[open]>summary{position:sticky;top:0;z-index:8;box-shadow:0 2px 5px rgba(0,0,0,.08)}
 @media(max-width:650px){.zauber-klassenkopf-5512{grid-template-columns:auto 1fr auto}.zauber-klasseninfo-5512{display:none}.zauber-klassenwahl-55{min-width:0;width:auto;padding:7px 10px}.zauber-klassenstufe-5512{display:none}.zauber-klassenname-5512{white-space:nowrap}.zauber-toggle-5512{justify-self:end}.zauber-metamagie-kopf-5512{grid-template-columns:1fr auto auto}}
+
+/* v0.55.13: Gradbanner beim Scrollen wirklich am Viewport fixieren.
+   overflow:hidden am geöffneten details-Element verhindert position:sticky. */
+.zauber-gradgruppe-55[open]{overflow:visible}
+.zauber-gradgruppe-55[open]>summary{
+  position:sticky;
+  top:var(--pf-kopf-sticky-hoehe, 99px);
+  z-index:20;
+  background:#eef3f8;
+  border-radius:9px 9px 0 0;
+  box-shadow:0 2px 5px rgba(0,0,0,.12)
+}
