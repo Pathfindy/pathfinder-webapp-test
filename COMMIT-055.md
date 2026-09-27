@@ -89,3 +89,12 @@ Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete
 - „Zauber ausdehnen“ verdoppelt automatisch die berechnete Dauer; „Zauberreichweite erhöhen“ verdoppelt automatisch berechenbare Reichweiten.
 - Weitere Metamagien aus GRW/EXP/ABR werden zunächst mit Slotänderung und Regelhinweis eingebunden, wenn ihre Wirkung nicht zuverlässig aus den vorhandenen Zauberdaten automatisiert werden kann.
 - Architektur vorbereitet für den nächsten Schritt: vorbereitete Zauberkopien bzw. spontane Wirkungen können später ihre konkrete Metamagie-Konfiguration getrennt speichern und an Effekte/Zeit übergeben.
+
+## v0.55.9
+- Metamagie-Talente als ausklappbarer Bereich; beim Aktivieren bleibt der Bereich geöffnet.
+- Hinweis unter Zauberwirker-Einstellungen entfernt; Metamagie-Hinweis auf GRW, EXP und ABR begrenzt.
+- Quelle in Zaubereinträgen wie Reichweite/Dauer hervorgehoben.
+- Zaubereinträge um Zeitaufwand, Komponenten und defensives Zaubern (Konzentrationswurf gegen SG 15 + 2 × effektiver Zaubergrad) erweitert.
+- ZR wird pro Zauber als Ja/Nein geführt; bei Ja wird der ZR-Wurf W20 + ZS (+ Bonus) angezeigt. Fehlende ZR-Daten werden nicht geraten.
+- Reichweite zeigt zusätzlich die Kategorie Persönlich, Berührung, Nah, Mittel, Weit, Unbegrenzt oder Fest/Sonder.
+- Bestehende Zeitaufwand- und Komponenten-Codes werden für die Anzeige lesbar aufbereitet.
