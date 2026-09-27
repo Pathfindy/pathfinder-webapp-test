@@ -116,3 +116,12 @@ Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete
 - Anzeige unterscheidet `Ja · W20 + ZS`, `Nein` und regelabhängige Sonderfälle `siehe Text`.
 - Keine neuen Zauber aufgenommen.
 - ZR ist ein eigenes Zaubermerkmal und wird nicht aus dem Rettungswurf abgeleitet.
+
+
+## v0.55.12 – Zauber-UI: Auswahl, Aufklappen und Sticky Gradbanner
+- Zauberklasse wählen und Klasseneinstellungen auf-/zuklappen sind getrennte Aktionen.
+- Aktive Zauberklasse wird dunkelblau mit weißer Schrift markiert.
+- Mobil zeigt der Klassenbutton nur die Klassenbezeichnung; die Stufe entfällt dort zugunsten von Platz.
+- Eigener Pfeilbutton öffnet/schließt die Klasseneinstellungen; Klick auf den Klassenbereich klappt nichts mehr auf oder zu.
+- Metamagie verwendet denselben getrennten Pfeilmechanismus.
+- Kopfzeile eines geöffneten Zaubergrads bleibt beim Scrollen sticky sichtbar.
