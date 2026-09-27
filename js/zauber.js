@@ -1,4 +1,4 @@
-// Commit 55.7: Zauberseite – Dauer bis unter 1 Stunde/St in Runden, ab Stunde/St in Stunden
+// Commit 55.8: Zauberseite – Metamagie GRW + EXP + ABR
 (() => {
   "use strict";
   const page=document.getElementById("zauber"), btn=document.getElementById("btnZauber"), root=document.getElementById("zauberInhalt55");
@@ -8,10 +8,34 @@
   const BENUTZER_KEY="pf-benutzer-zauber";
   const ADMIN_AENDERUNGEN_KEY="pf-admin-zauber-aenderungen";
   const ADMIN_NEU_KEY="pf-admin-zauber-neu";
+  const METAMAGIE_KEY="pf-metamagie-erlernt";
+  const METAMAGIE_ANWENDUNG_KEY="pf-metamagie-anwendung";
   const ZAUBERKLASSEN=new Set(["Alchemist","Antipaladin","Arkanist","Barde","Blutwüter","Druide","Ermittler","Hexe","Hexenmeister","Inquisitor","Jäger","Kampfmagus","Kleriker","Kriegspriester","Magier","Mystiker","Paladin","Paktmagier","Schamane","Skalde","Waldläufer"]);
   const STANDARD={Alchemist:["IN","vorbereitet"],Antipaladin:["CH","vorbereitet"],Arkanist:["IN","vorbereitet"],Barde:["CH","spontan"],Blutwüter:["CH","spontan"],Druide:["WE","vorbereitet"],Ermittler:["IN","vorbereitet"],Hexe:["IN","vorbereitet"],Hexenmeister:["CH","spontan"],Inquisitor:["WE","spontan"],Jäger:["WE","spontan"],Kampfmagus:["IN","vorbereitet"],Kleriker:["WE","vorbereitet"],Kriegspriester:["WE","vorbereitet"],Magier:["IN","vorbereitet"],Mystiker:["CH","spontan"],Paladin:["CH","vorbereitet"],Paktmagier:["CH","spontan"],Schamane:["WE","vorbereitet"],Skalde:["CH","spontan"],Waldläufer:["WE","vorbereitet"]};
 
   let basisDaten=null,daten={zauber:[]},klasseAktiv="",suche="",offeneGrade=new Set(),editorId=null,editorStandard=false;
+
+  const METAMAGIE=[
+    {id:"ausdehnen",name:"Zauber ausdehnen",quelle:"GRW",slot:1,typ:"dauer",faktor:2,hinweis:"Verdoppelt die Wirkungsdauer."},
+    {id:"gestenlos",name:"Gestenlos zaubern",quelle:"GRW",slot:1,typ:"komponenten",hinweis:"Somatische Komponente entfällt."},
+    {id:"lautlos",name:"Lautlos zaubern",quelle:"GRW",slot:1,typ:"komponenten",hinweis:"Verbale Komponente entfällt."},
+    {id:"reichweite",name:"Zauberreichweite erhöhen",quelle:"GRW",slot:1,typ:"reichweite",faktor:2,hinweis:"Verdoppelt berechenbare Reichweiten."},
+    {id:"verstarken",name:"Zauber verstärken",quelle:"GRW",slot:2,typ:"sonder",hinweis:"Variable numerische Wirkungen werden um 50 % verstärkt."},
+    {id:"maximieren",name:"Zaubereffekt maximieren",quelle:"GRW",slot:3,typ:"sonder",hinweis:"Variable numerische Wirkungen werden maximiert."},
+    {id:"bereich",name:"Zauberbereich erweitern",quelle:"GRW",slot:3,typ:"sonder",hinweis:"Verdoppelt geeignete Flächenmaße."},
+    {id:"schnell",name:"Schnell zaubern",quelle:"GRW",slot:4,typ:"sonder",hinweis:"Verändert den Zeitaufwand des Zaubers."},
+    {id:"erhohen",name:"Zaubergrad erhöhen",quelle:"GRW",slot:"variabel",typ:"hoehen",hinweis:"Erhöht tatsächlichen Zaubergrad und damit u. a. den SG."},
+    {id:"benommen",name:"Benommen machender Zauber",quelle:"EXP",slot:3,typ:"sonder",hinweis:"Schadenszauber können das Ziel zusätzlich benommen machen."},
+    {id:"elementar",name:"Elementarer Zauber",quelle:"EXP",slot:1,typ:"sonder",hinweis:"Kann die Energieart eines geeigneten Zaubers ändern."},
+    {id:"intensiviert",name:"Intensivierter Zauber",quelle:"EXP",slot:1,typ:"sonder",hinweis:"Erhöht bei geeigneten Zaubern die ZS-Obergrenze für Schadenswürfel."},
+    {id:"nachhaltig",name:"Nachhaltiger Zauber",quelle:"EXP",slot:2,typ:"sonder",hinweis:"Erzwingt bei geeigneten Zaubern einen zweiten Rettungswurf."},
+    {id:"selektiv",name:"Selektiver Zauber",quelle:"EXP",slot:1,typ:"sonder",hinweis:"Kann ausgewählte Kreaturen aus Flächeneffekten ausnehmen."},
+    {id:"widerstand",name:"Zauberresistenz durchdringen",quelle:"ABR",slot:1,typ:"zr",hinweis:"Erleichtert das Überwinden von Zauberresistenz bei diesem Zauber."},
+    {id:"echo",name:"Echozauber",quelle:"ABR",slot:3,typ:"sonder",hinweis:"Der Zauber kann ein weiteres Mal genutzt werden."},
+    {id:"eisig",name:"Eisiger Zauber",quelle:"ABR",slot:1,typ:"sonder",hinweis:"Kältezauber können das Ziel zusätzlich verstricken."},
+    {id:"umstossend",name:"Umstoßender Zauber",quelle:"ABR",slot:1,typ:"sonder",hinweis:"Machtzauber können einen Zu-Fall-Bringen-Versuch auslösen."},
+    {id:"threnodisch",name:"Threnodischer Zauber",quelle:"ABR",slot:2,typ:"sonder",hinweis:"Bestimmte geistesbeeinflussende Zauber können Untote betreffen."}
+  ];
   const esc=s=>String(s??"").replace(/[&<>\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const ch=()=>typeof aktiverCharakter==="function"?aktiverCharakter():null;
   const readJson=(key,standard)=>{try{const v=JSON.parse(localStorage.getItem(key)||"null");return v??standard}catch{return standard}};
@@ -58,9 +82,30 @@
     const merged=basis.map(z=>aender[z.id]?normZauber({...z,...aender[z.id],id:z.id}):z);
     daten={zauber:[...merged,...benutzer.map(normZauber),...adminNeu.map(z=>normZauber({...z,standard:true}))]};
   }
-  async function load(){if(basisDaten)return;try{const r=await fetch("data/zauber.json?v=55.7");if(!r.ok)throw new Error();basisDaten=await r.json()}catch{basisDaten={zauber:[]}}kombiniereDaten();}
+  async function load(){if(basisDaten)return;try{const r=await fetch("data/zauber.json?v=55.8");if(!r.ok)throw new Error();basisDaten=await r.json()}catch{basisDaten={zauber:[]}}kombiniereDaten();}
   function gradVorhanden(k,g){return (daten.zauber||[]).some(z=>Object.prototype.hasOwnProperty.call(z.klassen||{},k.name)&&Number(z.klassen[k.name])===Number(g));}
   function touchWert(fern=false){const c=ch(),gab=typeof charakterGAB==="function"?Number(charakterGAB(c)||0):Number(c?.gab||0),a=mod(c,fern?"GE":"ST");return gab+a;}
+
+  function metaErlernt(c){const raw=c?.metamagieErlernt;return Array.isArray(raw)?raw:[]}
+  function metaSetErlernt(c,ids){c.metamagieErlernt=[...new Set(ids)].filter(id=>METAMAGIE.some(m=>m.id===id));save()}
+  function metaAnwendung(c,zid){c.zauberMetamagie=c.zauberMetamagie&&typeof c.zauberMetamagie==="object"?c.zauberMetamagie:{};const a=c.zauberMetamagie[zid];return Array.isArray(a)?a:[]}
+  function metaSetAnwendung(c,zid,ids){c.zauberMetamagie=c.zauberMetamagie&&typeof c.zauberMetamagie==="object"?c.zauberMetamagie:{};c.zauberMetamagie[zid]=[...new Set(ids)].filter(id=>METAMAGIE.some(m=>m.id===id));save()}
+  function metaDefs(ids){return ids.map(id=>METAMAGIE.find(m=>m.id===id)).filter(Boolean)}
+  function metaSlotZusatz(defs){return defs.reduce((n,m)=>n+(Number.isFinite(Number(m.slot))?Number(m.slot):0),0)}
+  function metaHoehenZusatz(defs){const m=defs.find(x=>x.typ==="hoehen");return m?1:0}
+  function metaEffektiverGrad(g,defs){return Math.min(9,Number(g)+metaHoehenZusatz(defs))}
+  function metaSlotGrad(g,defs){return Math.min(9,Number(g)+metaSlotZusatz(defs)+metaHoehenZusatz(defs))}
+  function metaReichweiteText(z,x,defs){const basis=reichweiteMeter(z.reichweite,x.zs);const faktor=defs.some(m=>m.typ==="reichweite")?2:1;if(basis===null)return reichweiteText(z.reichweite,x.zs);const e=einheit(),m=basis*faktor;if(e==="ft")return `${runde(m/0.3)} ft`;if(e==="feld")return `${runde(m/1.5)} Felder`;return `${runde(m)} m`}
+  function metaDauerText(z,x,defs){const r=dauerRunden(z.dauer,Number(x.zs||0));if(r===null)return String(z.dauer||"");const faktor=defs.some(m=>m.typ==="dauer")?2:1;const rr=r*faktor;return `${z.dauer} (${formatDauerWert(z.dauer,rr)})`}
+  function metaNameZusatz(defs){return defs.length?` [${defs.map(m=>m.name.replace(/^Zauber /,"").replace(/ zaubern$/,"" )).join(", ")}]`:""}
+
+  function renderMetamagie(c){
+    const box=document.createElement("section");box.className="zauber-karte-55 zauber-metamagie-558";
+    const gelernt=new Set(metaErlernt(c));
+    box.innerHTML=`<div class="zauber-metamagie-kopf-558"><div><h3>Metamagie</h3><div class="zauber-hinweis-55">Hier werden nur erlernte Metamagietalente aus GRW, EXP und ABR aktiviert. Die konkrete Anwendung erfolgt anschließend am einzelnen Zauber.</div></div><span>${gelernt.size} erlernt</span></div><div class="zauber-metamagie-grid-558">${METAMAGIE.map(m=>`<label class="zauber-meta-talent-558${gelernt.has(m.id)?" aktiv":""}"><input type="checkbox" data-meta-lernen="${m.id}" ${gelernt.has(m.id)?"checked":""}><span><strong>${esc(m.name)}</strong><small>${m.quelle} · Slot +${m.slot==="variabel"?"variabel":m.slot}</small><em>${esc(m.hinweis)}</em></span></label>`).join("")}</div>`;
+    root.append(box);
+    box.querySelectorAll('[data-meta-lernen]').forEach(el=>el.onchange=()=>{const ids=new Set(metaErlernt(c));el.checked?ids.add(el.dataset.metaLernen):ids.delete(el.dataset.metaLernen);metaSetErlernt(c,[...ids]);render()});
+  }
 
   function renderKlassen(c,klassen){
     const box=document.createElement("section");box.className="zauber-karte-55";box.innerHTML='<h3>Zauberwirker-Einstellungen</h3><div class="zauber-hinweis-55">Zauberklasse anklicken, um sie unten anzuzeigen. ZS folgt der Klassenstufe automatisch, bis er manuell überschrieben wird.</div>';
@@ -114,10 +159,11 @@
   function dauerText(text,zs){const r=dauerRunden(text,zs);return r===null?String(text||""):`${text} (${formatDauerWert(text,r)})`}
   function rwText(text,sg){const t=String(text||"").trim();if(!t)return "";const hatRw=!/^-$/.test(t)&&!/^kein/i.test(t);return hatRw?`${t} (SG ${sg})`:t}
   function zauberHtml(z,k,x,g){
-    const sg=10+g+mod(ch(),x.attribut)+Number(x.sgBonus||0),source=quellenText(z),spontan=x.art==="spontan",gelernt=ids(x,g).includes(z.id),p=Number(prep(x,g)[z.id]||0),max=slotMax(x,g),used=prepAnzahl(x,g);
+    const c=ch(), erlernt=new Set(metaErlernt(c)), angewandt=metaAnwendung(c,z.id).filter(id=>erlernt.has(id)), defs=metaDefs(angewandt), effGrad=metaEffektiverGrad(g,defs), slotGrad=metaSlotGrad(g,defs), sg=10+effGrad+mod(c,x.attribut)+Number(x.sgBonus||0),source=quellenText(z),spontan=x.art==="spontan",gelernt=ids(x,g).includes(z.id),p=Number(prep(x,g)[z.id]||0),max=slotMax(x,g),used=prepAnzahl(x,g);
     const control=spontan?`<label class="zauber-lerncheck-55"><input type="checkbox" data-lern="${esc(z.id)}" ${gelernt?"checked":""}> gelernt / verfügbar</label>`:`<div class="zauber-prep-55"><label><input type="checkbox" data-prepcheck="${esc(z.id)}" ${p>0?"checked":""}> vorbereitet</label><button type="button" data-minus="${esc(z.id)}" ${p<=0?"disabled":""}>−</button><strong>${p}×</strong><button type="button" data-plus="${esc(z.id)}" ${max<=0||used>=max?"disabled":""}>+</button></div>`;
-    const editierbar=!z.standard||adminAktiv();
-    return `<article class="zauber-eintrag-55" data-zauber-id="${esc(z.id)}"><div class="zauber-eintrag-kopf-55"><h4>${esc(z.name)}</h4><div class="zauber-eintrag-aktionen-554">${editierbar?`<button type="button" data-edit="${esc(z.id)}" title="Zauber bearbeiten" aria-label="Zauber bearbeiten">✏️</button>`:""}</div></div>${control}<div class="zauber-meta-55">${source?`Quelle: ${esc(source)} · `:''}ZR-Wurf W20 ${fmt(Number(x.zs||0)+Number(x.zrBonus||0))}</div><div class="zauber-meta-55 zauber-meta-werte-556"><span>Reichweite: <strong class="zauber-reichweite-55">${esc(reichweiteText(z.reichweite,x.zs))}</strong></span>${z.dauer?`<span>Dauer: <strong class="zauber-dauer-556">${esc(dauerText(z.dauer,Number(x.zs||0)))}</strong></span>`:''}${z.rettungswurf?`<span>RW: <strong class="zauber-rw-556">${esc(rwText(z.rettungswurf,sg))}</strong></span>`:''}</div>${z.beschreibung?`<div class="zauber-beschreibung-55">${esc(z.beschreibung)}</div>`:''}</article>`;
+    const editierbar=!z.standard||adminAktiv(), lernbare=METAMAGIE.filter(m=>erlernt.has(m.id));
+    const meta=lernbare.length?`<details class="zauber-meta-anwendung-558"><summary>Metamagie${defs.length?` · Slot Grad ${slotGrad}`:""}</summary><div class="zauber-meta-auswahl-558">${lernbare.map(m=>`<label><input type="checkbox" data-meta-anwenden="${m.id}" data-zid="${esc(z.id)}" ${angewandt.includes(m.id)?"checked":""}><span>${esc(m.name)} <small>${m.quelle} · +${m.slot==="variabel"?"variabel":m.slot}</small></span></label>`).join("")}</div>${defs.length?`<div class="zauber-meta-ergebnis-558">Effektiver Zaubergrad: <strong>${effGrad}</strong> · benötigter Slot: <strong>Grad ${slotGrad}</strong></div>`:""}</details>`:"";
+    return `<article class="zauber-eintrag-55" data-zauber-id="${esc(z.id)}"><div class="zauber-eintrag-kopf-55"><h4>${esc(z.name)}${esc(metaNameZusatz(defs))}</h4><div class="zauber-eintrag-aktionen-554">${editierbar?`<button type="button" data-edit="${esc(z.id)}" title="Zauber bearbeiten" aria-label="Zauber bearbeiten">✏️</button>`:""}</div></div>${control}${meta}<div class="zauber-meta-55">${source?`Quelle: ${esc(source)} · `:''}ZR-Wurf W20 ${fmt(Number(x.zs||0)+Number(x.zrBonus||0))}</div><div class="zauber-meta-55 zauber-meta-werte-556"><span>Reichweite: <strong class="zauber-reichweite-55">${esc(metaReichweiteText(z,x,defs))}</strong></span>${z.dauer?`<span>Dauer: <strong class="zauber-dauer-556">${esc(metaDauerText(z,x,defs))}</strong></span>`:''}${z.rettungswurf?`<span>RW: <strong class="zauber-rw-556">${esc(rwText(z.rettungswurf,sg))}</strong></span>`:''}</div>${defs.filter(m=>m.typ==="sonder"||m.typ==="komponenten"||m.typ==="zr").length?`<div class="zauber-meta-hinweise-558">${defs.filter(m=>m.typ==="sonder"||m.typ==="komponenten"||m.typ==="zr").map(m=>`<span><strong>${esc(m.name)}:</strong> ${esc(m.hinweis)}</span>`).join("")}</div>`:""}${z.beschreibung?`<div class="zauber-beschreibung-55">${esc(z.beschreibung)}</div>`:''}</article>`;
   }
 
   function renderGradListen(k,x){
@@ -153,6 +199,7 @@
       details.querySelectorAll('[data-plus]').forEach(el=>el.onclick=()=>{if(prepAnzahl(x,g)>=slotMax(x,g))return;const o={...prep(x,g)},id=el.dataset.plus;o[id]=Number(o[id]||0)+1;x.vorbereitet[g]=o;offeneGrade.add(g);save();renderGradInhalte(container,k,x)});
       details.querySelectorAll('[data-minus]').forEach(el=>el.onclick=()=>{const o={...prep(x,g)},id=el.dataset.minus,n=Math.max(0,Number(o[id]||0)-1);if(n)o[id]=n;else delete o[id];x.vorbereitet[g]=o;offeneGrade.add(g);save();renderGradInhalte(container,k,x)});
       details.querySelectorAll('[data-edit]').forEach(el=>el.onclick=()=>{const z=daten.zauber.find(v=>String(v.id)===String(el.dataset.edit));if(z)oeffneZauberEditor(z,k,x,!!z.standard)});
+      details.querySelectorAll('[data-meta-anwenden]').forEach(el=>el.onchange=()=>{const c=ch(),id=el.dataset.zid,ids=new Set(metaAnwendung(c,id));el.checked?ids.add(el.dataset.metaAnwenden):ids.delete(el.dataset.metaAnwenden);metaSetAnwendung(c,id,[...ids]);offeneGrade.add(g);renderGradInhalte(container,k,x)});
     }
   }
 
@@ -167,7 +214,7 @@
   function editorDaten(){const klassen={};document.querySelectorAll('[data-editor-klasse]').forEach(i=>{if(i.value!=="")klassen[i.dataset.editorKlasse]=Math.max(0,Math.min(9,Number(i.value)||0))});return normZauber({id:editorId||undefined,name:document.getElementById('zauberName554').value,schule:document.getElementById('zauberSchule554').value,regelwerk:document.getElementById('zauberRegelwerk554').value,seite:document.getElementById('zauberSeite554').value,zeitaufwand:document.getElementById('zauberZeit554').value,komponenten:document.getElementById('zauberKomponenten554').value,reichweite:document.getElementById('zauberReichweite554').value,ziel:document.getElementById('zauberZiel554').value,dauer:document.getElementById('zauberDauer554').value,rettungswurf:document.getElementById('zauberRw554').value,beschreibung:document.getElementById('zauberBeschreibung554').value,klassen});}
   function speichereZauberEditor(){const z=editorDaten();if(!z.name){document.getElementById('zauberName554').focus();return}if(editorId){const basis=(basisDaten?.zauber||[]).some(v=>String(v.id)===String(editorId));if(basis){if(!adminAktiv()){alert('Standardzauber können nur im entsperrten Admin-Modus geändert werden.');return}const o=readJson(ADMIN_AENDERUNGEN_KEY,{});o[editorId]=z;writeJson(ADMIN_AENDERUNGEN_KEY,o)}else{for(const key of [BENUTZER_KEY,ADMIN_NEU_KEY]){const a=readJson(key,[]),idx=a.findIndex(v=>String(v.id)===String(editorId));if(idx>=0){a[idx]=z;writeJson(key,a);break}}}}else{const key=adminAktiv()?ADMIN_NEU_KEY:BENUTZER_KEY,a=readJson(key,[]);a.push(z);writeJson(key,a)}kombiniereDaten();document.getElementById('zauberDialog554').close();render();}
 
-  async function render(){await load();root.innerHTML='';const c=ch();if(!c){root.innerHTML='<section class="zauber-karte-55 zauber-leer-55">Kein aktiver Charakter.</section>';return}const klassen=zauberKlassen(c);if(!klassen.length){root.innerHTML='<section class="zauber-karte-55 zauber-leer-55">Der aktive Charakter besitzt aktuell keine unterstützte Zauberklasse.</section>';return}if(!klassen.some(k=>k.name===klasseAktiv))klasseAktiv=klassen[0].name;renderKlassen(c,klassen);const k=klassen.find(k=>k.name===klasseAktiv),x=config(c,k.name);renderWerte(c,k,x);renderGradListen(k,x);save();}
+  async function render(){await load();root.innerHTML='';const c=ch();if(!c){root.innerHTML='<section class="zauber-karte-55 zauber-leer-55">Kein aktiver Charakter.</section>';return}const klassen=zauberKlassen(c);if(!klassen.length){root.innerHTML='<section class="zauber-karte-55 zauber-leer-55">Der aktive Charakter besitzt aktuell keine unterstützte Zauberklasse.</section>';return}if(!klassen.some(k=>k.name===klasseAktiv))klasseAktiv=klassen[0].name;renderKlassen(c,klassen);renderMetamagie(c);const k=klassen.find(k=>k.name===klasseAktiv),x=config(c,k.name);renderWerte(c,k,x);renderGradListen(k,x);save();}
 
   const oldShow=zeigeSeite;zeigeSeite=function(name){oldShow(name);if(name==='zauber')render()};btn.onclick=()=>zeigeSeite('zauber');
   if(typeof waehleCharakter==='function'){const old=waehleCharakter;waehleCharakter=function(id){const r=old(id);if(r&&page.style.display!=='none')render();return r}}
