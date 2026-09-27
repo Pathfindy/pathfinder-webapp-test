@@ -125,3 +125,9 @@ Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete
 - Eigener Pfeilbutton öffnet/schließt die Klasseneinstellungen; Klick auf den Klassenbereich klappt nichts mehr auf oder zu.
 - Metamagie verwendet denselben getrennten Pfeilmechanismus.
 - Kopfzeile eines geöffneten Zaubergrads bleibt beim Scrollen sticky sichtbar.
+
+
+## v0.55.13 – Hotfix Sticky-Gradbanner
+- Geöffnete Zaubergrad-Container verwenden kein `overflow:hidden` mehr, damit `position: sticky` relativ zum Viewport wirken kann.
+- Das Gradbanner berücksichtigt den vorhandenen Sticky-Seitenkopf über `--pf-kopf-sticky-hoehe`.
+- Erhöhter z-index und eigener Hintergrund verhindern, dass Zauber beim Scrollen über dem Banner liegen.
