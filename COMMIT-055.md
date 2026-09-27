@@ -109,3 +109,10 @@ Noch nicht Bestandteil dieser ersten Version: Zauberslot-Verbrauch, vorbereitete
 - Spontane Zauberwirker erhalten weiterhin nur die Anzeige des benötigten Slotgrades; der tatsächliche Slotverbrauch bleibt bewusst manuell.
 - Zauberklassen-Konfiguration, gelernte Zauber, Slots, Vorbereitungen und Metamagie liegen am Charakterobjekt und sind damit Bestandteil des bestehenden vollständigen Charakterexports/-imports.
 - ZR-Anzeige pro Zauber bleibt Ja/Nein; bei Ja wird W20 + aktuelle ZS (+ ZR-Bonus) angezeigt.
+
+## v0.55.11 – Zauberresistenz-Daten
+- Zauberdatenbestand auf 1.168 vorhandene App-Zauber konsolidiert (`anzahl` korrigiert).
+- Feld `zauberresistenz` für alle Zauber ergänzt.
+- Anzeige unterscheidet `Ja · W20 + ZS`, `Nein` und regelabhängige Sonderfälle `siehe Text`.
+- Keine neuen Zauber aufgenommen.
+- ZR ist ein eigenes Zaubermerkmal und wird nicht aus dem Rettungswurf abgeleitet.
