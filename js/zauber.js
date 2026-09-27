@@ -1,4 +1,4 @@
-// Commit 55.12: Zauberseite – getrennte Auswahl/Aufklappen, mobile Klassenbuttons, sticky Gradbanner
+// Commit 55.13: Zauberseite – Hotfix Sticky-Gradbanner
 (() => {
   "use strict";
   const page=document.getElementById("zauber"), btn=document.getElementById("btnZauber"), root=document.getElementById("zauberInhalt55");
