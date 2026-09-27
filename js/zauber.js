@@ -1,4 +1,4 @@
-// Commit 55.10: Zauberseite – Klassenfortschritt, Metamagie-Slots und Charakterpersistenz
+// Commit 55.11: Zauberseite – Klassenfortschritt, Metamagie-Slots und Charakterpersistenz
 (() => {
   "use strict";
   const page=document.getElementById("zauber"), btn=document.getElementById("btnZauber"), root=document.getElementById("zauberInhalt55");
@@ -103,7 +103,7 @@
     const merged=basis.map(z=>aender[z.id]?normZauber({...z,...aender[z.id],id:z.id}):z);
     daten={zauber:[...merged,...benutzer.map(normZauber),...adminNeu.map(z=>normZauber({...z,standard:true}))]};
   }
-  async function load(){if(basisDaten)return;try{const r=await fetch("data/zauber.json?v=55.10");if(!r.ok)throw new Error();basisDaten=await r.json()}catch{basisDaten={zauber:[]}}kombiniereDaten();}
+  async function load(){if(basisDaten)return;try{const r=await fetch("data/zauber.json?v=55.11");if(!r.ok)throw new Error();basisDaten=await r.json()}catch{basisDaten={zauber:[]}}kombiniereDaten();}
   function gradVorhanden(k,g){return (daten.zauber||[]).some(z=>Object.prototype.hasOwnProperty.call(z.klassen||{},k.name)&&Number(z.klassen[k.name])===Number(g));}
   function touchWert(fern=false){const c=ch(),gab=typeof charakterGAB==="function"?Number(charakterGAB(c)||0):Number(c?.gab||0),a=mod(c,fern?"GE":"ST");return gab+a;}
 
@@ -184,7 +184,7 @@
   function komponentenText(t){const v=String(t||"").trim();if(!v)return "–";const a=[];if(/v/i.test(v))a.push("V");if(/g/.test(v))a.push("G");if(/m/i.test(v))a.push("M");if(/f/i.test(v))a.push("F");if(/[A-Z]G/.test(v)||v.includes("G"))a.push("GF");return [...new Set(a)].join(", ")||v}
   function reichweitenArt(t){const v=String(t||"").trim();if(!v)return "–";if(/berührung/i.test(v))return "Berührung";if(/^(du|persönlich)$/i.test(v))return "Persönlich";if(/∞|unbegrenzt/i.test(v))return "Unbegrenzt";if(/^7[,.]5m\+1[,.]5m\/2St$/i.test(v))return "Nah";if(/^30m\+3m\/St$/i.test(v))return "Mittel";if(/^120m\+12m\/St$/i.test(v))return "Weit";return "Fest/Sonder"}
   function reichweiteMitArt(z,x,defs){const art=reichweitenArt(z.reichweite);const wert=metaReichweiteText(z,x,defs);return art==="–"?wert:(art==="Berührung"||art==="Persönlich"||art==="Unbegrenzt")?art:`${art} (${wert})`}
-  function zrInfo(z,x){const raw=z.zauberresistenz;if(raw===true||/^(ja|j|yes)$/i.test(String(raw||"")))return `Ja · W20 ${fmt(Number(x.zs||0)+Number(x.zrBonus||0))}`;if(raw===false||/^(nein|n|no)$/i.test(String(raw||"")))return "Nein";return "–"}
+  function zrInfo(z,x){const raw=z.zauberresistenz;if(raw===true||/^(ja|j|yes)$/i.test(String(raw||"")))return `Ja · W20 ${fmt(Number(x.zs||0)+Number(x.zrBonus||0))}`;if(raw===false||/^(nein|n|no)$/i.test(String(raw||"")))return "Nein";if(/siehe\s*text/i.test(String(raw||"")))return "siehe Text";return "–"}
   function zauberHtml(z,k,x,g){
     const c=ch(), erlernt=new Set(metaErlernt(c)), angewandt=metaAnwendung(c,z.id).filter(id=>erlernt.has(id)), defs=metaDefs(angewandt), effGrad=metaEffektiverGrad(g,defs), slotGrad=metaSlotGrad(g,defs), sg=10+effGrad+mod(c,x.attribut)+Number(x.sgBonus||0),source=quellenText(z),spontan=x.art==="spontan",gelernt=ids(x,g).includes(z.id),p=prepZauberAnzahl(x,z.id),maxGradVerf=hoechsterGrad(k,x,c),slotFrei=slotGrad<=maxGradVerf&&(spontan||prepSlotAnzahl(x,slotGrad)<slotMax(x,slotGrad));
     const varianten=prepVariantenText(x,z.id);
