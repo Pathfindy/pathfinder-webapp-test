@@ -1,4 +1,4 @@
-/* Commit 56.2 – einheitliches Fantasy-/Pergament-Design */
+/* Commit 56.3 – Azlanti-Artefakt-Design */
 :root{
   --pf56-ink:#2b1b10;--pf56-ink-soft:#5d4630;--pf56-dark:#3b2114;
   --pf56-brown:#6d3d22;--pf56-bronze:#9b6a32;--pf56-gold:#c79a4a;
@@ -54,3 +54,127 @@ input,select,textarea{background:#f8e8c5!important;border-color:#a88456!importan
 .prolog-text-56 h2{margin:0 0 6px;color:#2d1e12!important;font-size:1.28rem}.prolog-text-56 p{margin:0;line-height:1.4;font-size:1rem}
 .prolog-steuerung-56{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;padding:9px;background:#120e0b}.prolog-steuerung-56 button:last-child{justify-self:stretch}
 @media(max-width:650px){.app-kopf-56{padding-left:34px}.startseite-56{padding:4px}.prolog-rahmen-56{height:99vh}.prolog-text-56{padding:10px 12px}.prolog-text-56 h2{font-size:1.05rem}.prolog-text-56 p{font-size:.86rem}.prolog-steuerung-56{grid-template-columns:1fr 1fr}.prolog-steuerung-56 #btnPrologUeberspringen56{grid-column:1/-1;grid-row:2}.start-home-56{left:2px}main{padding:9px}}
+
+
+/* v0.56.3 – Artefakt-Runen statt Seitenfarben */
+:root{--aktive-rune:"✥"}
+nav button.runen-tab-563{position:relative;padding-left:2.35rem!important;overflow:visible}
+nav button.runen-tab-563::before{content:attr(data-rune);position:absolute;left:.55rem;top:50%;transform:translateY(-52%);font-family:Georgia,"Times New Roman",serif;font-size:1.35rem;line-height:1;color:#6b431f;text-shadow:0 1px rgba(255,240,190,.55)}
+nav button.runen-tab-563.active::before{color:#ffe5a0;text-shadow:0 0 5px #f2bb51,0 0 11px rgba(239,171,53,.75)}
+main{position:relative;isolation:isolate}
+main::before{content:var(--aktive-rune);position:fixed;right:3.5vw;bottom:3vh;z-index:-1;font-family:Georgia,"Times New Roman",serif;font-size:min(42vw,31rem);line-height:.8;color:rgba(116,72,29,.055);text-shadow:0 0 16px rgba(197,142,56,.07);pointer-events:none;transform:rotate(-7deg)}
+body::after{content:"ᚨ ᛉ ᚱ ᛟ ᚾ ᛞ ᚨ ᛉ ᚱ ᛟ";position:fixed;right:-1.2rem;top:23vh;z-index:-1;writing-mode:vertical-rl;letter-spacing:.55rem;font-size:1.05rem;color:rgba(102,61,24,.14);pointer-events:none}
+
+/* Mehr Materialtiefe: Pergament + Leder/Bronze statt flacher Web-UI */
+body{background:
+ radial-gradient(circle at 16% 12%,rgba(255,245,205,.32),transparent 28rem),
+ radial-gradient(circle at 88% 72%,rgba(100,58,23,.10),transparent 34rem),
+ repeating-linear-gradient(0deg,rgba(91,55,24,.018) 0,rgba(91,55,24,.018) 1px,transparent 1px,transparent 5px),
+ linear-gradient(110deg,#d1a965,#ead09a 48%,#c99a57)!important}
+header{background:linear-gradient(180deg,#392116,#170e09)!important}
+nav{background:linear-gradient(180deg,#c89d59,#e7c98e 48%,#b78342)!important;padding-top:7px!important;padding-bottom:7px!important}
+nav button{box-shadow:inset 0 0 0 1px rgba(255,239,194,.38),0 1px 3px rgba(60,34,15,.25)!important}
+nav button.active{box-shadow:inset 0 0 12px rgba(245,190,82,.2),0 0 8px rgba(155,97,29,.32)!important}
+
+/* Startseite: Version/Credit sind HTML und damit künftig nicht mehr an eine Bildversion gebunden. */
+.startseite-panel-56{width:min(1080px,96vw);max-height:94vh}
+.start-meta-563{position:absolute;left:24%;right:24%;top:43.5%;z-index:3;display:flex;flex-direction:column;align-items:center;gap:.28rem;color:#f3dfb4;text-shadow:0 1px 3px #000;font-family:Georgia,"Times New Roman",serif;pointer-events:none}
+.start-version-563{font-size:clamp(.72rem,1.3vw,1rem)}
+.start-meta-563 strong{font-size:clamp(.75rem,1.45vw,1.08rem);font-weight:700}
+
+/* Prolog: jede Szene nutzt dieselbe Leinwand. Extreme Quellformate werden nicht mehr als Streifen dargestellt. */
+.prolog-rahmen-56{width:min(1180px,98vw);height:min(800px,96vh);grid-template-rows:minmax(0,1fr) auto auto}
+.prolog-bildfenster-56{position:relative;min-height:0;background:#0b0806}
+.prolog-bildfenster-56::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 38px rgba(20,10,4,.6)}
+.prolog-bildfenster-56 img{width:100%;height:100%;object-fit:cover;object-position:center;filter:sepia(.72) saturate(.62) contrast(1.07) brightness(.92)}
+.prolog-text-56 h2{font-size:1.25rem}
+
+@media(max-width:700px){
+ nav button.runen-tab-563{padding-left:1.7rem!important}
+ nav button.runen-tab-563::before{left:.3rem;font-size:1rem}
+ main::before{right:-4vw;bottom:8vh;font-size:70vw}
+ .prolog-rahmen-56{height:98vh}
+ .prolog-bildfenster-56 img{object-fit:cover}
+ .start-meta-563{left:18%;right:18%;top:43%}
+}
+
+/* ==========================================================
+   v0.56.4 – Grimoire-Oberfläche nach dem freigegebenen Entwurf
+   ========================================================== */
+:root{
+  --pf564-leder:#24140d;--pf564-leder2:#4a2817;--pf564-gold:#c58a32;
+  --pf564-goldhell:#f0c76d;--pf564-pergament:#e9ca8e;--pf564-pergamenthell:#f5dfae;
+  --pf564-tinte:#2c1a0d;--pf564-linie:rgba(100,55,20,.38);
+}
+html{background:#120b07!important}
+body{background:
+  radial-gradient(circle at 80% 22%,rgba(122,77,31,.11),transparent 24rem),
+  radial-gradient(circle at 16% 76%,rgba(92,49,18,.10),transparent 30rem),
+  repeating-linear-gradient(7deg,rgba(82,45,18,.018) 0 1px,transparent 1px 7px),
+  linear-gradient(100deg,#c79755 0,#ebcf94 13%,#efd8a7 50%,#e3bf7e 87%,#bd8849 100%)!important;
+  color:var(--pf564-tinte);min-height:100vh
+}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;background:
+  linear-gradient(90deg,rgba(49,24,9,.20),transparent 5%,transparent 95%,rgba(49,24,9,.20)),
+  linear-gradient(rgba(255,245,205,.08),rgba(70,33,10,.07));}
+header{border-bottom:1px solid #a76d25!important;background:
+  repeating-linear-gradient(90deg,transparent 0 38px,rgba(205,144,48,.07) 39px 40px),
+  linear-gradient(#351d12,#160c08)!important;box-shadow:inset 0 -1px rgba(238,188,91,.22),0 2px 7px #321a0e!important}
+.app-kopf-56{min-height:48px!important;padding:0 54px}
+.app-kopf-56 h1{font-size:clamp(1rem,2.1vw,1.55rem)!important;color:#f5dfaa!important;margin:0;text-shadow:0 1px 2px #000,0 0 12px rgba(209,148,54,.18)}
+.app-version-30{font-size:.58em!important;color:#d7b778!important;margin-left:.35rem}
+.start-home-56{left:10px!important;width:34px!important;height:34px!important;border:1px solid #b77c2e!important;background:linear-gradient(#4b2a18,#21120c)!important;box-shadow:inset 0 0 8px rgba(238,185,77,.12),0 0 0 1px #140a06!important}
+
+nav{position:sticky!important;top:0!important;z-index:1000!important;gap:4px!important;padding:5px 8px 7px!important;background:linear-gradient(#2f190f,#180d08)!important;border-bottom:2px solid #a66d28!important;box-shadow:0 3px 10px rgba(35,16,6,.4)!important}
+nav button.runen-tab-563{min-height:48px!important;padding:7px 8px 7px 2.55rem!important;border:1px solid #815222!important;border-radius:3px!important;background:linear-gradient(#4b2a18,#26150d)!important;color:#ecd59f!important;font-family:Georgia,"Times New Roman",serif!important;font-size:.93rem!important;box-shadow:inset 0 0 0 1px rgba(231,180,80,.08),inset 0 -8px 14px rgba(0,0,0,.12)!important}
+nav button.runen-tab-563::before{left:.65rem!important;font-size:1.55rem!important;color:#d5a34f!important;text-shadow:0 0 5px rgba(207,147,55,.22)!important}
+nav button.runen-tab-563:hover{background:linear-gradient(#5b321b,#311a0f)!important;color:#fff0c0!important}
+nav button.runen-tab-563.active{background:linear-gradient(#6b391c,#3b1d0f)!important;border-color:#e0a746!important;color:#fff0bc!important;box-shadow:inset 0 0 15px rgba(236,174,63,.25),0 0 8px rgba(227,158,48,.42)!important}
+nav button.runen-tab-563.active::before{color:#fff0a7!important;text-shadow:0 0 4px #ffd269,0 0 12px #e39b2f,0 0 20px rgba(229,147,38,.65)!important}
+
+.globale-charakterleiste{top:60px!important;background:rgba(236,207,151,.97)!important;border-bottom:1px solid #9d6b31!important;box-shadow:0 2px 5px rgba(58,31,12,.14)!important;padding:7px 12px!important}
+main{max-width:1220px!important;padding:20px 24px 42px!important;position:relative!important}
+main::after{content:"";position:fixed;left:0;right:0;bottom:0;height:18px;pointer-events:none;z-index:-1;background:linear-gradient(transparent,rgba(57,29,10,.16))}
+main::before{right:2vw!important;bottom:2vh!important;font-size:min(39vw,30rem)!important;color:rgba(102,59,20,.065)!important;text-shadow:0 0 1px rgba(113,62,20,.15)!important}
+
+/* Seitenkopf wie eine Seite im alten Grimoire */
+.page.active{position:relative;animation:pf564Einblenden .16s ease-out}
+@keyframes pf564Einblenden{from{opacity:.72;transform:translateY(2px)}to{opacity:1;transform:none}}
+.page.active>.seitenkopf,.page.active>h2:first-child{position:relative;margin:0 0 16px!important;padding:13px 14px 13px 74px!important;min-height:62px;border:0!important;border-bottom:1px solid var(--pf564-linie)!important;background:linear-gradient(90deg,rgba(250,229,185,.38),transparent 75%);font-size:1.75rem!important;display:flex;align-items:center}
+.page.active>.seitenkopf::before,.page.active>h2:first-child::before{content:var(--aktive-rune);position:absolute;left:10px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:48px;height:48px;border-radius:50%;border:1px solid #a66f2c;background:radial-gradient(circle,#6a3a1d,#2d180e 68%);color:#f3c65f;font-size:1.8rem;text-shadow:0 0 8px rgba(239,174,60,.55);box-shadow:inset 0 0 0 3px rgba(225,171,69,.12),0 2px 5px rgba(64,33,12,.22)}
+.page.active>.seitenkopf h2{font-size:1.75rem!important;border:0!important;padding:0!important;margin:0!important;color:#3b210f!important}
+.page.active>.seitenkopf p{margin:.15rem 0 0;color:#71502f}
+
+/* Karten und Bereiche */
+main .karte,main .effekt,main .admin-karte,main .vermoegen-karte,main .zeit-karte-54,main .zauber-karte-55,main .angriffe-bereich,main .tp-bereich,main .energie-bereich,
+.effekt-filter,.effekt-suche-filter-503,.charakter-eintrag,.zauber-gradgruppe-55,.zauber-klassendetails-5510,.stufen-editor,.bonus-editor-hinweis-425,.kampagnen-verwaltung,.kampagnen-baum{
+ background:
+   repeating-linear-gradient(0deg,rgba(93,54,22,.015) 0 1px,transparent 1px 5px),
+   linear-gradient(145deg,rgba(248,228,188,.97),rgba(228,194,133,.97))!important;
+ border:1px solid #a87538!important;border-radius:5px!important;
+ box-shadow:inset 0 0 0 1px rgba(255,244,207,.38),inset 0 0 22px rgba(106,62,22,.06),0 2px 6px rgba(67,35,13,.19)!important
+}
+main .angriffe-bereich,main .tp-bereich,main .energie-bereich,.kampagnen-verwaltung{padding:14px!important}
+main h2,main h3,main h4{color:#3c220f!important;text-shadow:0 1px rgba(255,239,199,.5)}
+main h3{font-family:Georgia,"Times New Roman",serif!important}
+main button:not(.zauber-slot-554),dialog button{border:1px solid #9d6b31!important;border-radius:4px!important;background:linear-gradient(#e7c483,#c99852)!important;color:#3a210f!important;box-shadow:inset 0 1px rgba(255,245,210,.42)!important;font-weight:700}
+main button:hover:not(:disabled){filter:brightness(1.06)}
+main button.active,main button[aria-pressed="true"]{background:linear-gradient(#573019,#2d180d)!important;color:#ffe7a7!important;border-color:#d99d3e!important;box-shadow:inset 0 0 9px rgba(235,171,62,.18),0 0 5px rgba(178,113,33,.18)!important}
+input,select,textarea{background:rgba(250,232,193,.93)!important;border:1px solid #a97b43!important;color:#302014!important;box-shadow:inset 0 1px 3px rgba(84,48,18,.08)!important}
+
+/* Angriffe bekommen die Optik des Entwurfs */
+.angriffe-kopf{border-bottom:1px solid rgba(116,72,29,.28);padding-bottom:8px;margin-bottom:10px}
+.angriff-karte,.angriff-zeile,.angriff-eintrag{border-color:#b4854c!important;background:rgba(248,229,192,.58)!important}
+
+/* Mobile: Runen bleiben sichtbar, Text kompakt. */
+@media(max-width:760px){
+ .app-kopf-56{min-height:42px!important;padding:0 42px}.app-kopf-56 h1{font-size:.92rem!important}
+ nav{overflow-x:auto!important;justify-content:flex-start!important;scrollbar-width:thin}
+ nav button.runen-tab-563{flex:0 0 auto!important;min-width:116px!important;min-height:43px!important;padding-left:2.25rem!important}
+ nav button.runen-tab-563::before{font-size:1.3rem!important;left:.55rem!important}
+ .globale-charakterleiste{top:55px!important}
+ main{padding:12px 9px 28px!important}
+ .page.active>.seitenkopf,.page.active>h2:first-child{padding-left:60px!important;font-size:1.4rem!important;min-height:54px}
+ .page.active>.seitenkopf::before,.page.active>h2:first-child::before{width:42px;height:42px;font-size:1.5rem}
+ main::before{font-size:76vw!important;right:-12vw!important;bottom:7vh!important}
+}
