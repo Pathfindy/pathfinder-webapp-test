@@ -15,3 +15,12 @@
 - Overlay-Sichtbarkeit korrigiert: `hidden` wird nicht mehr durch die Commit-56-CSS-Regeln überschrieben.
 - `Überspringen` und `Zur App` schließen den Prolog jetzt tatsächlich und wechseln zu `Charaktere`.
 - Prologbilder werden je Szene separat geladen und vollständig in das Bildfenster eingepasst.
+
+
+## v0.56.2 – Einheitliches Fantasy-Design
+- Seitenbezogene Farbcodierung entfernt; alle App-Seiten verwenden nun ein gemeinsames Pergament-/Bronze-/Altgold-Farbsystem.
+- Karten, Navigation, Formulare und Überschriften auf eine einheitliche Fantasy-Optik umgestellt.
+- Startseite auf großen Bildschirmen vergrößert, mobile Darstellung bleibt responsiv.
+- Prolog-Kopfzeile entfernt. Szenennummer und Szenentitel stehen nun gemeinsam im unteren Geschichtsbereich.
+- Eingebrannte Nummern und Überschriften aus den 12 Prolog-Szenenbildern durch Beschnitt entfernt.
+- Bestehende App-Funktionen einschließlich Zauber v0.55.13 bleiben erhalten.
