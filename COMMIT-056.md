@@ -24,3 +24,22 @@
 - Prolog-Kopfzeile entfernt. Szenennummer und Szenentitel stehen nun gemeinsam im unteren Geschichtsbereich.
 - Eingebrannte Nummern und Überschriften aus den 12 Prolog-Szenenbildern durch Beschnitt entfernt.
 - Bestehende App-Funktionen einschließlich Zauber v0.55.13 bleiben erhalten.
+
+
+## v0.56.3 – Azlanti-Artefakt-Design
+- Einheitliche warme Pergament-/Leder-/Bronze-Optik weiter vertieft; keine Seitenfarben.
+- Jeder Hauptbereich erhält eine feste Artefakt-Rune im Menü; die aktive Rune glimmt dezent golden und erscheint groß/transluzent im Seitenhintergrund.
+- Prolog-Titel auf reine Nummerierung umgestellt (`1 – Titel` statt `Szene 1 – Titel`).
+- Alle Prologbilder werden in einer identischen Szenenleinwand dargestellt; extreme Formate werden bildfüllend statt als schmaler Streifen gezeigt.
+- Einheitlicher Sepia-/Schwarzweiß-Look für alle Prologbilder per Darstellungsfilter.
+- Startseite zeigt Version `v0.56.3` und `App created by Raubritter` als echtes HTML, damit diese Angaben künftig unabhängig von der Grafik gepflegt werden können.
+
+
+## v0.56.4 – Grimoire-Oberfläche
+- App-Oberfläche deutlich näher an den freigegebenen Fantasy-Entwurf gebracht: dunkles Leder-Menü, Pergament-Arbeitsfläche, Bronze-/Altgold-Kanten und stärkere Materialtiefe.
+- Navigation dauerhaft in der Reihenfolge `Charaktere · Kampf · Leben · Effekte · Zauber · Zeit · Vermögen · Admin`.
+- Artefakt-Runen größer und klarer in jedem Menüpunkt; aktive Rune glimmt gold und bleibt als großes Wasserzeichen im Seitenhintergrund sichtbar.
+- Aktive Seiten erhalten einen Grimoire-Seitenkopf mit Runenmedaillon.
+- Karten, Eingabefelder, Schaltflächen und Hauptbereiche auf dieselbe Pergament-/Leder-Sprache vereinheitlicht.
+- Responsive Navigation für kleine Displays beibehalten; Hauptmenü wird dort horizontal scrollbar statt gequetscht.
+- Versionsanzeige und Startseiten-Metadaten auf `v0.56.4` aktualisiert.
