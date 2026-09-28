@@ -1,4 +1,4 @@
-// Commit 56.1: Startseite, Prolog und seitenbezogenes Farbsystem
+// Commit 56.2: Startseite, Prolog und einheitliches Fantasy-/Pergament-Design
 (() => {
   "use strict";
   const START=sessionStorage.getItem("pf56-session-gestartet")!=="1";
@@ -27,7 +27,7 @@
     bild.src=`assets/prolog56/${nr}.png`;
     bild.alt=`Prologszene ${i+1}: ${szenen[i][0]}`;
   }
-  function render(){const s=szenen[idx];titel.textContent=s[0];text.textContent=s[1];zaehler.textContent=`${idx+1} / ${szenen.length}`;bildFuerSzene(idx);document.getElementById("btnPrologZurueck56").disabled=idx===0;document.getElementById("btnPrologWeiter56").textContent=idx===szenen.length-1?"Zur App ›":"Weiter ›"}
+  function render(){const s=szenen[idx];titel.textContent=`Szene ${idx+1} – ${s[0]}`;text.textContent=s[1];zaehler.textContent=`${idx+1} / ${szenen.length}`;bildFuerSzene(idx);document.getElementById("btnPrologZurueck56").disabled=idx===0;document.getElementById("btnPrologWeiter56").textContent=idx===szenen.length-1?"Zur App ›":"Weiter ›"}
   function prologStart(){idx=0;zeigeOverlay(start,false);zeigeOverlay(prolog,true);render()}
   document.getElementById("btnStartseite56")?.addEventListener("click",startseite);
   document.getElementById("btnZurApp56")?.addEventListener("click",zurApp);
@@ -36,11 +36,6 @@
   document.getElementById("btnPrologZurueck56")?.addEventListener("click",()=>{if(idx>0){idx--;render()}});
   document.getElementById("btnPrologWeiter56")?.addEventListener("click",()=>{if(idx<szenen.length-1){idx++;render()}else zurApp()});
 
-  const map={effekte:"page-effekte-56",charakterwerte:"page-charakterwerte-56",leben:"page-leben-56",zauber:"page-zauber-56",zeit:"page-zeit-56",vermoegen:"page-vermoegen-56",charaktere:"page-charaktere-56",admin:"page-admin-56",dashboard:"page-charaktere-56"};
-  function farbe(name){document.body.classList.remove(...Object.values(map));document.body.classList.add(map[name]||map.charaktere)}
-  const alt=window.zeigeSeite;
-  if(typeof alt==="function") window.zeigeSeite=function(name){alt(name);farbe(name)};
-  document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{const id=b.id;const lookup={btnEffekte:"effekte",btnCharakterwerte:"charakterwerte",btnLeben:"leben",btnZeit:"zeit",btnZauber:"zauber",btnVermoegen:"vermoegen",btnCharaktere:"charaktere",btnAdmin:"admin"};if(lookup[id])farbe(lookup[id])}));
-  farbe("charaktere");
+  // v0.56.2: bewusst kein seitenbezogenes Farbsystem mehr.
   if(START) requestAnimationFrame(()=>startseite()); else zurApp();
 })();
