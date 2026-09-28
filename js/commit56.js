@@ -1,4 +1,4 @@
-// Commit 56.2: Startseite, Prolog und einheitliches Fantasy-/Pergament-Design
+// Commit 56.4: Startseite, Prolog und einheitliches Fantasy-/Pergament-Design
 (() => {
   "use strict";
   const START=sessionStorage.getItem("pf56-session-gestartet")!=="1";
@@ -27,7 +27,7 @@
     bild.src=`assets/prolog56/${nr}.png`;
     bild.alt=`Prologszene ${i+1}: ${szenen[i][0]}`;
   }
-  function render(){const s=szenen[idx];titel.textContent=`Szene ${idx+1} – ${s[0]}`;text.textContent=s[1];zaehler.textContent=`${idx+1} / ${szenen.length}`;bildFuerSzene(idx);document.getElementById("btnPrologZurueck56").disabled=idx===0;document.getElementById("btnPrologWeiter56").textContent=idx===szenen.length-1?"Zur App ›":"Weiter ›"}
+  function render(){const s=szenen[idx];titel.textContent=`${idx+1} – ${s[0]}`;text.textContent=s[1];zaehler.textContent=`${idx+1} / ${szenen.length}`;bildFuerSzene(idx);document.getElementById("btnPrologZurueck56").disabled=idx===0;document.getElementById("btnPrologWeiter56").textContent=idx===szenen.length-1?"Zur App ›":"Weiter ›"}
   function prologStart(){idx=0;zeigeOverlay(start,false);zeigeOverlay(prolog,true);render()}
   document.getElementById("btnStartseite56")?.addEventListener("click",startseite);
   document.getElementById("btnZurApp56")?.addEventListener("click",zurApp);
@@ -36,6 +36,23 @@
   document.getElementById("btnPrologZurueck56")?.addEventListener("click",()=>{if(idx>0){idx--;render()}});
   document.getElementById("btnPrologWeiter56")?.addEventListener("click",()=>{if(idx<szenen.length-1){idx++;render()}else zurApp()});
 
-  // v0.56.2: bewusst kein seitenbezogenes Farbsystem mehr.
+  // v0.56.4: Artefakt-Runen geben den Hauptbereichen ihre Identität.
+  const runen={
+    btnCharaktere:["charaktere","✥"],btnCharakterwerte:["charakterwerte","⚔"],btnLeben:["leben","♡"],
+    btnEffekte:["effekte","⌘"],btnZauber:["zauber","✧"],btnZeit:["zeit","⌛"],btnVermoegen:["vermoegen","◈"],btnAdmin:["admin","△"]
+  };
+  // Die Navigation folgt nun dauerhaft der visuellen Leserichtung des Entwurfs.
+  const nav=document.querySelector("nav");
+  ["btnCharaktere","btnCharakterwerte","btnLeben","btnEffekte","btnZauber","btnZeit","btnVermoegen","btnAdmin"].forEach(id=>{
+    const el=document.getElementById(id); if(nav&&el) nav.appendChild(el);
+  });
+  Object.entries(runen).forEach(([id,[seite,rune]])=>{
+    const b=document.getElementById(id); if(!b)return; b.dataset.rune=rune; b.classList.add("runen-tab-563");
+    b.addEventListener("click",()=>{document.body.dataset.artefaktSeite=seite;document.documentElement.style.setProperty("--aktive-rune",`"${rune}"`)});
+  });
+  // Startseite: eindeutige App-Zuordnung und live gepflegte Version als echtes HTML.
+  if(start && !start.querySelector(".start-meta-563")){
+    const m=document.createElement("div");m.className="start-meta-563";m.innerHTML='<span class="start-version-563">v0.56.4</span><strong>App created by Raubritter</strong>';start.querySelector(".startseite-panel-56")?.appendChild(m);
+  }
   if(START) requestAnimationFrame(()=>startseite()); else zurApp();
 })();
