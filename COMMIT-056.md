@@ -91,3 +91,10 @@
 - Vermögensrechner auf Mobile in einer durchgehenden Bedienzeile stabilisiert.
 - Hauptabschnitte weiterhin über Zierlinien statt Kartenrahmen getrennt.
 - Bestehende Rechen- und Speicherlogik unverändert.
+
+## v0.56.10 – Pergament-Hintergrund Vermögen
+- Vermögensseite erhält eine durchgehende, warme CSS-Pergamentfläche.
+- Dunklere gealterte Randzonen und dezente Papierflecken/Textur ergänzt.
+- Unregelmäßige Seitenkanten liegen innerhalb der Pergamentfläche, um den früheren schwarzen Randartefakt zu vermeiden.
+- Hintergrund wächst mit Inhalt und mindestens über die sichtbare mobile Höhe.
+- Inhaltslayout und Vermögenslogik aus v0.56.9 bleiben unverändert.
