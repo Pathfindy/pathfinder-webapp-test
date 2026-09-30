@@ -1,4 +1,4 @@
-// Commit 56.4: Startseite, Prolog und einheitliches Fantasy-/Pergament-Design
+// Commit 56.5: Startseite, Prolog und einheitliches Fantasy-/Pergament-Design
 (() => {
   "use strict";
   const START=sessionStorage.getItem("pf56-session-gestartet")!=="1";
@@ -36,7 +36,7 @@
   document.getElementById("btnPrologZurueck56")?.addEventListener("click",()=>{if(idx>0){idx--;render()}});
   document.getElementById("btnPrologWeiter56")?.addEventListener("click",()=>{if(idx<szenen.length-1){idx++;render()}else zurApp()});
 
-  // v0.56.4: Artefakt-Runen geben den Hauptbereichen ihre Identität.
+  // v0.56.5: Artefakt-Runen geben den Hauptbereichen ihre Identität.
   const runen={
     btnCharaktere:["charaktere","✥"],btnCharakterwerte:["charakterwerte","⚔"],btnLeben:["leben","♡"],
     btnEffekte:["effekte","⌘"],btnZauber:["zauber","✧"],btnZeit:["zeit","⌛"],btnVermoegen:["vermoegen","◈"],btnAdmin:["admin","△"]
@@ -52,7 +52,7 @@
   });
   // Startseite: eindeutige App-Zuordnung und live gepflegte Version als echtes HTML.
   if(start && !start.querySelector(".start-meta-563")){
-    const m=document.createElement("div");m.className="start-meta-563";m.innerHTML='<span class="start-version-563">v0.56.4</span><strong>App created by Raubritter</strong>';start.querySelector(".startseite-panel-56")?.appendChild(m);
+    const m=document.createElement("div");m.className="start-meta-563";m.innerHTML='<span class="start-version-563">v0.56.5</span><strong>App created by Raubritter</strong>';start.querySelector(".startseite-panel-56")?.appendChild(m);
   }
   if(START) requestAnimationFrame(()=>startseite()); else zurApp();
 })();
