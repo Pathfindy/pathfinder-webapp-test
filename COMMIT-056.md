@@ -43,3 +43,13 @@
 - Karten, Eingabefelder, Schaltflächen und Hauptbereiche auf dieselbe Pergament-/Leder-Sprache vereinheitlicht.
 - Responsive Navigation für kleine Displays beibehalten; Hauptmenü wird dort horizontal scrollbar statt gequetscht.
 - Versionsanzeige und Startseiten-Metadaten auf `v0.56.4` aktualisiert.
+
+
+## v0.56.5 – Grimoire-Veredelung
+- Oberfläche weiter an die freigegebene Quest-/Pergament-Referenz angenähert.
+- Pergament erhält stärkere Alterung, Randtiefe und feinere Materialstruktur.
+- Aktive Bereichsrune wird als azlantisches Siegel mit Kreis-/Gravurstruktur dargestellt statt nur als großes Wasserzeichen.
+- Leder-/Bronze-Navigation vertieft; aktive Rune glimmt weiterhin dezent golden.
+- Karten und Eingabebereiche wirken weniger wie moderne Web-Boxen und stärker wie beschriftbare Grimoire-Pergamente.
+- Große moderne Weiß-/Blauflächen, insbesondere auf Zeit/Kampf/Leben, visuell in die Pergamentwelt integriert.
+- Bestehende Funktionslogik bleibt unverändert.
