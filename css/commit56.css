@@ -178,3 +178,129 @@ input,select,textarea{background:rgba(250,232,193,.93)!important;border:1px soli
  .page.active>.seitenkopf::before,.page.active>h2:first-child::before{width:42px;height:42px;font-size:1.5rem}
  main::before{font-size:76vw!important;right:-12vw!important;bottom:7vh!important}
 }
+
+
+/* ==========================================================
+   v0.56.5 – Veredelung Richtung handgemaltes Grimoire
+   Fokus: Pergamenttiefe, ornamentale Linien, Siegel statt Wasserzeichen,
+          weniger Web-UI, ohne Funktionslogik anzutasten.
+   ========================================================== */
+:root{
+  --pf565-ink:#2d180c;
+  --pf565-brown:#5a2f17;
+  --pf565-gold:#b97b28;
+  --pf565-gold2:#e3b75f;
+  --pf565-paper:#ecd39c;
+  --pf565-paper-hi:#f6e6bd;
+  --pf565-paper-lo:#c99653;
+}
+body{
+  background:
+    radial-gradient(circle at 50% -10%,rgba(255,247,214,.44),transparent 34rem),
+    radial-gradient(circle at 12% 58%,rgba(93,51,18,.10),transparent 30rem),
+    radial-gradient(circle at 90% 78%,rgba(84,45,16,.12),transparent 30rem),
+    linear-gradient(90deg,rgba(57,25,7,.34),transparent 4.5%,transparent 95.5%,rgba(57,25,7,.34)),
+    linear-gradient(180deg,rgba(75,34,10,.14),transparent 6%,transparent 93%,rgba(68,29,8,.20)),
+    repeating-linear-gradient(5deg,rgba(72,41,19,.018) 0 1px,transparent 1px 7px),
+    linear-gradient(100deg,#c48a49 0%,#e4bd78 7%,#f0d9a6 17%,#f4dfb1 50%,#edd09a 84%,#c88e4e 100%)!important;
+}
+main::after{
+  content:"";
+  position:fixed; inset:auto 0 0 0; height:28px; z-index:-1; pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(60,28,9,.22),transparent 9%,transparent 91%,rgba(60,28,9,.22)),
+    linear-gradient(transparent,rgba(54,24,7,.16));
+}
+main::before{
+  content:var(--aktive-rune)!important;
+  right:2.5vw!important;
+  bottom:4.5vh!important;
+  width:min(31vw,25rem)!important;
+  height:min(31vw,25rem)!important;
+  display:grid!important; place-items:center!important;
+  border:2px solid rgba(105,60,21,.13)!important;
+  outline:1px solid rgba(105,60,21,.08)!important;
+  outline-offset:-16px!important;
+  border-radius:50%!important;
+  font-size:min(16vw,10rem)!important;
+  color:rgba(105,60,21,.11)!important;
+  transform:rotate(-8deg)!important;
+  background:
+    radial-gradient(circle,transparent 0 32%,rgba(105,60,21,.045) 32.5% 33%,transparent 33.5% 48%,rgba(105,60,21,.045) 48.5% 49%,transparent 49.5%),
+    repeating-conic-gradient(from 0deg,rgba(105,60,21,.05) 0 1deg,transparent 1deg 14deg)!important;
+  box-shadow:inset 0 0 0 8px rgba(105,60,21,.025),inset 0 0 30px rgba(105,60,21,.035)!important;
+}
+header{
+  background:
+    linear-gradient(90deg,rgba(221,162,65,.07),transparent 8%,transparent 92%,rgba(221,162,65,.07)),
+    repeating-linear-gradient(90deg,transparent 0 42px,rgba(217,157,62,.055) 43px 44px),
+    linear-gradient(#3d2113,#170c08)!important;
+}
+nav{background:linear-gradient(180deg,#321b10,#1c0e08)!important;border-top:1px solid rgba(231,178,82,.22)!important}
+nav button.runen-tab-563{
+  border:1px solid #81501f!important;
+  background:linear-gradient(180deg,rgba(94,50,24,.92),rgba(46,23,12,.98))!important;
+  box-shadow:inset 0 0 0 1px rgba(237,193,101,.08),inset 0 8px 12px rgba(255,224,154,.025),0 1px 0 rgba(255,230,171,.06)!important;
+}
+nav button.runen-tab-563.active{
+  background:radial-gradient(circle at 18% 50%,rgba(230,172,66,.13),transparent 36%),linear-gradient(#713b1c,#36190d)!important;
+}
+main{
+  max-width:1260px!important;
+  border-left:1px solid rgba(112,66,26,.20);
+  border-right:1px solid rgba(112,66,26,.20);
+  box-shadow:inset 22px 0 34px rgba(94,51,18,.045),inset -22px 0 34px rgba(94,51,18,.045);
+}
+.page.active>.seitenkopf,.page.active>h2:first-child{
+  background:linear-gradient(90deg,rgba(250,235,202,.68),rgba(244,220,171,.28) 62%,transparent)!important;
+  border-bottom:0!important;
+  box-shadow:none!important;
+}
+.page.active>.seitenkopf::after,.page.active>h2:first-child::after{
+  content:"";
+  position:absolute;
+  left:72px; right:16px; bottom:3px; height:1px;
+  background:linear-gradient(90deg,#8b5425,rgba(139,84,37,.22),transparent);
+  box-shadow:0 3px 0 rgba(139,84,37,.09);
+}
+.page.active>.seitenkopf::before,.page.active>h2:first-child::before{
+  width:52px;height:52px;
+  border:2px solid #9e672c!important;
+  outline:1px solid rgba(117,72,31,.35);
+  outline-offset:3px;
+  background:radial-gradient(circle at 50% 45%,#75401f 0 28%,#41200f 65%,#211008 100%)!important;
+}
+main .karte,main .effekt,main .admin-karte,main .vermoegen-karte,main .zeit-karte-54,main .zauber-karte-55,main .angriffe-bereich,main .tp-bereich,main .energie-bereich,
+.effekt-filter,.effekt-suche-filter-503,.charakter-eintrag,.zauber-gradgruppe-55,.zauber-klassendetails-5510,.stufen-editor,.bonus-editor-hinweis-425,.kampagnen-verwaltung,.kampagnen-baum{
+  background:
+    linear-gradient(90deg,rgba(111,63,24,.05),transparent 5%,transparent 95%,rgba(111,63,24,.05)),
+    repeating-linear-gradient(0deg,rgba(92,53,22,.016) 0 1px,transparent 1px 6px),
+    linear-gradient(145deg,rgba(248,229,191,.985),rgba(232,198,139,.985))!important;
+  border:1px solid rgba(139,89,42,.78)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,247,216,.34),inset 0 0 18px rgba(92,49,18,.055),0 2px 5px rgba(63,31,11,.14)!important;
+}
+.zeit-runde-54{
+  background:radial-gradient(circle at 50% 35%,rgba(255,243,207,.72),rgba(235,200,140,.92) 62%,rgba(198,147,77,.9))!important;
+  color:#2e1a0e!important;border:1px solid #a66f31!important;
+  box-shadow:inset 0 0 26px rgba(100,55,18,.08),0 2px 6px rgba(55,27,9,.16)!important;
+}
+.zeit-runde-wert-54{color:#3b210f!important;text-shadow:0 1px rgba(255,244,213,.6)!important}
+.angriff-wert,.angriff-wert-box,.angriff-zeile,.zauber-wert-55,.energie-tabelle>div,.tp-werte>div{
+  background:rgba(246,226,188,.82)!important;
+}
+input,select,textarea{
+  background:linear-gradient(180deg,rgba(255,242,210,.96),rgba(244,220,174,.96))!important;
+  border:1px solid #a67439!important;border-radius:3px!important;
+}
+input:focus,select:focus,textarea:focus{
+  outline:2px solid rgba(195,131,42,.22)!important;border-color:#b97d2d!important;
+}
+main button:not(.zauber-slot-554),dialog button{
+  background:linear-gradient(#dfb66f,#bd8140)!important;
+  border:1px solid #8a5728!important;
+  box-shadow:inset 0 1px rgba(255,244,208,.42),inset 0 -5px 8px rgba(99,52,19,.08),0 1px 2px rgba(58,28,9,.16)!important;
+}
+main button.active,main button[aria-pressed="true"]{background:linear-gradient(#633318,#2c160b)!important}
+@media(max-width:760px){
+  main::before{width:68vw!important;height:68vw!important;right:-20vw!important;bottom:10vh!important;font-size:28vw!important;opacity:.78}
+}
