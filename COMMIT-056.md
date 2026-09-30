@@ -62,3 +62,14 @@
 - Vermögen verwendet eine Münzrune; Zeit verwendet eine vereinfachte einfarbige Sanduhrrune ohne Emoji-Blau.
 - Große dekorative Hintergrundrunen werden auf Mobilgeräten ausgeblendet.
 - Funktionslogik der Vermögensverwaltung unverändert.
+
+
+## v0.56.7 – Vermögen: mobiles Pergament-Artefakt
+- Vermögens-Prototyp weiter an die mobile Grimoire-Referenz angenähert.
+- Pergament-Hintergrund vollständig responsiv per CSS aufgebaut; keine starre Vollbild-Hintergrundgrafik nötig.
+- Unregelmäßig dunkle, beschädigt wirkende Seitenkanten und dezente Flecken-/Faserstruktur ergänzt.
+- Eingabefelder und Auswahlfelder deutlich stärker gerundet und optisch in das Pergament eingebettet.
+- Kartenrahmen bleiben entfernt; Abschnitte werden durch feine braune Zierlinien und Ornamentmarken getrennt.
+- Münzrune auf eine klare, einfarbige Kreis-/Münzform `◎` vereinheitlicht.
+- Mobile Abstände, Feldhöhen und Touch-Ziele der Vermögensseite verfeinert.
+- Vermögenslogik unverändert.
