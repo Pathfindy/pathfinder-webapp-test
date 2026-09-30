@@ -556,3 +556,74 @@ body[data-artefakt-seite="vermoegen"] main::after{display:none!important;content
  #vermoegen .vermoegen-rechner-fuss{grid-template-columns:auto 62px 1fr!important;gap:6px!important}
  #vermoegen .vermoegen-rechner-aktionen button{font-size:.74rem!important;padding:7px 5px!important}
 }
+
+/* ==========================================================
+   v0.56.10 – Vermögen: durchgehendes gealtertes Pergament
+   Nur Hintergrund/Kanten; Inhaltslayout aus v0.56.9 bleibt bestehen.
+   ========================================================== */
+body[data-artefakt-seite="vermoegen"]{
+  background:#24150d!important;
+}
+body[data-artefakt-seite="vermoegen"] main{
+  position:relative!important;
+  min-height:calc(100dvh - 92px)!important;
+  margin:0 auto 12px!important;
+  border:0!important;
+  border-radius:0!important;
+  overflow:hidden!important;
+  background:
+    radial-gradient(ellipse at 15% 7%,rgba(104,55,18,.15) 0 2%,transparent 20%),
+    radial-gradient(ellipse at 86% 19%,rgba(126,72,25,.10) 0 3%,transparent 22%),
+    radial-gradient(ellipse at 24% 48%,rgba(93,48,14,.09) 0 2%,transparent 24%),
+    radial-gradient(ellipse at 79% 71%,rgba(116,62,19,.10) 0 2%,transparent 24%),
+    radial-gradient(ellipse at 34% 92%,rgba(86,43,12,.10) 0 2%,transparent 22%),
+    repeating-linear-gradient(4deg,rgba(89,48,18,.025) 0 1px,transparent 1px 5px),
+    linear-gradient(90deg,rgba(67,31,8,.38) 0,rgba(111,59,19,.14) 2.2%,transparent 6.5%,transparent 93.5%,rgba(111,59,19,.15) 97.8%,rgba(67,31,8,.40) 100%),
+    linear-gradient(180deg,rgba(92,46,12,.22) 0,transparent 4%,transparent 96%,rgba(75,35,9,.27) 100%),
+    #edcd8e!important;
+  box-shadow:
+    inset 18px 0 24px -20px rgba(45,18,4,.92),
+    inset -18px 0 24px -20px rgba(45,18,4,.92),
+    inset 0 16px 22px -20px rgba(45,18,4,.75),
+    inset 0 -18px 24px -20px rgba(45,18,4,.75),
+    0 7px 20px rgba(28,12,5,.34)!important;
+}
+/* Die unregelmäßige Kante sitzt innerhalb der Pergamentfläche und kann
+   deshalb keinen separaten schwarzen Streifen neben der Seite erzeugen. */
+body[data-artefakt-seite="vermoegen"] main::before,
+body[data-artefakt-seite="vermoegen"] main::after{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  top:0!important;bottom:0!important;
+  width:9px!important;height:auto!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  opacity:.72!important;
+  transform:none!important;
+  background:
+    radial-gradient(circle at 0 3%,rgba(65,28,7,.62) 0 2px,transparent 2.6px),
+    radial-gradient(circle at 100% 9%,rgba(78,35,9,.52) 0 2.5px,transparent 3px),
+    radial-gradient(circle at 10% 18%,rgba(58,24,6,.50) 0 1.8px,transparent 2.4px),
+    radial-gradient(circle at 90% 31%,rgba(82,39,10,.55) 0 2.2px,transparent 2.8px),
+    radial-gradient(circle at 5% 46%,rgba(62,27,7,.55) 0 2.5px,transparent 3px),
+    radial-gradient(circle at 95% 63%,rgba(77,34,8,.48) 0 2px,transparent 2.6px),
+    radial-gradient(circle at 8% 79%,rgba(59,25,6,.54) 0 2.3px,transparent 2.9px),
+    radial-gradient(circle at 92% 93%,rgba(76,34,8,.58) 0 2.5px,transparent 3px),
+    linear-gradient(90deg,rgba(69,29,7,.55),rgba(111,61,20,.18) 48%,transparent)!important;
+  background-size:9px 127px,9px 149px,9px 173px,9px 191px,9px 217px,9px 239px,9px 263px,9px 293px,100% 100%!important;
+}
+body[data-artefakt-seite="vermoegen"] main::before{left:0!important}
+body[data-artefakt-seite="vermoegen"] main::after{right:0!important;transform:scaleX(-1)!important}
+body[data-artefakt-seite="vermoegen"] #vermoegen{position:relative;z-index:1}
+
+@media(max-width:900px){
+  body[data-artefakt-seite="vermoegen"] main{
+    width:calc(100% - 12px)!important;
+    max-width:none!important;
+    margin:0 6px 10px!important;
+    padding-top:8px!important;
+    padding-bottom:24px!important;
+    min-height:calc(100dvh - 92px)!important;
+  }
+}
