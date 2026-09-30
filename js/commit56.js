@@ -39,7 +39,7 @@
   // v0.56.5: Artefakt-Runen geben den Hauptbereichen ihre Identität.
   const runen={
     btnCharaktere:["charaktere","✥"],btnCharakterwerte:["charakterwerte","⚔"],btnLeben:["leben","♡"],
-    btnEffekte:["effekte","⌘"],btnZauber:["zauber","✧"],btnZeit:["zeit","⌛"],btnVermoegen:["vermoegen","◈"],btnAdmin:["admin","△"]
+    btnEffekte:["effekte","⌘"],btnZauber:["zauber","✧"],btnZeit:["zeit","⧖"],btnVermoegen:["vermoegen","◉"],btnAdmin:["admin","△"]
   };
   // Die Navigation folgt nun dauerhaft der visuellen Leserichtung des Entwurfs.
   const nav=document.querySelector("nav");
@@ -52,7 +52,7 @@
   });
   // Startseite: eindeutige App-Zuordnung und live gepflegte Version als echtes HTML.
   if(start && !start.querySelector(".start-meta-563")){
-    const m=document.createElement("div");m.className="start-meta-563";m.innerHTML='<span class="start-version-563">v0.56.5</span><strong>App created by Raubritter</strong>';start.querySelector(".startseite-panel-56")?.appendChild(m);
+    const m=document.createElement("div");m.className="start-meta-563";m.innerHTML='<span class="start-version-563">v0.56.6</span><strong>App created by Raubritter</strong>';start.querySelector(".startseite-panel-56")?.appendChild(m);
   }
   if(START) requestAnimationFrame(()=>startseite()); else zurApp();
 })();
