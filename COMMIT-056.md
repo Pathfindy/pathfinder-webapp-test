@@ -82,3 +82,12 @@
 - Münzbereiche auf dem Handy als kompakte Viererspalte gestaltet.
 - Vermögensrechner wieder einzeilig und näher an der Zielvorlage angeordnet.
 - Eingabefelder stärker gerundet und Pergament-/Zierliniengestaltung weiter reduziert.
+
+
+## v0.56.9 – Vermögen: struktureller Mobile-Umbau
+- Gesamtvermögen nach Zielvorlage neu geordnet: Münzbeutel links, Titel und umgerechnete Summe rechts.
+- „Goldmünzen“ im Gesamtvermögensblock auf genau eine Angabe reduziert.
+- Vier Münzarten auf dem Handy als kompakte Viererspalte angeordnet.
+- Vermögensrechner auf Mobile in einer durchgehenden Bedienzeile stabilisiert.
+- Hauptabschnitte weiterhin über Zierlinien statt Kartenrahmen getrennt.
+- Bestehende Rechen- und Speicherlogik unverändert.
