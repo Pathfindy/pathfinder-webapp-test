@@ -73,3 +73,12 @@
 - Münzrune auf eine klare, einfarbige Kreis-/Münzform `◎` vereinheitlicht.
 - Mobile Abstände, Feldhöhen und Touch-Ziele der Vermögensseite verfeinert.
 - Vermögenslogik unverändert.
+
+## v0.56.8 – Vermögensseite: mobiler Zielbild-Prototyp
+- Linken CSS-Fremdkörper der Pergamentkante vollständig entfernt.
+- Hochgeladenen Münzbeutel als Grafik in das Gesamtvermögen integriert.
+- Unnötiges Symbol über dem Gesamtvermögen entfernt.
+- Detailwiederholung PM/GM/SM/KM am Gesamtvermögen ausgeblendet; dort wird nur die in Goldmünzen umgerechnete Gesamtsumme gezeigt.
+- Münzbereiche auf dem Handy als kompakte Viererspalte gestaltet.
+- Vermögensrechner wieder einzeilig und näher an der Zielvorlage angeordnet.
+- Eingabefelder stärker gerundet und Pergament-/Zierliniengestaltung weiter reduziert.
