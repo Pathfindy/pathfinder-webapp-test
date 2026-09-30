@@ -53,3 +53,12 @@
 - Karten und Eingabebereiche wirken weniger wie moderne Web-Boxen und stärker wie beschriftbare Grimoire-Pergamente.
 - Große moderne Weiß-/Blauflächen, insbesondere auf Zeit/Kampf/Leben, visuell in die Pergamentwelt integriert.
 - Bestehende Funktionslogik bleibt unverändert.
+
+## v0.56.6 – Mobile Grimoire-Prototyp: Vermögen
+- Vermögensseite als Referenz für die neue mobile-first Grimoire-Oberfläche umgebaut.
+- Große Karten-/Kastenoptik auf Vermögen weitgehend entfernt; Themen werden über Abstand, Zierlinien und Pergamentstruktur getrennt.
+- Eingabefelder auf Vermögen visuell reduziert und stärker in das Pergament integriert.
+- Mobile Hauptnavigation auf kompakte Runenleiste umgestellt; Seitennamen bleiben über die jeweilige Seitenüberschrift erhalten.
+- Vermögen verwendet eine Münzrune; Zeit verwendet eine vereinfachte einfarbige Sanduhrrune ohne Emoji-Blau.
+- Große dekorative Hintergrundrunen werden auf Mobilgeräten ausgeblendet.
+- Funktionslogik der Vermögensverwaltung unverändert.
