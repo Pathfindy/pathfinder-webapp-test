@@ -498,3 +498,61 @@ body[data-artefakt-seite="vermoegen"] main::after{display:none!important;content
 #vermoegen .vermoegen-summe-wrap #vermoegenGesamt{display:block!important;text-align:center!important;margin:0!important}
 #vermoegen .vermoegen-summe-wrap span{display:block;font-family:Georgia,"Times New Roman",serif;font-size:1.05rem;color:#3b210f;margin-top:4px}
 #vermoegen #vermoegenGesamt::after{content:none!important}
+
+
+/* ==========================================================
+   v0.56.9 – Vermögen: struktureller Mobile-Umbau
+   Ziel: Referenzaufbau statt Desktop-Formular auf schmalem Bildschirm.
+   ========================================================== */
+#vermoegen .vermoegen-gesamt{
+  min-height:170px!important;
+  grid-template-columns:minmax(118px,40%) minmax(0,60%)!important;
+  grid-template-rows:auto auto!important;
+  column-gap:10px!important;
+  align-items:center!important;
+}
+#vermoegen .vermoegen-gesamt::before{height:145px!important;grid-column:1!important;grid-row:1/3!important}
+#vermoegen .vermoegen-gesamt-titel{grid-column:2;grid-row:1;align-self:end;text-align:center;color:#321b0c;font-family:Georgia,"Times New Roman",serif;line-height:1.05;margin-bottom:7px}
+#vermoegen .vermoegen-gesamt-titel strong{display:block;font-size:1.5rem}
+#vermoegen .vermoegen-gesamt-titel span{display:block;margin-top:3px;font-size:.82rem;font-weight:400}
+#vermoegen .vermoegen-summe-wrap{grid-column:2!important;grid-row:2!important;align-self:start!important;text-align:center!important;margin:4px 0 0!important}
+#vermoegen .vermoegen-summe-wrap #vermoegenGesamt{font-size:2.6rem!important;line-height:1!important;margin:0!important}
+#vermoegen .vermoegen-summe-wrap span{display:none!important}
+#vermoegen .vermoegen-gesamt>label{display:none!important}
+#vermoegen .vermoegen-gesamt-detail{display:none!important}
+
+/* Vier Münzspalten als mobile Bediengruppe, ohne äußere Kartenoptik. */
+#vermoegen .vermoegen-muenzen{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0!important;border:0!important;border-radius:0!important;overflow:visible!important;background:transparent!important}
+#vermoegen .vermoegen-muenze{min-width:0!important;padding:10px 4px 11px!important;border:0!important;border-right:1px solid rgba(116,70,28,.25)!important}
+#vermoegen .vermoegen-muenze:last-child{border-right:0!important}
+#vermoegen .vermoegen-muenze label{font-size:.9rem!important;font-weight:700!important}
+#vermoegen .vermoegen-buchung{display:grid!important;grid-template-columns:30px minmax(0,1fr) 30px!important;gap:3px!important;width:100%!important}
+#vermoegen .vermoegen-buchung input{width:100%!important;min-width:0!important;padding:2px!important;text-align:center!important}
+#vermoegen .vermoegen-buchung button{width:30px!important;min-width:30px!important;padding:0!important}
+
+/* Rechner: erste Zeile bleibt auch auf dem Handy eine Zeile. */
+#vermoegen .vermoegen-rechner-kopf{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important}
+#vermoegen .vermoegen-rechner-kopf h3{margin:0!important}
+#vermoegen .vermoegen-rechner-zeile{display:grid!important;grid-template-columns:42px minmax(70px,.8fr) minmax(112px,1.35fr) 42px!important;gap:6px!important;align-items:center!important}
+#vermoegen .vermoegen-rechner-zeile select,#vermoegen .vermoegen-rechner-zeile input,#vermoegen .vermoegen-rechner-entfernen{grid-column:auto!important;grid-row:auto!important;min-width:0!important;width:100%!important}
+#vermoegen .vermoegen-rechner-fuss{display:grid!important;grid-template-columns:auto 72px minmax(70px,1fr)!important;gap:8px!important;align-items:center!important}
+#vermoegen .vermoegen-rechner-ergebnis{text-align:right!important;white-space:nowrap!important}
+#vermoegen .vermoegen-rechner-aktionen{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+
+/* Ornamentale Trennung statt Boxen. */
+#vermoegen .vermoegen-karte{border:0!important;box-shadow:none!important;background:transparent!important}
+#vermoegen .vermoegen-karte + .vermoegen-karte::before{content:"◆"!important;color:#805020!important;background:linear-gradient(90deg,transparent 2%,rgba(121,75,31,.42) 9% 44%,transparent 44% 56%,rgba(121,75,31,.42) 56% 91%,transparent 98%) center/100% 1px no-repeat!important}
+
+@media(max-width:520px){
+ #vermoegen .vermoegen-gesamt{grid-template-columns:39% 61%!important;min-height:158px!important}
+ #vermoegen .vermoegen-gesamt::before{height:132px!important}
+ #vermoegen .vermoegen-gesamt-titel strong{font-size:1.28rem!important}
+ #vermoegen .vermoegen-summe-wrap #vermoegenGesamt{font-size:2.25rem!important}
+ #vermoegen .vermoegen-muenze{padding-left:2px!important;padding-right:2px!important}
+ #vermoegen .vermoegen-muenze label{font-size:.76rem!important}
+ #vermoegen .vermoegen-buchung{grid-template-columns:27px minmax(0,1fr) 27px!important;gap:2px!important}
+ #vermoegen .vermoegen-buchung button{width:27px!important;min-width:27px!important;min-height:36px!important}
+ #vermoegen .vermoegen-rechner-zeile{grid-template-columns:38px minmax(64px,.8fr) minmax(102px,1.35fr) 38px!important;gap:5px!important}
+ #vermoegen .vermoegen-rechner-fuss{grid-template-columns:auto 62px 1fr!important;gap:6px!important}
+ #vermoegen .vermoegen-rechner-aktionen button{font-size:.74rem!important;padding:7px 5px!important}
+}
