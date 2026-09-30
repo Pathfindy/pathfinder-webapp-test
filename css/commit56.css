@@ -363,3 +363,79 @@ main button.active,main button[aria-pressed="true"]{background:linear-gradient(#
   #vermoegen .vermoegen-rechner-aktionen{display:grid!important;grid-template-columns:1fr 1fr!important}
   #vermoegen .vermoegen-rechner-aktionen button{font-size:.82rem;padding:7px!important}
 }
+
+/* ==========================================================
+   v0.56.7 – Vermögen: mobiles Pergament-Artefakt
+   CSS-Pergament mit unregelmäßigen Kanten, weicheren Formularen
+   und deutlich weniger statischer Kastenoptik.
+   ========================================================== */
+body[data-artefakt-seite="vermoegen"] main{
+  position:relative;
+  isolation:isolate;
+  background:
+    radial-gradient(ellipse at 12% 8%,rgba(116,62,20,.13),transparent 22%),
+    radial-gradient(ellipse at 88% 34%,rgba(126,72,25,.10),transparent 25%),
+    radial-gradient(ellipse at 22% 82%,rgba(103,52,16,.09),transparent 22%),
+    repeating-linear-gradient(0deg,rgba(94,54,22,.025) 0 1px,transparent 1px 4px),
+    linear-gradient(90deg,rgba(77,38,12,.20),transparent 4%,transparent 96%,rgba(77,38,12,.22)),
+    #efd092!important;
+}
+body[data-artefakt-seite="vermoegen"] main::before,
+body[data-artefakt-seite="vermoegen"] main::after{
+  content:""!important;display:block!important;position:absolute!important;z-index:20!important;
+  top:0!important;bottom:0!important;width:13px!important;height:auto!important;pointer-events:none!important;
+  opacity:.78!important;background:
+    radial-gradient(circle at 20% 4%,#4a240e 0 2px,transparent 2.6px),
+    radial-gradient(circle at 80% 11%,#5b2e12 0 3px,transparent 3.6px),
+    radial-gradient(circle at 30% 19%,#3d1d0b 0 2px,transparent 2.8px),
+    radial-gradient(circle at 75% 29%,#5b2d10 0 2.5px,transparent 3.2px),
+    radial-gradient(circle at 20% 41%,#42200c 0 3px,transparent 3.8px),
+    radial-gradient(circle at 80% 57%,#5b2d10 0 2px,transparent 2.8px),
+    radial-gradient(circle at 28% 72%,#3d1d0b 0 3px,transparent 3.8px),
+    radial-gradient(circle at 72% 88%,#52270e 0 2.5px,transparent 3.2px),
+    linear-gradient(90deg,#48210c 0 18%,rgba(82,39,13,.72) 25%,rgba(82,39,13,.15) 72%,transparent 100%)!important;
+  background-size:13px 118px,13px 137px,13px 151px,13px 173px,13px 191px,13px 211px,13px 233px,13px 257px,100% 100%!important;
+  filter:blur(.15px);box-shadow:inset -2px 0 4px rgba(52,22,6,.30)!important;
+}
+body[data-artefakt-seite="vermoegen"] main::before{left:0!important}
+body[data-artefakt-seite="vermoegen"] main::after{right:0!important;transform:scaleX(-1);}
+
+#vermoegen>.seitenkopf::before{content:"◎"!important;border:1px solid rgba(126,77,30,.55)!important;border-radius:50%!important;box-shadow:inset 0 0 0 3px rgba(239,202,129,.38),0 0 10px rgba(113,62,19,.14)!important}
+#vermoegen .vermoegen-karte+ .vermoegen-karte::before{content:"❖";color:#875122;font-size:.68rem;background:linear-gradient(90deg,transparent 2%,rgba(122,74,28,.46) 9% 44%,transparent 44% 56%,rgba(122,74,28,.46) 56% 91%,transparent 98%) center/100% 1px no-repeat}
+#vermoegen .vermoegen-muenzen{border-top:0;border-bottom:0;position:relative}
+#vermoegen .vermoegen-muenzen::before,#vermoegen .vermoegen-muenzen::after{content:"";position:absolute;left:3%;right:3%;height:1px;background:linear-gradient(90deg,transparent,#9a642f 12%,#9a642f 88%,transparent)}
+#vermoegen .vermoegen-muenzen::before{top:0}#vermoegen .vermoegen-muenzen::after{bottom:0}
+#vermoegen .vermoegen-muenze{border-right:1px solid rgba(124,77,32,.20)}
+#vermoegen input,#vermoegen select,#vermoegen textarea{
+  border:1px solid rgba(137,83,34,.52)!important;border-radius:9px!important;
+  background:linear-gradient(180deg,rgba(255,244,214,.76),rgba(250,224,170,.52))!important;
+  box-shadow:inset 0 1px rgba(255,250,229,.7),0 1px 2px rgba(75,36,10,.08)!important;
+}
+#vermoegen .vermoegen-buchung input{border:1px solid rgba(137,83,34,.45)!important;border-radius:8px!important;background:rgba(255,239,202,.58)!important}
+#vermoegen .vermoegen-rechner-zeile{border-bottom:0!important}
+#vermoegen .vermoegen-rechner-zeile input,#vermoegen .vermoegen-rechner-zeile select,#vermoegen #vermoegenRechnerTeiler,#vermoegen textarea{border:1px solid rgba(137,83,34,.48)!important;border-radius:9px!important}
+#vermoegen button{border-radius:7px!important}
+#vermoegen .vermoegen-rechner-aktionen button{border-radius:9px!important;box-shadow:inset 0 0 0 1px rgba(245,197,104,.24),0 2px 4px rgba(66,29,8,.18)!important}
+
+@media(max-width:760px){
+  body[data-artefakt-seite="vermoegen"] main{margin:0 7px 10px!important;padding:7px 8px 34px!important;border-radius:7px 7px 14px 14px!important;box-shadow:0 5px 16px rgba(43,19,6,.34),inset 0 0 24px rgba(111,59,20,.13)!important}
+  body[data-artefakt-seite="vermoegen"] main::before,body[data-artefakt-seite="vermoegen"] main::after{width:10px!important}
+  #vermoegen.page.active{padding:0 9px 28px!important}
+  #vermoegen>.seitenkopf{min-height:48px!important;padding:5px 5px 5px 49px!important;margin-bottom:0!important}
+  #vermoegen>.seitenkopf::before{left:4px!important;width:36px!important;height:36px!important;font-size:1.25rem!important}
+  #vermoegen>.seitenkopf h2{font-size:1.35rem!important}
+  #vermoegen .vermoegen-bereich{padding:0 3px}
+  #vermoegen .vermoegen-karte{padding:15px 2px 18px!important}
+  #vermoegen .vermoegen-gesamt{grid-template-columns:1fr auto;gap:3px 10px}
+  #vermoegen .vermoegen-gesamt label{font-size:1.28rem}
+  #vermoegen #vermoegenGesamt{font-size:2.15rem}
+  #vermoegen .vermoegen-muenze{padding:11px 5px 12px}
+  #vermoegen .vermoegen-muenze:nth-child(2){border-right:0}
+  #vermoegen .vermoegen-muenze:nth-child(-n+2){border-bottom:1px solid rgba(124,77,32,.20)}
+  #vermoegen .vermoegen-buchung{grid-template-columns:34px minmax(36px,1fr) 34px;gap:4px}
+  #vermoegen .vermoegen-buchung button{min-height:40px!important;border-radius:8px!important}
+  #vermoegen .vermoegen-buchung input{min-height:40px!important}
+  #vermoegen .vermoegen-rechner-kopf h3{font-size:1.3rem}
+  #vermoegen .vermoegen-rechner-zeile input,#vermoegen .vermoegen-rechner-zeile select,#vermoegen #vermoegenRechnerTeiler{min-height:42px!important}
+  #vermoegen textarea{min-height:112px!important;border-radius:10px!important}
+}
