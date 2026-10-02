@@ -139,3 +139,11 @@
 - `×` leert weiterhin ausschließlich das Betragsfeld der jeweiligen Zeile und entfernt die Zeile nicht.
 - Die beiden unteren Aktionsbuttons bestimmen weiterhin erst im letzten Schritt, ob das berechnete Ergebnis zum Gesamtvermögen hinzugefügt oder davon abgezogen wird.
 - Pergament, Goldbeutel, Navigation und übrige Vermögensdarstellung bleiben unverändert.
+
+
+## v0.56.17 – Vermögensrechner mobile-first
+- Rechnerzeilen bleiben einzeilig: Operator und Münzart erhalten feste, lesbare Breiten; das Betragsfeld nutzt flexibel den verbleibenden Platz.
+- Der ×-Button wurde entfernt; Beträge werden direkt im Eingabefeld geändert.
+- PM / GM / SM / KM werden im Währungsfeld vollständig dargestellt.
+- Nach Übernahme des Ergebnisses ins Gesamtvermögen wird der Rechner auf genau eine leere Grundzeile, Teiler 1 und Ergebnis 0 GM zurückgesetzt.
+- Mehrere Beträge können weiterhin über „+ Betrag“ angelegt und intern mit + / − verrechnet werden.
