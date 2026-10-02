@@ -109,16 +109,10 @@
       <select class="vermoegen-rechner-muenze" aria-label="Münzart">
         ${MUENZEN.map(m => `<option value="${m.key}" title="${m.label}">${m.kurz}</option>`).join("")}
       </select>
-      <button type="button" class="vermoegen-rechner-entfernen" aria-label="Betrag leeren" title="Betrag leeren">×</button>
     `;
     zeile.querySelector("input").value = wert.anzahl || "";
     zeile.querySelector(".vermoegen-rechner-operator").value = wert.operator || "+";
     zeile.querySelector(".vermoegen-rechner-muenze").value = wert.muenze || "gold";
-    zeile.querySelector("button").addEventListener("click", () => {
-      zeile.querySelector("input").value = "";
-      aktualisiereRechner();
-      zeile.querySelector("input").focus();
-    });
     zeile.querySelectorAll("input,select").forEach(element => element.addEventListener("input", aktualisiereRechner));
     return zeile;
   }
@@ -155,6 +149,13 @@
     vermoegen.kupferGesamt = Math.max(0, vermoegen.kupferGesamt + (richtung > 0 ? wert : -wert));
     speichere();
     aktualisiereAnzeige();
+    const zeilen = document.getElementById("vermoegenRechnerZeilen");
+    if (zeilen) {
+      zeilen.replaceChildren(rechnerZeile({muenze:"gold"}));
+    }
+    const teiler = document.getElementById("vermoegenRechnerTeiler");
+    if (teiler) teiler.value = "1";
+    aktualisiereRechner();
   }
 
   function initialisiere() {
