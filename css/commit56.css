@@ -749,3 +749,11 @@ body[data-artefakt-seite="vermoegen"] #vermoegen>.vermoegen-bereich{position:rel
 #vermoegen .vermoegen-rechner-zeile input{min-width:0!important;width:100%!important;}
 #vermoegen .vermoegen-rechner-zeile select{min-width:0!important;width:100%!important;text-align:center!important;font-weight:700!important;}
 @media(max-width:700px){#vermoegen .vermoegen-rechner-zeile{grid-template-columns:minmax(100px,1fr) 54px 38px!important;gap:5px!important;}}
+
+
+/* v0.56.16 – Vermögensrechner: mehrere Beträge wieder addieren/subtrahieren */
+#vermoegen #btnVermoegenRechnerZeile{display:inline-flex!important}
+#vermoegen .vermoegen-rechner-zeile{grid-template-columns:42px minmax(110px,1fr) 58px 42px!important;gap:6px!important}
+#vermoegen .vermoegen-rechner-operator{width:100%!important;text-align:center!important;font-weight:800!important}
+#vermoegen .vermoegen-rechner-muenze{width:100%!important;text-align:center!important;font-weight:700!important}
+@media(max-width:700px){#vermoegen .vermoegen-rechner-zeile{grid-template-columns:38px minmax(96px,1fr) 54px 38px!important;gap:5px!important}}
