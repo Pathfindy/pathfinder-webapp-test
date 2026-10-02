@@ -1,0 +1,355 @@
+/* Commit 50 – Effekt-Schnellauswahl und Kampf-Symbole */
+
+/* Kopf bis einschließlich Schnellleisten sticky halten */
+#charakterwerte .seitenkopf{
+  position:sticky;
+  top:calc(var(--pf-nav-hoehe, 48px) + 51px);
+  z-index:970;
+  margin-left:-4px;
+  margin-right:-4px;
+  padding:5px 4px 2px;
+  background:rgba(245,247,250,.97);
+  backdrop-filter:blur(5px);
+}
+.effekt-schnellleisten-50{
+  position:sticky;
+  top:calc(var(--pf-nav-hoehe, 48px) + 96px);
+  z-index:965;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px;
+  max-width:920px;
+  margin:0 0 10px;
+  padding:5px 0 7px;
+  background:rgba(245,247,250,.97);
+  backdrop-filter:blur(5px);
+}
+.effekt-schnellleiste-50{
+  min-width:0;
+  border:1px solid #c8d2df;
+  border-radius:9px;
+  background:#f7f9fb;
+  overflow:hidden;
+}
+.effekt-schnellleiste-50 summary{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-height:34px;
+  padding:5px 8px;
+  color:#1e3a5f;
+  cursor:pointer;
+  list-style:none;
+  user-select:none;
+}
+.effekt-schnellleiste-50 summary::-webkit-details-marker{display:none}
+.effekt-schnellleiste-50 summary small{
+  margin-left:auto;
+  color:#66788b;
+  font-size:.7rem;
+  font-weight:600;
+}
+.effekt-schnellchips-50{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  padding:5px 6px 7px;
+  border-top:1px solid #dbe2ea;
+}
+.effekt-schnellchip-50{
+  min-height:30px;
+  max-width:100%;
+  padding:4px 8px;
+  border:1px solid #b9c4d0;
+  border-radius:999px;
+  background:#eef1f4;
+  color:#34475b;
+  font:inherit;
+  font-size:.76rem;
+  font-weight:700;
+  line-height:1.1;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  cursor:pointer;
+}
+.effekt-schnellchip-50.aktiv{
+  background:#cfdfef;
+  border-color:#6f91b6;
+  color:#14395f;
+  box-shadow:inset 0 0 0 1px rgba(30,58,95,.08);
+}
+.effekt-schnellleer-50{
+  padding:3px 5px;
+  color:#788696;
+  font-size:.72rem;
+}
+
+/* Schwert/Bogen-Zuweisung direkt im Effektbanner */
+.effekt-schnellzuweisung-box-50{
+  order:3;
+  display:flex;
+  align-items:center;
+  gap:3px;
+}
+.effekt-schnellzuweisung-50{
+  display:grid;
+  place-items:center;
+  width:30px;
+  height:30px;
+  padding:5px;
+  border:1px solid #c4ccd5;
+  border-radius:7px;
+  background:#eef1f4;
+  color:#7b8794;
+  cursor:pointer;
+}
+.effekt-schnellzuweisung-50.aktiv{
+  border-color:#6f91b6;
+  background:#cfdfef;
+  color:#173b63;
+}
+.effekt-sprungziel-50{
+  outline:3px solid rgba(63,118,177,.38);
+  outline-offset:2px;
+}
+
+/* Einheitliche Vektor-Symbole */
+.kampf-icon-50{
+  display:inline-flex;
+  width:1.05em;
+  height:1.05em;
+  vertical-align:-.14em;
+  color:currentColor;
+  flex:0 0 auto;
+}
+.kampf-icon-50 svg,
+.effekt-schnellzuweisung-50 svg{
+  width:100%;
+  height:100%;
+  fill:currentColor;
+}
+.kampf-icon-schild-50{color:#244e79}
+.kampf-icon-rw-50{margin-left:2px}
+.kampf-icon-rw-reflex-50{color:#d8aa00}
+.kampf-icon-rw-wille-50{color:#2873be}
+.kampf-icon-rw-zaehigkeit-50{color:#c84444}
+.angriff-ergebnis-haupt-48 .kampf-icon-angriff-50{
+  width:1.12em;
+  height:1.12em;
+}
+
+@media(max-width:600px){
+  #charakterwerte .seitenkopf{
+    top:calc(var(--pf-nav-hoehe, 48px) + 51px);
+  }
+  .effekt-schnellleisten-50{
+    top:calc(var(--pf-nav-hoehe, 48px) + 92px);
+    grid-template-columns:1fr;
+    gap:4px;
+  }
+  .effekt-schnellleiste-50 summary{min-height:31px;padding:4px 7px}
+  .effekt-schnellchips-50{gap:4px;padding:4px 5px 6px}
+  .effekt-schnellchip-50{font-size:.71rem;min-height:28px;padding:4px 7px}
+}
+
+
+/* Commit 50.1 – kompaktere Schnellleisten und klarere Symbolik */
+
+/* Keine Leerzeile zwischen Kopf/Aktivem Charakter und Schnellleisten. */
+#charakterwerte .seitenkopf{
+  margin-bottom:0 !important;
+  padding-bottom:0 !important;
+}
+#charakterwerte .seitenkopf + .effekt-schnellleisten-50{
+  margin-top:0 !important;
+}
+
+/* Die beiden Schnellleisten bleiben auch auf dem Handy eine schlanke Zeile. */
+.effekt-schnellleisten-50{
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:4px !important;
+  margin:0 0 6px !important;
+  padding:0 0 4px !important;
+}
+.effekt-schnellleiste-50{
+  border-radius:7px !important;
+}
+.effekt-schnellleiste-50 summary{
+  min-height:27px !important;
+  padding:2px 6px !important;
+  gap:4px !important;
+  font-size:.76rem;
+}
+.effekt-schnellleiste-50 summary strong{
+  font-size:.76rem;
+}
+.effekt-schnellleiste-50 summary small{
+  font-size:.62rem !important;
+}
+.effekt-schnell-dreieck-501{
+  display:inline-block;
+  width:.75em;
+  color:#52677d;
+  font-size:.8rem;
+  line-height:1;
+  transition:transform .12s ease;
+}
+.effekt-schnellleiste-50[open] .effekt-schnell-dreieck-501{
+  transform:rotate(90deg);
+}
+.effekt-schnellchips-50{
+  gap:4px !important;
+  padding:4px 5px 5px !important;
+}
+.effekt-schnellchip-50{
+  min-height:26px !important;
+  padding:3px 7px !important;
+  font-size:.7rem !important;
+}
+
+/* Zuweissymbole sind in jedem Effektbanner sichtbar. */
+.effekt-schnellzuweisung-box-50{
+  flex:0 0 auto;
+  order:3;
+  display:flex !important;
+  align-items:center;
+  gap:3px;
+  visibility:visible !important;
+}
+.effekt-schnellzuweisung-50{
+  width:28px !important;
+  height:28px !important;
+  padding:4px !important;
+}
+
+/* SVGs mit Stroke (Bogen) nicht durch globale Fill-Regel zerstören. */
+.kampf-icon-50 svg,
+.effekt-schnellzuweisung-50 svg{
+  overflow:visible;
+}
+.kampf-icon-50 svg path[fill="none"],
+.effekt-schnellzuweisung-50 svg path[fill="none"]{
+  fill:none !important;
+}
+
+@media(max-width:600px){
+  .effekt-schnellleisten-50{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:3px !important;
+  }
+  .effekt-schnellleiste-50 summary{
+    min-height:26px !important;
+    padding:2px 5px !important;
+  }
+  .effekt-schnellleiste-50 summary small{
+    font-size:.58rem !important;
+  }
+}
+
+
+/* Commit 50.2 – Schnellleisten direkt am Kopf, dunkler und Hover-Automatik */
+
+/* Kopf + Schnellleisten bilden beim Scrollen EINEN geschlossenen Block.
+   So kann Seiteninhalt nicht mehr durch einen Zwischenraum sichtbar werden. */
+.kampf-sticky-kopf-502{
+  position:sticky;
+  top:0;
+  z-index:970;
+  margin:0 -4px 6px;
+  padding:0 4px 4px;
+  background:#f4f6f8;
+  box-shadow:0 2px 4px rgba(30,58,95,.08);
+}
+.kampf-sticky-kopf-502 > #charakterwerte .seitenkopf,
+.kampf-sticky-kopf-502 > .seitenkopf{
+  position:static !important;
+  top:auto !important;
+  margin:0 !important;
+  padding:2px 0 0 !important;
+  background:#f4f6f8 !important;
+  backdrop-filter:none !important;
+}
+.kampf-sticky-kopf-502 .effekt-schnellleisten-50{
+  position:static !important;
+  top:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  background:transparent !important;
+  backdrop-filter:none !important;
+}
+
+/* Dunkleres Blau für bessere Ablesbarkeit. */
+.effekt-schnellleiste-50{
+  border-color:#315b86 !important;
+  background:#274f77 !important;
+}
+.effekt-schnellleiste-50 summary{
+  color:#fff !important;
+  background:#274f77 !important;
+}
+.effekt-schnellleiste-50 summary small{
+  color:#d8e5f1 !important;
+}
+.effekt-schnell-dreieck-501{
+  color:#d8e5f1 !important;
+}
+.effekt-schnellleiste-50 .kampf-icon-50{
+  color:#fff !important;
+}
+.effekt-schnellchips-50{
+  border-top-color:#466d94 !important;
+  background:#eef3f8;
+}
+
+/* Auf Hover-Geräten öffnet/schließt JS automatisch.
+   Auf Touch-Geräten bleibt das bekannte Tippen zum Aufklappen erhalten. */
+@media(hover:hover) and (pointer:fine){
+  .effekt-schnellleiste-50 summary{
+    cursor:default;
+  }
+}
+
+/* Handy: ebenfalls ohne Lücke; kein künstlicher Sticky-Offset. */
+@media(max-width:600px){
+  .kampf-sticky-kopf-502{
+    top:0;
+    margin-bottom:5px;
+  }
+}
+
+
+/* Commit 50.3 – Kampf: Schnellleiste direkt unter Aktiver Charakter */
+#charakterwerte .effekt-schnellleisten-50{
+  position:sticky !important;
+  top:var(--pf-aktiver-charakter-hoehe, 42px) !important;
+  z-index:970;
+  margin:0 0 6px !important;
+  padding:0 !important;
+  background:#f4f6f8 !important;
+}
+
+/* Alte Sonderfixierung neutralisieren */
+.kampf-sticky-kopf-502{
+  position:static !important;
+  top:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+#charakterwerte > .seitenkopf{
+  display:none !important;
+}
+
+
+/* Commit 50.4 – Schnellleiste als dritte Zeile der gemeinsamen Kopfzeile */
+#charakterwerte .effekt-schnellleisten-50{
+  position:sticky !important;
+  top:var(--pf-kopf-sticky-hoehe, 99px) !important;
+  z-index:980 !important;
+  margin:0 0 6px !important;
+  padding:0 !important;
+  background:#f4f6f8 !important;
+  box-shadow:0 2px 5px rgba(30,58,95,.08);
+}
