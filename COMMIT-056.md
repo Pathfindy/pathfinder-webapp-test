@@ -105,3 +105,13 @@
 - Gealterte Ober- und Unterkante ergänzt.
 - Papierfläche mit dezenten unregelmäßigen Flecken verfeinert.
 - Inhaltslayout und Vermögenslogik unverändert.
+
+
+## v0.56.12 – Vermögen: Finalisierung der Grundlagenseite
+- Pergament-Hintergrund aus v0.56.11 unverändert übernommen.
+- Münzeingaben erhalten die volle Kachelbreite; Minus/Plus liegen darunter.
+- Münzarten im Vermögensrechner auf PM / GM / SM / KM gekürzt.
+- Aktionsbuttons im Vermögensrechner auf die Serifenschrift der Seite vereinheitlicht.
+- Umrechnungshinweis und zusätzliche „+ Betrag“-Schaltfläche ausgeblendet, um die mobile Oberfläche zu beruhigen.
+- Überflüssige Mindesthöhe unterhalb der Notizen entfernt.
+- Bestehende Vermögens-, Umrechnungs- und Speicherlogik bleibt erhalten.
