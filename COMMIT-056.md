@@ -131,3 +131,11 @@
 - Das Betragsfeld erhält dadurch mehr nutzbare Breite.
 - Der `×`-Button entfernt nicht mehr die Rechnerzeile, sondern leert ausschließlich das Betragsfeld.
 - Währungsauswahl, Teiler, Vermögenslogik, Navigation, Goldbeutel und Pergamentdarstellung bleiben unverändert.
+
+
+## v0.56.16 – Vermögensrechner: Rechenketten wiederhergestellt
+- Mehrere Betragszeilen können wieder über `+ Betrag` angelegt werden.
+- Jede Zeile besitzt wieder einen Rechenoperator `+` oder `−`; damit werden verschiedene Beträge vor der Übernahme ins Gesamtvermögen verrechnet.
+- `×` leert weiterhin ausschließlich das Betragsfeld der jeweiligen Zeile und entfernt die Zeile nicht.
+- Die beiden unteren Aktionsbuttons bestimmen weiterhin erst im letzten Schritt, ob das berechnete Ergebnis zum Gesamtvermögen hinzugefügt oder davon abgezogen wird.
+- Pergament, Goldbeutel, Navigation und übrige Vermögensdarstellung bleiben unverändert.
