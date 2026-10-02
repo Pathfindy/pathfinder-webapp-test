@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="css/vermoegen.css?v=42">
     <link rel="stylesheet" href="css/zeit.css?v=54.6">
     <link rel="stylesheet" href="css/zauber.css?v=55.13">
-    <link rel="stylesheet" href="css/commit56.css?v=56.13">
+    <link rel="stylesheet" href="css/commit56.css?v=56.14">
     
     <meta name="theme-color" content="#1e3a5f">
     <link rel="stylesheet" href="css/commit50.css?v=50.4">
@@ -33,7 +33,7 @@
 
 <header>
 
-    <div class="app-kopf-56"><button type="button" id="btnStartseite56" class="start-home-56" aria-label="Zur Startseite" title="Zur Startseite">⌂</button><h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.56.13</span></h1></div>
+    <div class="app-kopf-56"><button type="button" id="btnStartseite56" class="start-home-56" aria-label="Zur Startseite" title="Zur Startseite">⌂</button><h1>Das azlantische Helferlein der Boni <span class="app-version-30">v0.56.14</span></h1></div>
 
 </header>
 
@@ -357,11 +357,11 @@
                     <div class="vermoegen-muenze"><label for="vermoegenSilber">Silber</label><div class="vermoegen-buchung"><button type="button" data-vermoegen-minus="silber" aria-label="Silbermünzen abziehen">−</button><input id="vermoegenSilber" data-vermoegen-eingabe="silber" type="number" min="0" step="1" inputmode="numeric"><button type="button" data-vermoegen-plus="silber" aria-label="Silbermünzen hinzufügen">+</button></div></div>
                     <div class="vermoegen-muenze"><label for="vermoegenKupfer">Kupfer</label><div class="vermoegen-buchung"><button type="button" data-vermoegen-minus="kupfer" aria-label="Kupfermünzen abziehen">−</button><input id="vermoegenKupfer" data-vermoegen-eingabe="kupfer" type="number" min="0" step="1" inputmode="numeric"><button type="button" data-vermoegen-plus="kupfer" aria-label="Kupfermünzen hinzufügen">+</button></div></div>
                 </div>
-                
+                <p class="vermoegen-hinweis">10 Kupfermünzen = 1 Silbermünze · 10 Silbermünzen = 1 Goldmünze · 10 Goldmünzen = 1 Platinmünze</p>
             </section>
 
             <section class="vermoegen-karte">
-                <div class="vermoegen-rechner-kopf"><h3>Vermögensrechner</h3></div>
+                <div class="vermoegen-rechner-kopf"><h3>Vermögensrechner</h3><button type="button" id="btnVermoegenRechnerZeile">+ Betrag</button></div>
                 <div id="vermoegenRechnerZeilen" class="vermoegen-rechner-zeilen"></div>
                 <div class="vermoegen-rechner-fuss"><label for="vermoegenRechnerTeiler">Teilen durch</label><input id="vermoegenRechnerTeiler" type="number" min="1" max="999" step="1" value="1" inputmode="numeric"><output id="vermoegenRechnerErgebnis" class="vermoegen-rechner-ergebnis">0 GM</output></div>
                 <div class="vermoegen-rechner-aktionen"><button type="button" id="btnVermoegenRechnerPlus">Zum Vermögen hinzufügen</button><button type="button" id="btnVermoegenRechnerMinus">Vom Vermögen abziehen</button></div>
@@ -437,7 +437,7 @@
 <script src="js/app.js?v=54.2"></script>
 <script src="js/charakterwerte.js?v=53"></script>
 <script src="js/leben.js?v=53"></script>
-<script src="js/vermoegen.js?v=56.13"></script>
+<script src="js/vermoegen.js?v=42.1"></script>
 <script src="js/filter.js"></script>
 <script src="js/berechnung.js?v=52.2"></script>
 <script src="js/makros.js"></script>
@@ -535,7 +535,7 @@ Stufenabhängigen Wert verwenden
 <script src="js/commit50.js?v=50.4"></script>
 <script src="js/zeit.js?v=54.6"></script>
 <script src="js/zauber.js?v=55.13"></script>
-<script src="js/commit56.js?v=56.12"></script>
+<script src="js/commit56.js?v=56.14"></script>
 </body>
 
 </html>

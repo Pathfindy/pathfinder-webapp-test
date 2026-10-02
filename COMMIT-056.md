@@ -115,3 +115,12 @@
 - Umrechnungshinweis und zusätzliche „+ Betrag“-Schaltfläche ausgeblendet, um die mobile Oberfläche zu beruhigen.
 - Überflüssige Mindesthöhe unterhalb der Notizen entfernt.
 - Bestehende Vermögens-, Umrechnungs- und Speicherlogik bleibt erhalten.
+
+
+## v0.56.14 – Vermögen: gezielte Reparatur auf Basis v0.56.12
+- v0.56.12 bleibt gestalterische Basis; Pergament-Hintergrund, Goldbeutel und responsive Runen-Navigation bleiben unverändert.
+- Münzeingaben nutzen die volle Kachelbreite; Minus/Plus stehen darunter.
+- Vermögensrechner verwendet PM / GM / SM / KM und gibt dem Betragsfeld mehr Platz.
+- Aktionsbuttons verwenden die Serifenschrift der Vermögensseite und kürzere Beschriftungen.
+- Umrechnungshinweis und zusätzliche „+ Betrag“-Schaltfläche werden ausgeblendet.
+- Keine großflächige CSS-Konsolidierung; Änderungen sind auf die Vermögens-Bedienelemente begrenzt.
