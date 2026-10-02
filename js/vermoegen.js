@@ -1,4 +1,4 @@
-// Commit 42: Vermögen
+// v0.56.13: Vermögen – konsolidierte mobile Grundlagenseite
 (() => {
   "use strict";
 
@@ -175,10 +175,6 @@
 
     const zeilen = document.getElementById("vermoegenRechnerZeilen");
     zeilen?.appendChild(rechnerZeile({muenze:"gold"}));
-    document.getElementById("btnVermoegenRechnerZeile")?.addEventListener("click", () => {
-      zeilen?.appendChild(rechnerZeile({muenze:"gold"}));
-      aktualisiereRechner();
-    });
     document.getElementById("vermoegenRechnerTeiler")?.addEventListener("input", aktualisiereRechner);
     document.getElementById("btnVermoegenRechnerPlus")?.addEventListener("click", () => uebernehmeRechner(1));
     document.getElementById("btnVermoegenRechnerMinus")?.addEventListener("click", () => uebernehmeRechner(-1));
