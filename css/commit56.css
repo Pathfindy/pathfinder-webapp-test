@@ -627,3 +627,49 @@ body[data-artefakt-seite="vermoegen"] #vermoegen{position:relative;z-index:1}
     min-height:calc(100dvh - 92px)!important;
   }
 }
+
+/* ==========================================================
+   v0.56.11 – Vermögen: organische Pergamentkante
+   Hintergrund-Feinschliff; Inhaltslayout bleibt unverändert.
+   ========================================================== */
+body[data-artefakt-seite="vermoegen"] main{
+  overflow:hidden!important;
+  background:
+    radial-gradient(ellipse at 8% 10%,rgba(116,59,17,.18) 0 2%,transparent 17%),
+    radial-gradient(ellipse at 91% 14%,rgba(102,49,13,.15) 0 2%,transparent 18%),
+    radial-gradient(ellipse at 18% 38%,rgba(133,76,27,.10) 0 3%,transparent 21%),
+    radial-gradient(ellipse at 82% 57%,rgba(91,43,12,.11) 0 2%,transparent 23%),
+    radial-gradient(ellipse at 28% 78%,rgba(115,59,17,.10) 0 3%,transparent 22%),
+    radial-gradient(ellipse at 72% 91%,rgba(91,42,10,.14) 0 2%,transparent 19%),
+    repeating-linear-gradient(3deg,rgba(91,50,20,.024) 0 1px,transparent 1px 5px),
+    linear-gradient(90deg,rgba(77,34,8,.27),transparent 3.8%,transparent 96.2%,rgba(77,34,8,.28)),
+    linear-gradient(180deg,rgba(82,37,8,.25),transparent 3.2%,transparent 96.8%,rgba(82,37,8,.27)),
+    #efd092!important;
+  box-shadow:inset 9px 0 15px -12px rgba(45,18,4,.72),inset -9px 0 15px -12px rgba(45,18,4,.72),inset 0 9px 15px -12px rgba(45,18,4,.65),inset 0 -10px 16px -12px rgba(45,18,4,.68),0 7px 20px rgba(28,12,5,.30)!important;
+}
+/* Schmale, unregelmäßig fleckige Brandkante statt gerader Seitenbalken. */
+body[data-artefakt-seite="vermoegen"] main::before,
+body[data-artefakt-seite="vermoegen"] main::after{
+  width:7px!important;opacity:.66!important;z-index:0!important;
+  background:
+    radial-gradient(ellipse at 25% 2%,rgba(67,28,6,.74) 0 2px,transparent 3px),
+    radial-gradient(ellipse at 85% 8%,rgba(91,42,10,.56) 0 2px,transparent 3.2px),
+    radial-gradient(ellipse at 5% 15%,rgba(61,24,5,.65) 0 2.4px,transparent 3.3px),
+    radial-gradient(ellipse at 95% 24%,rgba(94,43,10,.58) 0 2px,transparent 3px),
+    radial-gradient(ellipse at 12% 35%,rgba(58,22,5,.63) 0 2.5px,transparent 3.4px),
+    radial-gradient(ellipse at 88% 49%,rgba(89,39,8,.58) 0 2.2px,transparent 3.2px),
+    radial-gradient(ellipse at 8% 64%,rgba(62,24,5,.64) 0 2.5px,transparent 3.5px),
+    radial-gradient(ellipse at 92% 77%,rgba(91,40,8,.56) 0 2.3px,transparent 3.2px),
+    radial-gradient(ellipse at 18% 91%,rgba(59,23,5,.67) 0 2.5px,transparent 3.5px),
+    linear-gradient(90deg,rgba(66,26,5,.58),rgba(112,60,18,.16) 62%,transparent)!important;
+  background-size:7px 113px,7px 137px,7px 157px,7px 181px,7px 211px,7px 239px,7px 271px,7px 307px,7px 347px,100% 100%!important;
+}
+/* Gealterte Ober-/Unterkante innerhalb des Blatts, ohne zusätzliche Elemente. */
+body[data-artefakt-seite="vermoegen"] #vermoegen::before,
+body[data-artefakt-seite="vermoegen"] #vermoegen::after{
+  content:"";position:absolute;left:0;right:0;height:8px;pointer-events:none;z-index:0;opacity:.62;
+  background:radial-gradient(ellipse at 4% 50%,rgba(70,29,6,.58) 0 4px,transparent 5px),radial-gradient(ellipse at 17% 30%,rgba(92,43,10,.42) 0 3px,transparent 4px),radial-gradient(ellipse at 31% 70%,rgba(63,25,5,.50) 0 4px,transparent 5px),radial-gradient(ellipse at 48% 35%,rgba(94,45,11,.40) 0 3px,transparent 4px),radial-gradient(ellipse at 66% 68%,rgba(62,24,5,.50) 0 4px,transparent 5px),radial-gradient(ellipse at 82% 30%,rgba(91,42,9,.43) 0 3px,transparent 4px),radial-gradient(ellipse at 97% 55%,rgba(65,26,5,.56) 0 4px,transparent 5px),linear-gradient(rgba(74,30,6,.22),transparent);
+}
+body[data-artefakt-seite="vermoegen"] #vermoegen::before{top:0}
+body[data-artefakt-seite="vermoegen"] #vermoegen::after{bottom:0;transform:scaleY(-1)}
+body[data-artefakt-seite="vermoegen"] #vermoegen>.vermoegen-bereich{position:relative;z-index:1}
