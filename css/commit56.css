@@ -774,3 +774,46 @@ body[data-artefakt-seite="vermoegen"] #vermoegen>.vermoegen-bereich{position:rel
  #vermoegen .vermoegen-rechner-operator{min-width:50px!important;width:50px!important;}
  #vermoegen .vermoegen-rechner-muenze{min-width:62px!important;width:62px!important;}
 }
+
+/* v0.56.18 – Hotfix Vermögensrechner: Select-Inhalte auf Mobilgeräten sichtbar */
+#vermoegen .vermoegen-rechner-zeile{
+  display:grid!important;
+  grid-template-columns:48px minmax(0,1fr) 66px!important;
+  gap:5px!important;
+  align-items:center!important;
+}
+#vermoegen .vermoegen-rechner-operator,
+#vermoegen .vermoegen-rechner-muenze{
+  box-sizing:border-box!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:44px!important;
+  min-height:44px!important;
+  margin:0!important;
+  text-align:center!important;
+  text-align-last:center!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  line-height:1.2!important;
+}
+#vermoegen .vermoegen-rechner-operator{
+  width:48px!important;
+  padding:4px 14px 4px 4px!important;
+  font-size:1.05rem!important;
+  font-weight:800!important;
+}
+#vermoegen .vermoegen-rechner-muenze{
+  width:66px!important;
+  padding:4px 16px 4px 5px!important;
+  font-size:.92rem!important;
+  font-weight:700!important;
+}
+#vermoegen .vermoegen-rechner-zeile input{
+  box-sizing:border-box!important;
+  min-width:0!important;
+  width:100%!important;
+}
+@media(max-width:430px){
+  #vermoegen .vermoegen-rechner-zeile{grid-template-columns:46px minmax(0,1fr) 64px!important;gap:4px!important}
+  #vermoegen .vermoegen-rechner-operator{width:46px!important;padding-left:3px!important;padding-right:13px!important}
+  #vermoegen .vermoegen-rechner-muenze{width:64px!important;padding-left:4px!important;padding-right:15px!important}
+}
