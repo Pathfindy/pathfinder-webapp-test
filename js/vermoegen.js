@@ -101,14 +101,19 @@
     const zeile = document.createElement("div");
     zeile.className = "vermoegen-rechner-zeile";
     zeile.innerHTML = `
+      <select class="vermoegen-rechner-operator" aria-label="Rechenart">
+        <option value="+">+</option>
+        <option value="-">−</option>
+      </select>
       <input type="number" min="0" step="1" inputmode="numeric" placeholder="Betrag">
-      <select aria-label="Münzart">
+      <select class="vermoegen-rechner-muenze" aria-label="Münzart">
         ${MUENZEN.map(m => `<option value="${m.key}" title="${m.label}">${m.kurz}</option>`).join("")}
       </select>
       <button type="button" class="vermoegen-rechner-entfernen" aria-label="Betrag leeren" title="Betrag leeren">×</button>
     `;
     zeile.querySelector("input").value = wert.anzahl || "";
-    zeile.querySelector("select").value = wert.muenze || "gold";
+    zeile.querySelector(".vermoegen-rechner-operator").value = wert.operator || "+";
+    zeile.querySelector(".vermoegen-rechner-muenze").value = wert.muenze || "gold";
     zeile.querySelector("button").addEventListener("click", () => {
       zeile.querySelector("input").value = "";
       aktualisiereRechner();
@@ -123,8 +128,9 @@
     if (!container) return 0;
     return [...container.querySelectorAll(".vermoegen-rechner-zeile")].reduce((summe, zeile) => {
       const anzahl = ganzzahl(zeile.querySelector("input")?.value, 0);
-      const muenze = MUENZEN.find(e => e.key === zeile.querySelector("select")?.value) || MUENZEN[1];
-      return summe + anzahl * muenze.kupfer;
+      const muenze = MUENZEN.find(e => e.key === zeile.querySelector(".vermoegen-rechner-muenze")?.value) || MUENZEN[1];
+      const operator = zeile.querySelector(".vermoegen-rechner-operator")?.value === "-" ? -1 : 1;
+      return summe + operator * anzahl * muenze.kupfer;
     }, 0);
   }
 
