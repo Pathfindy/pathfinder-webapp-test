@@ -124,3 +124,10 @@
 - Aktionsbuttons verwenden die Serifenschrift der Vermögensseite und kürzere Beschriftungen.
 - Umrechnungshinweis und zusätzliche „+ Betrag“-Schaltfläche werden ausgeblendet.
 - Keine großflächige CSS-Konsolidierung; Änderungen sind auf die Vermögens-Bedienelemente begrenzt.
+
+
+## v0.56.15 – Vermögensrechner vereinfacht
+- Auswahl `+ / −` aus der Rechnerzeile entfernt; Hinzufügen oder Abziehen erfolgt ausschließlich über die beiden Aktionsbuttons.
+- Das Betragsfeld erhält dadurch mehr nutzbare Breite.
+- Der `×`-Button entfernt nicht mehr die Rechnerzeile, sondern leert ausschließlich das Betragsfeld.
+- Währungsauswahl, Teiler, Vermögenslogik, Navigation, Goldbeutel und Pergamentdarstellung bleiben unverändert.
