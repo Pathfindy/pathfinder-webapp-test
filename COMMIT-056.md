@@ -147,3 +147,10 @@
 - PM / GM / SM / KM werden im Währungsfeld vollständig dargestellt.
 - Nach Übernahme des Ergebnisses ins Gesamtvermögen wird der Rechner auf genau eine leere Grundzeile, Teiler 1 und Ergebnis 0 GM zurückgesetzt.
 - Mehrere Beträge können weiterhin über „+ Betrag“ angelegt und intern mit + / − verrechnet werden.
+
+
+## v0.56.18 – Hotfix Rechnerfelder auf Mobilgeräten
+- Operator `+ / −` erhält eine feste, sichtbare Select-Fläche mit reduziertem Innenabstand.
+- Münzart `PM / GM / SM / KM` erhält ausreichend feste Breite und reduzierten Pfeil-Innenabstand.
+- Nur das Betragsfeld nutzt flexibel den verbleibenden Platz; die Rechnerzeile bleibt einzeilig.
+- Keine Änderungen an Pergament, Goldbeutel, Navigation oder Berechnungslogik.
