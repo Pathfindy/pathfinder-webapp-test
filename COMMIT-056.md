@@ -154,3 +154,9 @@
 - Münzart `PM / GM / SM / KM` erhält ausreichend feste Breite und reduzierten Pfeil-Innenabstand.
 - Nur das Betragsfeld nutzt flexibel den verbleibenden Platz; die Rechnerzeile bleibt einzeilig.
 - Keine Änderungen an Pergament, Goldbeutel, Navigation oder Berechnungslogik.
+
+## v0.56.19 – Zeit: erster grafischer Umbau
+- Die Zeit-Seite übernimmt die grafische Sprache der fertigen Vermögensseite: transparente Pergament-Abschnitte, ornamentale Trenner, Serif-Überschriften und weich gerundete Eingaben.
+- Rundenzähler und Rundenaktionen wurden mobile-first neu angeordnet; die bestehende Zeit-Logik bleibt unverändert.
+- Initiative, Effekte und freie Effekte verwenden Linien und Abstände statt klassischer Kartenrahmen.
+- Papierkorb-Symbole in Initiative und freien Effekten wurden durch eine eigene Azlanti-Löschrune als SVG-Grafik ersetzt.
