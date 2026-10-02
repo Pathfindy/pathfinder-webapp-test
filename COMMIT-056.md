@@ -98,3 +98,10 @@
 - Unregelmäßige Seitenkanten liegen innerhalb der Pergamentfläche, um den früheren schwarzen Randartefakt zu vermeiden.
 - Hintergrund wächst mit Inhalt und mindestens über die sichtbare mobile Höhe.
 - Inhaltslayout und Vermögenslogik aus v0.56.9 bleiben unverändert.
+
+## v0.56.11 – Pergamentkante
+- Vermögensseite: geradlinige dunkle Seitenzonen reduziert.
+- Schmalere, organisch fleckige Brand-/Alterungskanten links und rechts.
+- Gealterte Ober- und Unterkante ergänzt.
+- Papierfläche mit dezenten unregelmäßigen Flecken verfeinert.
+- Inhaltslayout und Vermögenslogik unverändert.
