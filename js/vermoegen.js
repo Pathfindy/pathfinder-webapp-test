@@ -4,10 +4,10 @@
 
   const KUPFER_PRO_GOLD = 100;
   const MUENZEN = [
-    { key: "platin", label: "Platinmünzen", kupfer: 1000 },
-    { key: "gold", label: "Goldmünzen", kupfer: 100 },
-    { key: "silber", label: "Silbermünzen", kupfer: 10 },
-    { key: "kupfer", label: "Kupfermünzen", kupfer: 1 }
+    { key: "platin", label: "Platinmünzen", kurz: "PM", kupfer: 1000 },
+    { key: "gold", label: "Goldmünzen", kurz: "GM", kupfer: 100 },
+    { key: "silber", label: "Silbermünzen", kurz: "SM", kupfer: 10 },
+    { key: "kupfer", label: "Kupfermünzen", kurz: "KM", kupfer: 1 }
   ];
 
   function ganzzahl(wert, minimum = 0, maximum = 999999999) {
@@ -107,7 +107,7 @@
       </select>
       <input type="number" min="0" step="1" inputmode="numeric" placeholder="Betrag">
       <select aria-label="Münzart">
-        ${MUENZEN.map(m => `<option value="${m.key}">${m.label}</option>`).join("")}
+        ${MUENZEN.map(m => `<option value="${m.key}" title="${m.label}">${m.kurz}</option>`).join("")}
       </select>
       <button type="button" class="vermoegen-rechner-entfernen" aria-label="Zeile entfernen">×</button>
     `;
