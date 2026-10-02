@@ -306,371 +306,59 @@ main button.active,main button[aria-pressed="true"]{background:linear-gradient(#
 }
 
 /* ==========================================================
-   v0.56.6 – Mobile Grimoire-Prototyp: Vermögen
-   Pergament statt Karten, ornamentale Trennung, mobile Runenleiste.
+   v0.56.13 – Vermögen: konsolidierte Grundlagenseite
+   Ersetzt die gestapelten Vermögens-Overrides aus v0.56.6–v0.56.12.
    ========================================================== */
-#vermoegen.page.active{max-width:760px;margin:0 auto;padding:0 10px 34px;position:relative}
-#vermoegen>.seitenkopf{display:flex!important;align-items:center;min-height:58px!important;margin:0 0 4px!important;padding:8px 8px 8px 62px!important;background:transparent!important}
-#vermoegen>.seitenkopf h2{margin:0!important;border:0!important;font-size:1.65rem!important}
-#vermoegen>.seitenkopf::after{left:10px!important;right:10px!important;bottom:0!important;background:linear-gradient(90deg,transparent,#8d5928 12%,#8d5928 88%,transparent)!important}
-#vermoegen>.seitenkopf::before{content:"◉"!important;width:44px!important;height:44px!important;left:10px!important;font-size:1.55rem!important}
-#vermoegen .vermoegen-bereich{display:block;max-width:none;margin:0;padding:0 8px}
-#vermoegen .vermoegen-karte{position:relative;margin:0!important;padding:17px 4px 19px!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
-#vermoegen .vermoegen-karte+ .vermoegen-karte::before{content:"✦";position:absolute;left:0;right:0;top:-9px;height:18px;text-align:center;color:#8b5727;font-size:.8rem;line-height:18px;background:linear-gradient(90deg,transparent 0 7%,rgba(123,76,32,.45) 7% 45%,transparent 45% 55%,rgba(123,76,32,.45) 55% 93%,transparent 93%) center/100% 1px no-repeat}
-#vermoegen .vermoegen-gesamt{display:grid;grid-template-columns:1fr auto;align-items:end;gap:2px 14px;padding-top:10px!important}
-#vermoegen .vermoegen-gesamt label{grid-column:1/-1;font-family:Georgia,"Times New Roman",serif;color:#3a210f!important;font-size:1.18rem}
-#vermoegen #vermoegenGesamt{grid-column:1/2;width:auto;min-height:0;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;color:#2c180b!important;font-family:Georgia,"Times New Roman",serif;font-size:2.25rem;font-weight:800;line-height:1}
-#vermoegen .vermoegen-gesamt-detail{grid-column:2/3;font-size:1rem;color:#5b351a;align-self:end;padding-bottom:3px}
-#vermoegen .vermoegen-muenzen{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid rgba(124,77,32,.42);border-bottom:1px solid rgba(124,77,32,.42)}
-#vermoegen .vermoegen-muenze{gap:8px;padding:12px 7px;text-align:center;border-right:1px solid rgba(124,77,32,.28)}
-#vermoegen .vermoegen-muenze:last-child{border-right:0}
-#vermoegen .vermoegen-muenze label{font-family:Georgia,"Times New Roman",serif;color:#3d230f!important;font-size:.92rem}
-#vermoegen .vermoegen-buchung{display:grid;grid-template-columns:32px minmax(34px,1fr) 32px;gap:3px}
-#vermoegen .vermoegen-buchung input{min-height:38px!important;text-align:center;padding:4px!important;background:rgba(255,239,202,.44)!important;border:0!important;border-bottom:1px solid #9b672f!important;box-shadow:none!important;font-weight:700}
-#vermoegen .vermoegen-buchung button{min-width:32px;min-height:38px;padding:0!important;border-radius:3px!important;font-size:1.15rem}
-#vermoegen .vermoegen-hinweis{margin:9px 0 0;color:#75502e;font-size:.78rem;text-align:center;line-height:1.35}
-#vermoegen .vermoegen-rechner-kopf{margin:0 0 12px;align-items:center}
-#vermoegen .vermoegen-rechner-kopf h3{margin:0;font-size:1.25rem}
-#vermoegen .vermoegen-rechner-zeilen{gap:9px}
-#vermoegen .vermoegen-rechner-zeile{padding:0 0 9px;border-bottom:1px solid rgba(126,78,32,.25)}
-#vermoegen .vermoegen-rechner-zeile input,#vermoegen .vermoegen-rechner-zeile select,#vermoegen #vermoegenRechnerTeiler,#vermoegen textarea{background:rgba(255,240,205,.48)!important;border:0!important;border-bottom:1px solid #9a662f!important;border-radius:0!important;box-shadow:none!important}
-#vermoegen .vermoegen-rechner-fuss{margin-top:12px}
-#vermoegen .vermoegen-rechner-ergebnis{font-family:Georgia,"Times New Roman",serif;font-size:1.25rem;font-weight:800;color:#34200f}
-#vermoegen .vermoegen-rechner-aktionen{gap:8px;margin-top:12px}
-#vermoegen .vermoegen-rechner-aktionen button{min-height:46px;background:linear-gradient(#5d3219,#30180c)!important;color:#f8dfa2!important;border-color:#a86e2c!important}
-#vermoegen textarea{width:100%;min-height:90px;padding:9px!important;resize:vertical}
-#vermoegen .vermoegen-karte:last-child>label{display:block;margin-bottom:7px;font-family:Georgia,"Times New Roman",serif;font-size:1.1rem;color:#3b210f}
-
-@media(max-width:760px){
-  body::after,main::before{display:none!important}
-  header{position:sticky;top:0;z-index:100}
-  .app-kopf-56{min-height:40px!important;padding:0 44px!important}
-  .app-kopf-56 h1{font-size:.82rem!important;white-space:nowrap}
-  nav{position:sticky;top:40px;z-index:99;display:grid!important;grid-template-columns:repeat(8,1fr)!important;overflow:visible!important;gap:2px!important;padding:4px!important}
-  nav button.runen-tab-563{min-width:0!important;width:auto!important;height:42px!important;min-height:42px!important;padding:0!important;font-size:0!important;border-radius:3px!important}
-  nav button.runen-tab-563::before{position:static!important;display:block!important;transform:none!important;font-size:1.35rem!important;line-height:40px!important;text-align:center!important}
-  nav button.runen-tab-563.active::before{text-shadow:0 0 4px #fff0b5,0 0 8px #e8a93d,0 0 13px rgba(235,160,42,.75)!important}
-  .globale-charakterleiste,.aktiver-charakter-hinweis,#aktiverCharakterLeiste,.aktiver-charakter-leiste,.charakter-global-leiste,.global-charakter-leiste{position:sticky!important;top:90px!important;z-index:90!important}
-  main{padding:8px 0 26px!important;border:0!important;box-shadow:none!important}
-  #vermoegen.page.active{padding-left:8px;padding-right:8px}
-  #vermoegen .vermoegen-muenzen{grid-template-columns:repeat(2,1fr)}
-  #vermoegen .vermoegen-muenze:nth-child(2){border-right:0}
-  #vermoegen .vermoegen-muenze:nth-child(-n+2){border-bottom:1px solid rgba(124,77,32,.28)}
-  #vermoegen .vermoegen-rechner-zeile{grid-template-columns:44px minmax(90px,1fr) 36px!important}
-  #vermoegen .vermoegen-rechner-zeile select{grid-column:1/3!important}
-  #vermoegen .vermoegen-rechner-zeile .vermoegen-rechner-entfernen{grid-column:3!important;grid-row:1/3!important}
-  #vermoegen .vermoegen-rechner-fuss{grid-template-columns:auto 74px 1fr!important}
-  #vermoegen .vermoegen-rechner-aktionen{display:grid!important;grid-template-columns:1fr 1fr!important}
-  #vermoegen .vermoegen-rechner-aktionen button{font-size:.82rem;padding:7px!important}
-}
-
-/* ==========================================================
-   v0.56.7 – Vermögen: mobiles Pergament-Artefakt
-   CSS-Pergament mit unregelmäßigen Kanten, weicheren Formularen
-   und deutlich weniger statischer Kastenoptik.
-   ========================================================== */
+body[data-artefakt-seite="vermoegen"]{background:#24150d!important}
 body[data-artefakt-seite="vermoegen"] main{
-  position:relative;
-  isolation:isolate;
-  background:
-    radial-gradient(ellipse at 12% 8%,rgba(116,62,20,.13),transparent 22%),
-    radial-gradient(ellipse at 88% 34%,rgba(126,72,25,.10),transparent 25%),
-    radial-gradient(ellipse at 22% 82%,rgba(103,52,16,.09),transparent 22%),
-    repeating-linear-gradient(0deg,rgba(94,54,22,.025) 0 1px,transparent 1px 4px),
-    linear-gradient(90deg,rgba(77,38,12,.20),transparent 4%,transparent 96%,rgba(77,38,12,.22)),
-    #efd092!important;
+  position:relative!important;width:min(100%,920px)!important;min-height:0!important;
+  margin:0 auto 10px!important;padding:8px 14px 18px!important;overflow:hidden!important;
+  border:0!important;border-radius:0!important;
+  background:radial-gradient(ellipse at 8% 10%,rgba(116,59,17,.18) 0 2%,transparent 17%),radial-gradient(ellipse at 91% 14%,rgba(102,49,13,.15) 0 2%,transparent 18%),radial-gradient(ellipse at 18% 38%,rgba(133,76,27,.10) 0 3%,transparent 21%),radial-gradient(ellipse at 82% 57%,rgba(91,43,12,.11) 0 2%,transparent 23%),radial-gradient(ellipse at 28% 78%,rgba(115,59,17,.10) 0 3%,transparent 22%),repeating-linear-gradient(3deg,rgba(91,50,20,.024) 0 1px,transparent 1px 5px),linear-gradient(90deg,rgba(77,34,8,.27),transparent 3.8%,transparent 96.2%,rgba(77,34,8,.28)),#efd092!important;
+  box-shadow:inset 9px 0 15px -12px rgba(45,18,4,.72),inset -9px 0 15px -12px rgba(45,18,4,.72),0 7px 20px rgba(28,12,5,.30)!important
 }
-body[data-artefakt-seite="vermoegen"] main::before,
-body[data-artefakt-seite="vermoegen"] main::after{
-  content:""!important;display:block!important;position:absolute!important;z-index:20!important;
-  top:0!important;bottom:0!important;width:13px!important;height:auto!important;pointer-events:none!important;
-  opacity:.78!important;background:
-    radial-gradient(circle at 20% 4%,#4a240e 0 2px,transparent 2.6px),
-    radial-gradient(circle at 80% 11%,#5b2e12 0 3px,transparent 3.6px),
-    radial-gradient(circle at 30% 19%,#3d1d0b 0 2px,transparent 2.8px),
-    radial-gradient(circle at 75% 29%,#5b2d10 0 2.5px,transparent 3.2px),
-    radial-gradient(circle at 20% 41%,#42200c 0 3px,transparent 3.8px),
-    radial-gradient(circle at 80% 57%,#5b2d10 0 2px,transparent 2.8px),
-    radial-gradient(circle at 28% 72%,#3d1d0b 0 3px,transparent 3.8px),
-    radial-gradient(circle at 72% 88%,#52270e 0 2.5px,transparent 3.2px),
-    linear-gradient(90deg,#48210c 0 18%,rgba(82,39,13,.72) 25%,rgba(82,39,13,.15) 72%,transparent 100%)!important;
-  background-size:13px 118px,13px 137px,13px 151px,13px 173px,13px 191px,13px 211px,13px 233px,13px 257px,100% 100%!important;
-  filter:blur(.15px);box-shadow:inset -2px 0 4px rgba(52,22,6,.30)!important;
-}
-body[data-artefakt-seite="vermoegen"] main::before{left:0!important}
-body[data-artefakt-seite="vermoegen"] main::after{right:0!important;transform:scaleX(-1);}
-
-#vermoegen>.seitenkopf::before{content:"◎"!important;border:1px solid rgba(126,77,30,.55)!important;border-radius:50%!important;box-shadow:inset 0 0 0 3px rgba(239,202,129,.38),0 0 10px rgba(113,62,19,.14)!important}
-#vermoegen .vermoegen-karte+ .vermoegen-karte::before{content:"❖";color:#875122;font-size:.68rem;background:linear-gradient(90deg,transparent 2%,rgba(122,74,28,.46) 9% 44%,transparent 44% 56%,rgba(122,74,28,.46) 56% 91%,transparent 98%) center/100% 1px no-repeat}
-#vermoegen .vermoegen-muenzen{border-top:0;border-bottom:0;position:relative}
-#vermoegen .vermoegen-muenzen::before,#vermoegen .vermoegen-muenzen::after{content:"";position:absolute;left:3%;right:3%;height:1px;background:linear-gradient(90deg,transparent,#9a642f 12%,#9a642f 88%,transparent)}
-#vermoegen .vermoegen-muenzen::before{top:0}#vermoegen .vermoegen-muenzen::after{bottom:0}
-#vermoegen .vermoegen-muenze{border-right:1px solid rgba(124,77,32,.20)}
-#vermoegen input,#vermoegen select,#vermoegen textarea{
-  border:1px solid rgba(137,83,34,.52)!important;border-radius:9px!important;
-  background:linear-gradient(180deg,rgba(255,244,214,.76),rgba(250,224,170,.52))!important;
-  box-shadow:inset 0 1px rgba(255,250,229,.7),0 1px 2px rgba(75,36,10,.08)!important;
-}
-#vermoegen .vermoegen-buchung input{border:1px solid rgba(137,83,34,.45)!important;border-radius:8px!important;background:rgba(255,239,202,.58)!important}
-#vermoegen .vermoegen-rechner-zeile{border-bottom:0!important}
-#vermoegen .vermoegen-rechner-zeile input,#vermoegen .vermoegen-rechner-zeile select,#vermoegen #vermoegenRechnerTeiler,#vermoegen textarea{border:1px solid rgba(137,83,34,.48)!important;border-radius:9px!important}
-#vermoegen button{border-radius:7px!important}
-#vermoegen .vermoegen-rechner-aktionen button{border-radius:9px!important;box-shadow:inset 0 0 0 1px rgba(245,197,104,.24),0 2px 4px rgba(66,29,8,.18)!important}
-
-@media(max-width:760px){
-  body[data-artefakt-seite="vermoegen"] main{margin:0 7px 10px!important;padding:7px 8px 34px!important;border-radius:7px 7px 14px 14px!important;box-shadow:0 5px 16px rgba(43,19,6,.34),inset 0 0 24px rgba(111,59,20,.13)!important}
-  body[data-artefakt-seite="vermoegen"] main::before,body[data-artefakt-seite="vermoegen"] main::after{width:10px!important}
-  #vermoegen.page.active{padding:0 9px 28px!important}
-  #vermoegen>.seitenkopf{min-height:48px!important;padding:5px 5px 5px 49px!important;margin-bottom:0!important}
-  #vermoegen>.seitenkopf::before{left:4px!important;width:36px!important;height:36px!important;font-size:1.25rem!important}
-  #vermoegen>.seitenkopf h2{font-size:1.35rem!important}
-  #vermoegen .vermoegen-bereich{padding:0 3px}
-  #vermoegen .vermoegen-karte{padding:15px 2px 18px!important}
-  #vermoegen .vermoegen-gesamt{grid-template-columns:1fr auto;gap:3px 10px}
-  #vermoegen .vermoegen-gesamt label{font-size:1.28rem}
-  #vermoegen #vermoegenGesamt{font-size:2.15rem}
-  #vermoegen .vermoegen-muenze{padding:11px 5px 12px}
-  #vermoegen .vermoegen-muenze:nth-child(2){border-right:0}
-  #vermoegen .vermoegen-muenze:nth-child(-n+2){border-bottom:1px solid rgba(124,77,32,.20)}
-  #vermoegen .vermoegen-buchung{grid-template-columns:34px minmax(36px,1fr) 34px;gap:4px}
-  #vermoegen .vermoegen-buchung button{min-height:40px!important;border-radius:8px!important}
-  #vermoegen .vermoegen-buchung input{min-height:40px!important}
-  #vermoegen .vermoegen-rechner-kopf h3{font-size:1.3rem}
-  #vermoegen .vermoegen-rechner-zeile input,#vermoegen .vermoegen-rechner-zeile select,#vermoegen #vermoegenRechnerTeiler{min-height:42px!important}
-  #vermoegen textarea{min-height:112px!important;border-radius:10px!important}
-}
-
-/* ==========================================================
-   v0.56.8 – Vermögen: Zielbild-Prototyp fürs Handy
-   ========================================================== */
-body[data-artefakt-seite="vermoegen"] main::before,
-body[data-artefakt-seite="vermoegen"] main::after{display:none!important;content:none!important}
-#vermoegen.page.active{max-width:760px;padding:0 12px 28px!important}
-#vermoegen>.seitenkopf{display:none!important}
-#vermoegen .vermoegen-bereich{padding:0 4px!important}
-#vermoegen .vermoegen-karte{padding:20px 4px 24px!important}
-#vermoegen .vermoegen-karte+ .vermoegen-karte::before{content:"✦"!important;top:-9px!important}
-
-#vermoegen .vermoegen-gesamt{min-height:190px;display:grid!important;grid-template-columns:minmax(125px,42%) 1fr!important;grid-template-rows:auto 1fr!important;align-items:center!important;gap:0 10px!important;padding:18px 4px 18px!important}
-#vermoegen .vermoegen-gesamt::before{content:"";grid-column:1;grid-row:1/3;width:100%;height:150px;background:url("../assets/goldsack.webp") center/contain no-repeat;filter:drop-shadow(0 5px 5px rgba(73,35,8,.22));align-self:center}
-#vermoegen .vermoegen-gesamt label{grid-column:2!important;grid-row:1!important;align-self:end;font-size:1.55rem!important;line-height:1.05;margin:0 0 7px!important;color:#321b0c!important}
-#vermoegen .vermoegen-gesamt label::after{content:"\A(Goldmünzen)";white-space:pre;font-size:.82rem;font-weight:400}
-#vermoegen #vermoegenGesamt{grid-column:2!important;grid-row:2!important;align-self:start!important;text-align:center;font-size:2.55rem!important;line-height:1.05!important;margin-top:8px!important}
-#vermoegen #vermoegenGesamt::after{content:" Goldmünzen"}
+body[data-artefakt-seite="vermoegen"] main::before,body[data-artefakt-seite="vermoegen"] main::after{content:""!important;position:absolute!important;top:0!important;bottom:0!important;width:7px!important;z-index:0!important;pointer-events:none!important;opacity:.66!important;background:radial-gradient(ellipse at 25% 2%,rgba(67,28,6,.74) 0 2px,transparent 3px),radial-gradient(ellipse at 85% 18%,rgba(91,42,10,.56) 0 2px,transparent 3.2px),radial-gradient(ellipse at 5% 38%,rgba(61,24,5,.65) 0 2.4px,transparent 3.3px),radial-gradient(ellipse at 95% 63%,rgba(94,43,10,.58) 0 2px,transparent 3px),radial-gradient(ellipse at 12% 86%,rgba(58,22,5,.63) 0 2.5px,transparent 3.4px),linear-gradient(90deg,rgba(66,26,5,.58),rgba(112,60,18,.16) 62%,transparent)!important;background-size:7px 113px,7px 157px,7px 211px,7px 271px,7px 347px,100% 100%!important}
+body[data-artefakt-seite="vermoegen"] main::before{left:0!important} body[data-artefakt-seite="vermoegen"] main::after{right:0!important;transform:scaleX(-1)!important}
+#vermoegen{position:relative;z-index:1}
+#vermoegen.page.active{padding:0!important}
+#vermoegen .vermoegen-bereich{max-width:880px;margin:0 auto;display:grid;gap:0;font-family:Georgia,"Times New Roman",serif;color:#351d0d}
+#vermoegen .vermoegen-karte{position:relative;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:18px 12px!important}
+#vermoegen .vermoegen-karte+.vermoegen-karte::before{content:"◆";display:block;height:18px;margin:-9px 0 8px;text-align:center;color:#805020;background:linear-gradient(90deg,transparent 2%,rgba(121,75,31,.42) 9% 44%,transparent 44% 56%,rgba(121,75,31,.42) 56% 91%,transparent 98%) center/100% 1px no-repeat}
+#vermoegen .vermoegen-gesamt{display:grid!important;grid-template-columns:minmax(120px,40%) minmax(0,60%)!important;grid-template-rows:auto auto!important;min-height:170px;align-items:center;column-gap:10px}
+#vermoegen .vermoegen-gesamt::before{content:"";grid-column:1;grid-row:1/3;height:145px;background:url("../img/vermoegen-muenzbeutel.png") center/contain no-repeat}
+#vermoegen .vermoegen-gesamt-titel{grid-column:2;grid-row:1;align-self:end;text-align:center;line-height:1.05;margin-bottom:8px}
+#vermoegen .vermoegen-gesamt-titel strong{display:block;font-size:1.55rem} #vermoegen .vermoegen-gesamt-titel span{display:block;margin-top:4px;font-size:.9rem}
+#vermoegen .vermoegen-summe-wrap{grid-column:2;grid-row:2;align-self:start;text-align:center;margin-top:4px} #vermoegenGesamt{display:block!important;width:auto!important;min-height:0!important;padding:0!important;border:0!important;background:transparent!important;color:#2e1608!important;font-size:2.7rem!important;line-height:1!important;font-weight:800!important}
 #vermoegen .vermoegen-gesamt-detail{display:none!important}
-
-#vermoegen .vermoegen-muenzen{grid-template-columns:repeat(4,1fr)!important;border:1px solid rgba(128,77,29,.34)!important;border-radius:13px!important;overflow:hidden;background:rgba(255,242,211,.22)}
-#vermoegen .vermoegen-muenze{padding:12px 5px 10px!important;border-right:1px solid rgba(128,77,29,.28)!important;border-bottom:0!important;gap:6px!important}
-#vermoegen .vermoegen-muenze:last-child{border-right:0!important}
-#vermoegen .vermoegen-muenze label{font-size:.92rem!important}
-#vermoegen .vermoegen-buchung{grid-template-columns:32px minmax(28px,1fr) 32px!important;gap:3px!important}
-#vermoegen .vermoegen-buchung input,#vermoegen .vermoegen-rechner-zeile input,#vermoegen .vermoegen-rechner-zeile select,#vermoegen #vermoegenRechnerTeiler,#vermoegen textarea{border:1px solid rgba(145,88,34,.52)!important;border-radius:10px!important;background:rgba(255,241,207,.68)!important;box-shadow:inset 0 1px 4px rgba(112,61,19,.08)!important}
-#vermoegen .vermoegen-buchung input{border-radius:8px!important;border-color:rgba(145,88,34,.36)!important}
-#vermoegen .vermoegen-buchung button{border-radius:7px!important}
-#vermoegen .vermoegen-hinweis{margin-top:10px!important}
-
-#vermoegen .vermoegen-rechner-kopf h3{font-size:1.55rem!important}
-#vermoegen .vermoegen-rechner-zeile{display:grid!important;grid-template-columns:42px minmax(90px,1fr) minmax(120px,1fr) 42px!important;gap:6px!important;border:0!important;padding:0!important}
-#vermoegen .vermoegen-rechner-zeile select,#vermoegen .vermoegen-rechner-zeile input{min-height:44px!important}
-#vermoegen .vermoegen-rechner-entfernen{border-radius:8px!important}
-#vermoegen .vermoegen-rechner-fuss{grid-template-columns:auto 80px 1fr!important;margin-top:12px!important}
-#vermoegen .vermoegen-rechner-ergebnis{background:transparent!important;padding-right:3px!important}
-#vermoegen .vermoegen-rechner-aktionen{display:grid!important;grid-template-columns:1fr 1fr!important}
-#vermoegen .vermoegen-rechner-aktionen button{border-radius:9px!important;line-height:1.15}
-#vermoegen textarea{border-radius:11px!important;min-height:120px!important}
-
+#vermoegen .vermoegen-muenzen{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0!important;background:rgba(255,242,211,.13);border-top:1px solid rgba(116,70,28,.25);border-bottom:1px solid rgba(116,70,28,.25)}
+#vermoegen .vermoegen-muenze{display:grid!important;gap:8px!important;min-width:0;padding:12px 7px!important;text-align:center;border-right:1px solid rgba(116,70,28,.25)} #vermoegen .vermoegen-muenze:last-child{border-right:0}
+#vermoegen .vermoegen-muenze label{font-weight:700!important;color:#351d0d!important;font-size:1rem}
+#vermoegen .vermoegen-buchung{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:auto auto!important;gap:6px!important;width:100%}
+#vermoegen .vermoegen-buchung input{grid-column:1/-1!important;grid-row:1!important;width:100%!important;min-width:0!important;min-height:42px!important;padding:5px 7px!important;text-align:center;font:700 1rem Georgia,"Times New Roman",serif!important;border:1px solid rgba(145,88,34,.45)!important;border-radius:10px!important;background:rgba(255,241,207,.76)!important;box-shadow:inset 0 1px 4px rgba(112,61,19,.08)!important}
+#vermoegen .vermoegen-buchung button{grid-row:2!important;width:100%!important;min-width:0!important;min-height:39px!important;padding:0!important;border:1px solid #9d5c1e!important;border-radius:9px!important;background:linear-gradient(#e7b765,#c98939)!important;color:#321b0c!important;font:700 1.2rem Georgia,"Times New Roman",serif!important}
+#vermoegen .vermoegen-hinweis,#vermoegen #btnVermoegenRechnerZeile{display:none!important}
+#vermoegen .vermoegen-rechner-kopf{display:block!important;margin:0 0 10px!important} #vermoegen .vermoegen-rechner-kopf h3{margin:0!important;font-size:1.65rem!important;color:#351d0d}
+#vermoegen .vermoegen-rechner-zeilen{display:grid;gap:7px}
+#vermoegen .vermoegen-rechner-zeile{display:grid!important;grid-template-columns:44px minmax(130px,1fr) 66px 44px!important;gap:7px!important;align-items:center}
+#vermoegen .vermoegen-rechner-zeile input,#vermoegen .vermoegen-rechner-zeile select,#vermoegen #vermoegenRechnerTeiler{width:100%!important;min-width:0!important;min-height:46px!important;padding:7px 9px!important;border:1px solid rgba(145,88,34,.52)!important;border-radius:10px!important;background:rgba(255,241,207,.76)!important;color:#351d0d!important;font:1rem Georgia,"Times New Roman",serif!important}
+#vermoegen .vermoegen-rechner-zeile select:nth-of-type(2){font-weight:700!important;text-align:center!important;text-align-last:center!important;padding-left:4px!important;padding-right:4px!important}
+#vermoegen .vermoegen-rechner-entfernen{width:100%;min-height:40px;border:1px solid #9d5c1e!important;border-radius:9px!important;background:linear-gradient(#e7b765,#c98939)!important;color:#321b0c!important;font:700 1.2rem Georgia,"Times New Roman",serif!important}
+#vermoegen .vermoegen-rechner-fuss{display:grid!important;grid-template-columns:auto 80px minmax(80px,1fr)!important;gap:9px!important;align-items:center;margin-top:12px!important;font-size:1.05rem}
+#vermoegen .vermoegen-rechner-ergebnis{padding:0!important;background:transparent!important;color:#351d0d!important;text-align:right!important;white-space:nowrap;font-size:1.25rem!important;font-weight:800!important}
+#vermoegen .vermoegen-rechner-aktionen{display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px!important;margin-top:12px!important}
+#vermoegen .vermoegen-rechner-aktionen button{min-height:46px;padding:8px 10px!important;border:1px solid #9d5c1e!important;border-radius:9px!important;background:linear-gradient(#6b2d0d,#4a1d08)!important;color:#f5d88d!important;font:700 .98rem Georgia,"Times New Roman",serif!important;line-height:1.15!important}
+#vermoegen .vermoegen-karte>label[for="vermoegenNotiz"]{display:block;margin-bottom:8px;font-size:1.15rem} #vermoegenNotiz{width:100%!important;min-height:120px!important;padding:10px!important;border:1px solid rgba(145,88,34,.52)!important;border-radius:11px!important;background:rgba(255,241,207,.72)!important;color:#351d0d!important;font:1rem Georgia,"Times New Roman",serif!important;line-height:1.4;resize:vertical}
+#vermoegen .vermoegen-karte:last-child{padding-bottom:8px!important}
+@media(max-width:900px){body[data-artefakt-seite="vermoegen"] main{width:calc(100% - 12px)!important;max-width:none!important;margin:0 6px 8px!important;padding:8px 10px 14px!important}}
 @media(max-width:520px){
- #vermoegen.page.active{padding-left:8px!important;padding-right:8px!important}
- #vermoegen .vermoegen-gesamt{min-height:170px;grid-template-columns:42% 58%!important;padding-top:12px!important}
- #vermoegen .vermoegen-gesamt::before{height:138px}
- #vermoegen .vermoegen-gesamt label{font-size:1.28rem!important}
- #vermoegen #vermoegenGesamt{font-size:2.25rem!important}
- #vermoegen .vermoegen-muenze{padding:10px 3px!important}
- #vermoegen .vermoegen-muenze label{font-size:.78rem!important}
- #vermoegen .vermoegen-buchung{grid-template-columns:29px minmax(20px,1fr) 29px!important}
- #vermoegen .vermoegen-buchung button{min-width:29px!important;min-height:36px!important}
- #vermoegen .vermoegen-rechner-zeile{grid-template-columns:40px minmax(78px,1fr) minmax(112px,1fr) 40px!important}
- #vermoegen .vermoegen-rechner-zeile select{grid-column:auto!important}
- #vermoegen .vermoegen-rechner-zeile .vermoegen-rechner-entfernen{grid-column:auto!important;grid-row:auto!important}
- #vermoegen .vermoegen-rechner-aktionen button{font-size:.76rem!important}
+ #vermoegen .vermoegen-karte{padding:15px 8px!important}
+ #vermoegen .vermoegen-gesamt{grid-template-columns:39% 61%!important;min-height:158px!important} #vermoegen .vermoegen-gesamt::before{height:132px!important}
+ #vermoegen .vermoegen-gesamt-titel strong{font-size:1.3rem!important} #vermoegen .vermoegen-gesamt-titel span{font-size:.82rem!important} #vermoegenGesamt{font-size:2.3rem!important}
+ #vermoegen .vermoegen-muenze{padding:10px 4px!important;gap:6px!important} #vermoegen .vermoegen-muenze label{font-size:.78rem!important}
+ #vermoegen .vermoegen-buchung{gap:5px!important} #vermoegen .vermoegen-buchung input{min-height:40px!important;font-size:.9rem!important} #vermoegen .vermoegen-buchung button{min-height:37px!important}
+ #vermoegen .vermoegen-rechner-kopf h3{font-size:1.5rem!important}
+ #vermoegen .vermoegen-rechner-zeile{grid-template-columns:40px minmax(110px,1fr) 56px 40px!important;gap:5px!important}
+ #vermoegen .vermoegen-rechner-zeile input,#vermoegen .vermoegen-rechner-zeile select{min-height:44px!important;padding-left:6px!important;padding-right:6px!important}
+ #vermoegen .vermoegen-rechner-fuss{grid-template-columns:auto 64px 1fr!important;gap:6px!important}
+ #vermoegen .vermoegen-rechner-aktionen button{font-size:.82rem!important;padding:7px 5px!important}
 }
-#vermoegen .vermoegen-summe-wrap{grid-column:2!important;grid-row:2!important;align-self:start;text-align:center;margin-top:8px}
-#vermoegen .vermoegen-summe-wrap #vermoegenGesamt{display:block!important;text-align:center!important;margin:0!important}
-#vermoegen .vermoegen-summe-wrap span{display:block;font-family:Georgia,"Times New Roman",serif;font-size:1.05rem;color:#3b210f;margin-top:4px}
-#vermoegen #vermoegenGesamt::after{content:none!important}
-
-
-/* ==========================================================
-   v0.56.9 – Vermögen: struktureller Mobile-Umbau
-   Ziel: Referenzaufbau statt Desktop-Formular auf schmalem Bildschirm.
-   ========================================================== */
-#vermoegen .vermoegen-gesamt{
-  min-height:170px!important;
-  grid-template-columns:minmax(118px,40%) minmax(0,60%)!important;
-  grid-template-rows:auto auto!important;
-  column-gap:10px!important;
-  align-items:center!important;
-}
-#vermoegen .vermoegen-gesamt::before{height:145px!important;grid-column:1!important;grid-row:1/3!important}
-#vermoegen .vermoegen-gesamt-titel{grid-column:2;grid-row:1;align-self:end;text-align:center;color:#321b0c;font-family:Georgia,"Times New Roman",serif;line-height:1.05;margin-bottom:7px}
-#vermoegen .vermoegen-gesamt-titel strong{display:block;font-size:1.5rem}
-#vermoegen .vermoegen-gesamt-titel span{display:block;margin-top:3px;font-size:.82rem;font-weight:400}
-#vermoegen .vermoegen-summe-wrap{grid-column:2!important;grid-row:2!important;align-self:start!important;text-align:center!important;margin:4px 0 0!important}
-#vermoegen .vermoegen-summe-wrap #vermoegenGesamt{font-size:2.6rem!important;line-height:1!important;margin:0!important}
-#vermoegen .vermoegen-summe-wrap span{display:none!important}
-#vermoegen .vermoegen-gesamt>label{display:none!important}
-#vermoegen .vermoegen-gesamt-detail{display:none!important}
-
-/* Vier Münzspalten als mobile Bediengruppe, ohne äußere Kartenoptik. */
-#vermoegen .vermoegen-muenzen{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0!important;border:0!important;border-radius:0!important;overflow:visible!important;background:transparent!important}
-#vermoegen .vermoegen-muenze{min-width:0!important;padding:10px 4px 11px!important;border:0!important;border-right:1px solid rgba(116,70,28,.25)!important}
-#vermoegen .vermoegen-muenze:last-child{border-right:0!important}
-#vermoegen .vermoegen-muenze label{font-size:.9rem!important;font-weight:700!important}
-#vermoegen .vermoegen-buchung{display:grid!important;grid-template-columns:30px minmax(0,1fr) 30px!important;gap:3px!important;width:100%!important}
-#vermoegen .vermoegen-buchung input{width:100%!important;min-width:0!important;padding:2px!important;text-align:center!important}
-#vermoegen .vermoegen-buchung button{width:30px!important;min-width:30px!important;padding:0!important}
-
-/* Rechner: erste Zeile bleibt auch auf dem Handy eine Zeile. */
-#vermoegen .vermoegen-rechner-kopf{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important}
-#vermoegen .vermoegen-rechner-kopf h3{margin:0!important}
-#vermoegen .vermoegen-rechner-zeile{display:grid!important;grid-template-columns:42px minmax(70px,.8fr) minmax(112px,1.35fr) 42px!important;gap:6px!important;align-items:center!important}
-#vermoegen .vermoegen-rechner-zeile select,#vermoegen .vermoegen-rechner-zeile input,#vermoegen .vermoegen-rechner-entfernen{grid-column:auto!important;grid-row:auto!important;min-width:0!important;width:100%!important}
-#vermoegen .vermoegen-rechner-fuss{display:grid!important;grid-template-columns:auto 72px minmax(70px,1fr)!important;gap:8px!important;align-items:center!important}
-#vermoegen .vermoegen-rechner-ergebnis{text-align:right!important;white-space:nowrap!important}
-#vermoegen .vermoegen-rechner-aktionen{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
-
-/* Ornamentale Trennung statt Boxen. */
-#vermoegen .vermoegen-karte{border:0!important;box-shadow:none!important;background:transparent!important}
-#vermoegen .vermoegen-karte + .vermoegen-karte::before{content:"◆"!important;color:#805020!important;background:linear-gradient(90deg,transparent 2%,rgba(121,75,31,.42) 9% 44%,transparent 44% 56%,rgba(121,75,31,.42) 56% 91%,transparent 98%) center/100% 1px no-repeat!important}
-
-@media(max-width:520px){
- #vermoegen .vermoegen-gesamt{grid-template-columns:39% 61%!important;min-height:158px!important}
- #vermoegen .vermoegen-gesamt::before{height:132px!important}
- #vermoegen .vermoegen-gesamt-titel strong{font-size:1.28rem!important}
- #vermoegen .vermoegen-summe-wrap #vermoegenGesamt{font-size:2.25rem!important}
- #vermoegen .vermoegen-muenze{padding-left:2px!important;padding-right:2px!important}
- #vermoegen .vermoegen-muenze label{font-size:.76rem!important}
- #vermoegen .vermoegen-buchung{grid-template-columns:27px minmax(0,1fr) 27px!important;gap:2px!important}
- #vermoegen .vermoegen-buchung button{width:27px!important;min-width:27px!important;min-height:36px!important}
- #vermoegen .vermoegen-rechner-zeile{grid-template-columns:38px minmax(64px,.8fr) minmax(102px,1.35fr) 38px!important;gap:5px!important}
- #vermoegen .vermoegen-rechner-fuss{grid-template-columns:auto 62px 1fr!important;gap:6px!important}
- #vermoegen .vermoegen-rechner-aktionen button{font-size:.74rem!important;padding:7px 5px!important}
-}
-
-/* ==========================================================
-   v0.56.10 – Vermögen: durchgehendes gealtertes Pergament
-   Nur Hintergrund/Kanten; Inhaltslayout aus v0.56.9 bleibt bestehen.
-   ========================================================== */
-body[data-artefakt-seite="vermoegen"]{
-  background:#24150d!important;
-}
-body[data-artefakt-seite="vermoegen"] main{
-  position:relative!important;
-  min-height:calc(100dvh - 92px)!important;
-  margin:0 auto 12px!important;
-  border:0!important;
-  border-radius:0!important;
-  overflow:hidden!important;
-  background:
-    radial-gradient(ellipse at 15% 7%,rgba(104,55,18,.15) 0 2%,transparent 20%),
-    radial-gradient(ellipse at 86% 19%,rgba(126,72,25,.10) 0 3%,transparent 22%),
-    radial-gradient(ellipse at 24% 48%,rgba(93,48,14,.09) 0 2%,transparent 24%),
-    radial-gradient(ellipse at 79% 71%,rgba(116,62,19,.10) 0 2%,transparent 24%),
-    radial-gradient(ellipse at 34% 92%,rgba(86,43,12,.10) 0 2%,transparent 22%),
-    repeating-linear-gradient(4deg,rgba(89,48,18,.025) 0 1px,transparent 1px 5px),
-    linear-gradient(90deg,rgba(67,31,8,.38) 0,rgba(111,59,19,.14) 2.2%,transparent 6.5%,transparent 93.5%,rgba(111,59,19,.15) 97.8%,rgba(67,31,8,.40) 100%),
-    linear-gradient(180deg,rgba(92,46,12,.22) 0,transparent 4%,transparent 96%,rgba(75,35,9,.27) 100%),
-    #edcd8e!important;
-  box-shadow:
-    inset 18px 0 24px -20px rgba(45,18,4,.92),
-    inset -18px 0 24px -20px rgba(45,18,4,.92),
-    inset 0 16px 22px -20px rgba(45,18,4,.75),
-    inset 0 -18px 24px -20px rgba(45,18,4,.75),
-    0 7px 20px rgba(28,12,5,.34)!important;
-}
-/* Die unregelmäßige Kante sitzt innerhalb der Pergamentfläche und kann
-   deshalb keinen separaten schwarzen Streifen neben der Seite erzeugen. */
-body[data-artefakt-seite="vermoegen"] main::before,
-body[data-artefakt-seite="vermoegen"] main::after{
-  content:""!important;
-  display:block!important;
-  position:absolute!important;
-  top:0!important;bottom:0!important;
-  width:9px!important;height:auto!important;
-  z-index:0!important;
-  pointer-events:none!important;
-  opacity:.72!important;
-  transform:none!important;
-  background:
-    radial-gradient(circle at 0 3%,rgba(65,28,7,.62) 0 2px,transparent 2.6px),
-    radial-gradient(circle at 100% 9%,rgba(78,35,9,.52) 0 2.5px,transparent 3px),
-    radial-gradient(circle at 10% 18%,rgba(58,24,6,.50) 0 1.8px,transparent 2.4px),
-    radial-gradient(circle at 90% 31%,rgba(82,39,10,.55) 0 2.2px,transparent 2.8px),
-    radial-gradient(circle at 5% 46%,rgba(62,27,7,.55) 0 2.5px,transparent 3px),
-    radial-gradient(circle at 95% 63%,rgba(77,34,8,.48) 0 2px,transparent 2.6px),
-    radial-gradient(circle at 8% 79%,rgba(59,25,6,.54) 0 2.3px,transparent 2.9px),
-    radial-gradient(circle at 92% 93%,rgba(76,34,8,.58) 0 2.5px,transparent 3px),
-    linear-gradient(90deg,rgba(69,29,7,.55),rgba(111,61,20,.18) 48%,transparent)!important;
-  background-size:9px 127px,9px 149px,9px 173px,9px 191px,9px 217px,9px 239px,9px 263px,9px 293px,100% 100%!important;
-}
-body[data-artefakt-seite="vermoegen"] main::before{left:0!important}
-body[data-artefakt-seite="vermoegen"] main::after{right:0!important;transform:scaleX(-1)!important}
-body[data-artefakt-seite="vermoegen"] #vermoegen{position:relative;z-index:1}
-
-@media(max-width:900px){
-  body[data-artefakt-seite="vermoegen"] main{
-    width:calc(100% - 12px)!important;
-    max-width:none!important;
-    margin:0 6px 10px!important;
-    padding-top:8px!important;
-    padding-bottom:24px!important;
-    min-height:calc(100dvh - 92px)!important;
-  }
-}
-
-/* ==========================================================
-   v0.56.11 – Vermögen: organische Pergamentkante
-   Hintergrund-Feinschliff; Inhaltslayout bleibt unverändert.
-   ========================================================== */
-body[data-artefakt-seite="vermoegen"] main{
-  overflow:hidden!important;
-  background:
-    radial-gradient(ellipse at 8% 10%,rgba(116,59,17,.18) 0 2%,transparent 17%),
-    radial-gradient(ellipse at 91% 14%,rgba(102,49,13,.15) 0 2%,transparent 18%),
-    radial-gradient(ellipse at 18% 38%,rgba(133,76,27,.10) 0 3%,transparent 21%),
-    radial-gradient(ellipse at 82% 57%,rgba(91,43,12,.11) 0 2%,transparent 23%),
-    radial-gradient(ellipse at 28% 78%,rgba(115,59,17,.10) 0 3%,transparent 22%),
-    radial-gradient(ellipse at 72% 91%,rgba(91,42,10,.14) 0 2%,transparent 19%),
-    repeating-linear-gradient(3deg,rgba(91,50,20,.024) 0 1px,transparent 1px 5px),
-    linear-gradient(90deg,rgba(77,34,8,.27),transparent 3.8%,transparent 96.2%,rgba(77,34,8,.28)),
-    linear-gradient(180deg,rgba(82,37,8,.25),transparent 3.2%,transparent 96.8%,rgba(82,37,8,.27)),
-    #efd092!important;
-  box-shadow:inset 9px 0 15px -12px rgba(45,18,4,.72),inset -9px 0 15px -12px rgba(45,18,4,.72),inset 0 9px 15px -12px rgba(45,18,4,.65),inset 0 -10px 16px -12px rgba(45,18,4,.68),0 7px 20px rgba(28,12,5,.30)!important;
-}
-/* Schmale, unregelmäßig fleckige Brandkante statt gerader Seitenbalken. */
-body[data-artefakt-seite="vermoegen"] main::before,
-body[data-artefakt-seite="vermoegen"] main::after{
-  width:7px!important;opacity:.66!important;z-index:0!important;
-  background:
-    radial-gradient(ellipse at 25% 2%,rgba(67,28,6,.74) 0 2px,transparent 3px),
-    radial-gradient(ellipse at 85% 8%,rgba(91,42,10,.56) 0 2px,transparent 3.2px),
-    radial-gradient(ellipse at 5% 15%,rgba(61,24,5,.65) 0 2.4px,transparent 3.3px),
-    radial-gradient(ellipse at 95% 24%,rgba(94,43,10,.58) 0 2px,transparent 3px),
-    radial-gradient(ellipse at 12% 35%,rgba(58,22,5,.63) 0 2.5px,transparent 3.4px),
-    radial-gradient(ellipse at 88% 49%,rgba(89,39,8,.58) 0 2.2px,transparent 3.2px),
-    radial-gradient(ellipse at 8% 64%,rgba(62,24,5,.64) 0 2.5px,transparent 3.5px),
-    radial-gradient(ellipse at 92% 77%,rgba(91,40,8,.56) 0 2.3px,transparent 3.2px),
-    radial-gradient(ellipse at 18% 91%,rgba(59,23,5,.67) 0 2.5px,transparent 3.5px),
-    linear-gradient(90deg,rgba(66,26,5,.58),rgba(112,60,18,.16) 62%,transparent)!important;
-  background-size:7px 113px,7px 137px,7px 157px,7px 181px,7px 211px,7px 239px,7px 271px,7px 307px,7px 347px,100% 100%!important;
-}
-/* Gealterte Ober-/Unterkante innerhalb des Blatts, ohne zusätzliche Elemente. */
-body[data-artefakt-seite="vermoegen"] #vermoegen::before,
-body[data-artefakt-seite="vermoegen"] #vermoegen::after{
-  content:"";position:absolute;left:0;right:0;height:8px;pointer-events:none;z-index:0;opacity:.62;
-  background:radial-gradient(ellipse at 4% 50%,rgba(70,29,6,.58) 0 4px,transparent 5px),radial-gradient(ellipse at 17% 30%,rgba(92,43,10,.42) 0 3px,transparent 4px),radial-gradient(ellipse at 31% 70%,rgba(63,25,5,.50) 0 4px,transparent 5px),radial-gradient(ellipse at 48% 35%,rgba(94,45,11,.40) 0 3px,transparent 4px),radial-gradient(ellipse at 66% 68%,rgba(62,24,5,.50) 0 4px,transparent 5px),radial-gradient(ellipse at 82% 30%,rgba(91,42,9,.43) 0 3px,transparent 4px),radial-gradient(ellipse at 97% 55%,rgba(65,26,5,.56) 0 4px,transparent 5px),linear-gradient(rgba(74,30,6,.22),transparent);
-}
-body[data-artefakt-seite="vermoegen"] #vermoegen::before{top:0}
-body[data-artefakt-seite="vermoegen"] #vermoegen::after{bottom:0;transform:scaleY(-1)}
-body[data-artefakt-seite="vermoegen"] #vermoegen>.vermoegen-bereich{position:relative;z-index:1}
-\n\n/* ==========================================================\n   v0.56.12 – Vermögen: Finalisierung der Grundlagenseite\n   Hintergrund bleibt unverändert. Fokus: Mobile Bedienung.\n   ========================================================== */\n#vermoegen .vermoegen-hinweis{display:none!important}\n#vermoegen #btnVermoegenRechnerZeile{display:none!important}\n\n/* Münzeingabe: volles Betragsfeld, darunter Minus/Plus. */\n#vermoegen .vermoegen-buchung{\n  display:grid!important;\n  grid-template-columns:1fr 1fr!important;\n  grid-template-rows:auto auto!important;\n  gap:6px 7px!important;\n  width:100%!important;\n}\n#vermoegen .vermoegen-buchung input{\n  grid-column:1/-1!important;grid-row:1!important;\n  width:100%!important;min-width:0!important;min-height:42px!important;\n  font-family:Georgia,"Times New Roman",serif!important;font-size:1rem!important;\n}\n#vermoegen .vermoegen-buchung button{\n  grid-row:2!important;width:100%!important;min-width:0!important;min-height:40px!important;\n  font-family:Georgia,"Times New Roman",serif!important;font-size:1.15rem!important;font-weight:700!important;\n}\n#vermoegen .vermoegen-buchung button[data-vermoegen-minus]{grid-column:1!important}\n#vermoegen .vermoegen-buchung button[data-vermoegen-plus]{grid-column:2!important}\n\n/* Rechner: Kürzel schaffen Platz für den Betrag. */\n#vermoegen .vermoegen-rechner-zeile{\n  grid-template-columns:44px minmax(120px,1fr) 68px 44px!important;\n  gap:7px!important;\n}\n#vermoegen .vermoegen-rechner-zeile select,\n#vermoegen .vermoegen-rechner-zeile input{font-family:Georgia,"Times New Roman",serif!important}\n#vermoegen .vermoegen-rechner-zeile select:nth-of-type(2){text-align:center!important;font-weight:700!important}\n\n/* Einheitliche Typografie der Hauptaktionen. */\n#vermoegen .vermoegen-rechner-aktionen button{\n  font-family:Georgia,"Times New Roman",serif!important;\n  font-size:.95rem!important;font-weight:700!important;\n}\n\n/* Nach dem Inhalt nur noch ein kleiner Pergamentabschluss. */\nbody[data-artefakt-seite="vermoegen"] main{min-height:0!important;padding-bottom:18px!important}\n#vermoegen .vermoegen-karte:last-child{padding-bottom:10px!important}\n\n@media(max-width:520px){\n  #vermoegen .vermoegen-muenze{padding:10px 4px 12px!important}\n  #vermoegen .vermoegen-buchung{grid-template-columns:1fr 1fr!important;gap:5px!important}\n  #vermoegen .vermoegen-buchung input{min-height:40px!important;font-size:.92rem!important}\n  #vermoegen .vermoegen-buchung button{width:100%!important;min-width:0!important;min-height:38px!important}\n  #vermoegen .vermoegen-rechner-zeile{grid-template-columns:40px minmax(105px,1fr) 58px 40px!important;gap:5px!important}\n  #vermoegen .vermoegen-rechner-aktionen button{font-size:.82rem!important;line-height:1.15!important}\n}\n
