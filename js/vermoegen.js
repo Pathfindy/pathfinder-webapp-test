@@ -101,22 +101,18 @@
     const zeile = document.createElement("div");
     zeile.className = "vermoegen-rechner-zeile";
     zeile.innerHTML = `
-      <select aria-label="Rechenart">
-        <option value="1">+</option>
-        <option value="-1">−</option>
-      </select>
       <input type="number" min="0" step="1" inputmode="numeric" placeholder="Betrag">
       <select aria-label="Münzart">
         ${MUENZEN.map(m => `<option value="${m.key}" title="${m.label}">${m.kurz}</option>`).join("")}
       </select>
-      <button type="button" class="vermoegen-rechner-entfernen" aria-label="Zeile entfernen">×</button>
+      <button type="button" class="vermoegen-rechner-entfernen" aria-label="Betrag leeren" title="Betrag leeren">×</button>
     `;
-    zeile.querySelector("select").value = String(wert.richtung || 1);
     zeile.querySelector("input").value = wert.anzahl || "";
-    zeile.querySelectorAll("select")[1].value = wert.muenze || "gold";
+    zeile.querySelector("select").value = wert.muenze || "gold";
     zeile.querySelector("button").addEventListener("click", () => {
-      zeile.remove();
+      zeile.querySelector("input").value = "";
       aktualisiereRechner();
+      zeile.querySelector("input").focus();
     });
     zeile.querySelectorAll("input,select").forEach(element => element.addEventListener("input", aktualisiereRechner));
     return zeile;
@@ -126,11 +122,9 @@
     const container = document.getElementById("vermoegenRechnerZeilen");
     if (!container) return 0;
     return [...container.querySelectorAll(".vermoegen-rechner-zeile")].reduce((summe, zeile) => {
-      const selects = zeile.querySelectorAll("select");
-      const richtung = Number(selects[0]?.value) || 1;
       const anzahl = ganzzahl(zeile.querySelector("input")?.value, 0);
-      const muenze = MUENZEN.find(e => e.key === selects[1]?.value) || MUENZEN[1];
-      return summe + richtung * anzahl * muenze.kupfer;
+      const muenze = MUENZEN.find(e => e.key === zeile.querySelector("select")?.value) || MUENZEN[1];
+      return summe + anzahl * muenze.kupfer;
     }, 0);
   }
 
