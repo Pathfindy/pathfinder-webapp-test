@@ -160,3 +160,18 @@
 - Rundenzähler und Rundenaktionen wurden mobile-first neu angeordnet; die bestehende Zeit-Logik bleibt unverändert.
 - Initiative, Effekte und freie Effekte verwenden Linien und Abstände statt klassischer Kartenrahmen.
 - Papierkorb-Symbole in Initiative und freien Effekten wurden durch eine eigene Azlanti-Löschrune als SVG-Grafik ersetzt.
+
+## v0.56.20 – Zeit nach Vermögensvorbild
+- Zeitseite konsequenter an die offene Pergamentgestaltung der Vermögensseite angeglichen.
+- Gelieferte Sanduhr-Grafik links neben „Aktuelle Runde“ integriert, analog zum Goldsack beim Gesamtvermögen.
+- „Nächste Runde“ bewusst etwas größer als die beiden Nachbaraktionen; +/− aus den Rundenbuttons entfernt.
+- Initiative repariert: Charakter-IDs werden beim Vergleich normalisiert, sodass Teilnehmer auch bei numerischen IDs wieder hinzugefügt werden können.
+- Bestehende Runden-, Effekt- und Timerlogik ansonsten unverändert.
+
+## v0.56.20 – Zeit nach Vermögensvorbild
+- Zeitseite konsequenter an die offene Pergamentgestaltung der Vermögensseite angeglichen.
+- Gelieferte Sanduhr-Grafik links neben „Aktuelle Runde“ integriert, analog zum Goldsack beim Gesamtvermögen.
+- „Nächste Runde“ bewusst etwas größer als die beiden Nachbaraktionen; +/− aus den Rundenbuttons entfernt.
+- Initiative repariert: Charakter-IDs werden beim Vergleich normalisiert, sodass Teilnehmer auch bei numerischen IDs wieder hinzugefügt werden können.
+- Löschfunktion verwendet eine eigene Runen-SVG statt eines Mülleimer-Symbols.
+- Bestehende Runden-, Effekt- und Timerlogik ansonsten unverändert.
