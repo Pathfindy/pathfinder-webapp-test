@@ -757,3 +757,20 @@ body[data-artefakt-seite="vermoegen"] #vermoegen>.vermoegen-bereich{position:rel
 #vermoegen .vermoegen-rechner-operator{width:100%!important;text-align:center!important;font-weight:800!important}
 #vermoegen .vermoegen-rechner-muenze{width:100%!important;text-align:center!important;font-weight:700!important}
 @media(max-width:700px){#vermoegen .vermoegen-rechner-zeile{grid-template-columns:38px minmax(96px,1fr) 54px 38px!important;gap:5px!important}}
+
+
+/* v0.56.17 – Vermögensrechner mobile-first: Operator/Währung lesbar, Betrag flexibel, kein × */
+#vermoegen .vermoegen-rechner-zeile{
+  display:grid!important;
+  grid-template-columns:52px minmax(0,1fr) 64px!important;
+  gap:6px!important;
+  align-items:center!important;
+}
+#vermoegen .vermoegen-rechner-operator{min-width:52px!important;width:52px!important;padding-left:8px!important;padding-right:22px!important;font-size:1rem!important;}
+#vermoegen .vermoegen-rechner-muenze{min-width:64px!important;width:64px!important;padding-left:7px!important;padding-right:20px!important;font-size:.9rem!important;}
+#vermoegen .vermoegen-rechner-zeile input{min-width:0!important;width:100%!important;}
+@media(max-width:430px){
+ #vermoegen .vermoegen-rechner-zeile{grid-template-columns:50px minmax(0,1fr) 62px!important;gap:5px!important;}
+ #vermoegen .vermoegen-rechner-operator{min-width:50px!important;width:50px!important;}
+ #vermoegen .vermoegen-rechner-muenze{min-width:62px!important;width:62px!important;}
+}
