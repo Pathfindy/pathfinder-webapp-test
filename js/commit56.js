@@ -52,7 +52,7 @@
   });
   // Startseite: eindeutige App-Zuordnung und live gepflegte Version als echtes HTML.
   if(start && !start.querySelector(".start-meta-563")){
-    const m=document.createElement("div");m.className="start-meta-563";m.innerHTML='<span class="start-version-563">v0.56.21</span><strong>App created by Raubritter</strong>';start.querySelector(".startseite-panel-56")?.appendChild(m);
+    const m=document.createElement("div");m.className="start-meta-563";m.innerHTML='<span class="start-version-563">v0.56.22</span><strong>App created by Raubritter</strong>';start.querySelector(".startseite-panel-56")?.appendChild(m);
   }
   // v0.56.21: globaler Seitenhintergrund aus Pergament 1/2/3.
   const main=document.querySelector("main");
