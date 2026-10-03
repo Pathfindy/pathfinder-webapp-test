@@ -190,3 +190,12 @@
 - Die App-Kopfzeile reserviert auf Mobilgeräten festen Platz für die Hometaste, damit der Titel nicht überlagert wird.
 - Die Zeitseite erhält zusätzlichen horizontalen Innenabstand, damit Überschriften, Initiative, Effekte und Eingaben vollständig auf dem Pergament stehen.
 - Der neue Pergament-Hintergrund aus v0.56.21 bleibt unverändert.
+
+
+## v0.56.23 – Zeit/Vermögen: Innenrahmen und transparente Felder
+- Zeit: Initiative, Effekte und Freie Effekte werden über die jeweiligen Inhaltsabschnitte sicher innerhalb der zerrissenen Pergamentkante eingerückt.
+- Zeit: Initiativwert ist im Feld zentriert; Name, Hoch/Runter-Navigation und Löschrune bleiben auch mobil in einer Zeile.
+- Zeit: helle Eingabeflächen verwenden nur noch ca. 15 % Füllung, damit das Pergament sichtbar bleibt.
+- Vermögen: gleicher sicherer horizontaler Innenrahmen für den Inhaltsbereich.
+- Vermögen: Münz-, Rechner-, Teiler- und Notizfelder erhalten ebenfalls ca. 15 % helle Füllung.
+- Globaler Pergament-Hintergrund bleibt unverändert.
