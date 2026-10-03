@@ -253,3 +253,13 @@
  #zeit .zeit-runde-aktionen-54 button{font-size:.72rem!important;padding:6px 4px!important;white-space:normal!important}
  #zeit #btnZeitNaechsteRunde{min-height:48px!important;font-size:.82rem!important}
 }
+
+/* ==========================================================
+   v0.56.22 – Zeit: Inhalt sicher innerhalb der Pergamentkante
+   ========================================================== */
+#zeit.page.active{box-sizing:border-box!important;padding-left:clamp(24px,5vw,48px)!important;padding-right:clamp(24px,5vw,48px)!important}
+@media(max-width:620px){
+  #zeit.page.active{padding-left:28px!important;padding-right:28px!important}
+  #zeit .zeit-karte-54{padding-left:0!important;padding-right:0!important}
+}
+@media(max-width:390px){#zeit.page.active{padding-left:24px!important;padding-right:24px!important}}

@@ -856,3 +856,24 @@ body[data-artefakt-seite="vermoegen"] #vermoegen::after{display:none!important;c
    width:100%!important;max-width:none!important;margin:0!important;
  }
 }
+
+/* ==========================================================
+   v0.56.22 – Kopfbereich mobil zusammenhalten
+   Navigation + aktive Charakterzeile bilden einen gemeinsamen
+   Sticky-Block; Titel reserviert Platz für die Hometaste.
+   ========================================================== */
+.app-kopf-56{box-sizing:border-box!important;padding-left:64px!important;padding-right:64px!important}
+.app-kopf-56 h1{max-width:100%!important;text-align:center!important;overflow:hidden!important;text-overflow:ellipsis!important}
+
+/* Nav-Höhe wird als feste mobile Kopfgeometrie verwendet. */
+@media(max-width:760px){
+  header{position:static!important;top:auto!important}
+  .app-kopf-56{min-height:48px!important;padding-left:64px!important;padding-right:18px!important}
+  .app-kopf-56 h1{font-size:.82rem!important;white-space:nowrap!important;text-align:center!important}
+  .start-home-56{left:10px!important}
+  nav{position:sticky!important;top:0!important;z-index:1000!important;height:50px!important;box-sizing:border-box!important}
+  .globale-charakterleiste,
+  .aktiver-charakter-hinweis,#aktiverCharakterLeiste,.aktiver-charakter-leiste,.charakter-global-leiste,.global-charakter-leiste{
+    position:sticky!important;top:50px!important;z-index:999!important;margin:0!important;
+  }
+}
