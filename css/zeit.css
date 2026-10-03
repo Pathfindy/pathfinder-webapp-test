@@ -263,3 +263,46 @@
   #zeit .zeit-karte-54{padding-left:0!important;padding-right:0!important}
 }
 @media(max-width:390px){#zeit.page.active{padding-left:24px!important;padding-right:24px!important}}
+
+/* ==========================================================
+   v0.56.23 – Zeit: echter Pergament-Innenrahmen + transparente Felder
+   ========================================================== */
+/* Die Inhaltskarten selbst werden eingerückt; der Seitencontainer bleibt
+   vollbreit, damit der globale Pergament-Hintergrund unverändert bleibt. */
+#zeit.page.active{padding-left:0!important;padding-right:0!important;}
+#zeit .zeit-karte-54{
+  box-sizing:border-box!important;
+  width:auto!important;
+  margin-left:clamp(30px,5vw,48px)!important;
+  margin-right:clamp(30px,5vw,48px)!important;
+}
+/* Eingabeflächen: Pergament sichtbar lassen (ca. 15 % helle Füllung). */
+#zeit input,#zeit select{
+  background:rgba(255,241,207,.15)!important;
+}
+/* Initiative: Zahl mittig; Name, Navigation und Löschen bleiben in einer Zeile. */
+#zeit .zeit-init-54>input[type=number]{text-align:center!important;}
+#zeit .zeit-init-54{
+  grid-template-columns:4.25rem minmax(0,1fr) auto!important;
+  column-gap:.55rem!important;
+  row-gap:0!important;
+  align-items:center!important;
+}
+#zeit .zeit-init-54>input[type=number]{grid-column:1!important;grid-row:1!important;width:4.25rem!important;max-width:4.25rem!important;}
+#zeit .zeit-init-54>span:not(.zeit-init-actions-54){grid-column:2!important;grid-row:1!important;}
+#zeit .zeit-init-actions-54{grid-column:3!important;grid-row:1!important;justify-self:end!important;align-items:center!important;}
+@media(max-width:620px){
+  #zeit .zeit-karte-54{margin-left:32px!important;margin-right:32px!important;}
+  #zeit .zeit-init-54{grid-template-columns:3.75rem minmax(0,1fr) auto!important;column-gap:.4rem!important;}
+  #zeit .zeit-init-54>input[type=number]{width:3.75rem!important;max-width:3.75rem!important;}
+  #zeit .zeit-init-actions-54 button:not(.zeit-loesch-rune-5619){min-width:32px!important;width:32px!important;padding-left:4px!important;padding-right:4px!important;}
+  #zeit .zeit-loesch-rune-5619{width:34px!important;min-width:34px!important;height:34px!important;min-height:34px!important;}
+}
+@media(max-width:390px){
+  #zeit .zeit-karte-54{margin-left:28px!important;margin-right:28px!important;}
+  #zeit .zeit-init-54{grid-template-columns:3.5rem minmax(0,1fr) auto!important;column-gap:.3rem!important;}
+  #zeit .zeit-init-54>input[type=number]{width:3.5rem!important;max-width:3.5rem!important;}
+  #zeit .zeit-init-actions-54{gap:2px!important;}
+  #zeit .zeit-init-actions-54 button:not(.zeit-loesch-rune-5619){min-width:29px!important;width:29px!important;}
+  #zeit .zeit-loesch-rune-5619{width:31px!important;min-width:31px!important;height:31px!important;min-height:31px!important;background-size:20px 20px!important;}
+}
