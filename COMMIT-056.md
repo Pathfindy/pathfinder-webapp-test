@@ -183,3 +183,10 @@
 - „Pergament 2“ füllt bei längeren Seiten den Bereich dazwischen wiederholt und mit leichter Überlappung, damit keine offenen Nähte entstehen.
 - Alle drei Pergamentteile skalieren gemeinsam auf die jeweilige Seiten-/Handybreite.
 - Die gelieferten PNGs wurden nur technisch freigestellt: das eingebettete weiß-graue Transparenzraster wurde transparent gesetzt; die Pergamentstruktur selbst bleibt erhalten.
+
+
+## v0.56.22 – Sticky-Kopf und Zeit-Innenabstand
+- Navigation und globale aktive Charakterzeile bleiben beim Scrollen ohne Lücke direkt zusammen.
+- Die App-Kopfzeile reserviert auf Mobilgeräten festen Platz für die Hometaste, damit der Titel nicht überlagert wird.
+- Die Zeitseite erhält zusätzlichen horizontalen Innenabstand, damit Überschriften, Initiative, Effekte und Eingaben vollständig auf dem Pergament stehen.
+- Der neue Pergament-Hintergrund aus v0.56.21 bleibt unverändert.
