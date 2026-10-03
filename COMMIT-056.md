@@ -175,3 +175,11 @@
 - Initiative repariert: Charakter-IDs werden beim Vergleich normalisiert, sodass Teilnehmer auch bei numerischen IDs wieder hinzugefügt werden können.
 - Löschfunktion verwendet eine eigene Runen-SVG statt eines Mülleimer-Symbols.
 - Bestehende Runden-, Effekt- und Timerlogik ansonsten unverändert.
+
+## v0.56.21 – globaler Pergament-Hintergrund
+- Bisherige künstliche Seitenhintergründe, Verläufe, Kanten und Hintergrundrunen werden für die Inhaltsseiten deaktiviert.
+- Grundfläche aller Inhaltsseiten ist schwarz.
+- Geliefertes „Pergament 1“ bildet den oberen Blattabschnitt, „Pergament 3“ den unteren Abschluss.
+- „Pergament 2“ füllt bei längeren Seiten den Bereich dazwischen wiederholt und mit leichter Überlappung, damit keine offenen Nähte entstehen.
+- Alle drei Pergamentteile skalieren gemeinsam auf die jeweilige Seiten-/Handybreite.
+- Die gelieferten PNGs wurden nur technisch freigestellt: das eingebettete weiß-graue Transparenzraster wurde transparent gesetzt; die Pergamentstruktur selbst bleibt erhalten.
