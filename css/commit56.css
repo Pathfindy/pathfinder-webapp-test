@@ -817,3 +817,42 @@ body[data-artefakt-seite="vermoegen"] #vermoegen>.vermoegen-bereich{position:rel
   #vermoegen .vermoegen-rechner-operator{width:46px!important;padding-left:3px!important;padding-right:13px!important}
   #vermoegen .vermoegen-rechner-muenze{width:64px!important;padding-left:4px!important;padding-right:15px!important}
 }
+
+/* ==========================================================
+   v0.56.21 – globales Pergament aus drei gelieferten Grafiken
+   Schwarzer Grund; oben Pergament 1, Mitte Pergament 2 wiederholt,
+   unten Pergament 3. Ersetzt die bisherigen Seitenhintergründe.
+   ========================================================== */
+html,body{background:#000!important;}
+body::before,body::after{display:none!important;content:none!important;}
+main,
+body[data-artefakt-seite] main,
+body[data-artefakt-seite="vermoegen"] main{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background:#000!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+/* Alte künstliche Pergament-/Runen-Kanten vollständig abschalten. */
+main::before,main::after,
+body[data-artefakt-seite] main::before,body[data-artefakt-seite] main::after,
+body[data-artefakt-seite="vermoegen"] main::before,body[data-artefakt-seite="vermoegen"] main::after{
+  display:none!important;content:none!important;background:none!important;box-shadow:none!important;
+}
+.pf-pergament-global-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#000;}
+.pf-pergament-global-bg__oben,.pf-pergament-global-bg__mitte,.pf-pergament-global-bg__unten{position:absolute;left:0;width:100%;pointer-events:none;}
+.pf-pergament-global-bg__oben{top:0;z-index:2;display:block;height:auto;}
+.pf-pergament-global-bg__mitte{z-index:1;background:url('../assets/pergament-global-mitte.png') center top/100% auto repeat-y;}
+.pf-pergament-global-bg__unten{bottom:0;z-index:2;display:block;height:auto;}
+main>.page,main>.globale-charakterleiste,main>#aktiverCharakterLeiste{position:relative;z-index:3;}
+/* Auch die Vermögensseite verwendet ab jetzt ausschließlich das globale Blatt. */
+body[data-artefakt-seite="vermoegen"] #vermoegen::before,
+body[data-artefakt-seite="vermoegen"] #vermoegen::after{display:none!important;content:none!important;}
+@media(max-width:900px){
+ main,body[data-artefakt-seite] main,body[data-artefakt-seite="vermoegen"] main{
+   width:100%!important;max-width:none!important;margin:0!important;
+ }
+}
