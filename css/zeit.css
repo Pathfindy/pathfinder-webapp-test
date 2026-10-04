@@ -306,3 +306,87 @@
   #zeit .zeit-init-actions-54 button:not(.zeit-loesch-rune-5619){min-width:29px!important;width:29px!important;}
   #zeit .zeit-loesch-rune-5619{width:31px!important;min-width:31px!important;height:31px!important;min-height:31px!important;background-size:20px 20px!important;}
 }
+
+/* ==========================================================
+   v0.56.24 – Zeit: Rundenkopf, Aktionshierarchie, Initiative
+   ========================================================== */
+/* Rundenanzeige exakt in der Seitenmitte; Sanduhr bleibt links davon. */
+#zeit .zeit-runde-hero-5620{
+  position:relative!important;
+  display:block!important;
+  min-height:170px!important;
+  max-width:680px!important;
+  margin:0 auto 8px!important;
+  padding-top:32px!important;
+  box-sizing:border-box!important;
+}
+#zeit .zeit-runde-info-5620{
+  width:100%!important;
+  text-align:center!important;
+  position:relative!important;
+  z-index:1!important;
+}
+#zeit .zeit-sanduhr-5620{
+  position:absolute!important;
+  left:clamp(18px,7%,54px)!important;
+  top:16px!important;
+  width:min(132px,22%)!important;
+  height:145px!important;
+  max-height:145px!important;
+  object-fit:contain!important;
+  z-index:0!important;
+}
+/* Hauptaktion dunkel; Nebenaktionen kleiner und im hellen Initiative-Stil. */
+#zeit .zeit-runde-aktionen-54{
+  grid-template-columns:.82fr 1.18fr .82fr!important;
+  align-items:center!important;
+}
+#zeit #btnZeitVorherigeRunde,#zeit #btnZeitReset{
+  min-height:38px!important;
+  align-self:center!important;
+  background:linear-gradient(#e7c483,#c99852)!important;
+  color:#3a210f!important;
+  border-color:#9d6b31!important;
+  box-shadow:inset 0 1px rgba(255,245,210,.42)!important;
+  font-size:.82rem!important;
+}
+#zeit #btnZeitNaechsteRunde{
+  min-height:50px!important;
+  background:linear-gradient(#5d3219,#30180c)!important;
+  color:#f8dfa2!important;
+  border-color:#a86e2c!important;
+}
+/* Initiativewert deutlich lesbar. */
+#zeit .zeit-init-54>input[type=number]{font-weight:800!important;text-align:center!important;color:#321b0c!important;}
+/* Löschen hat dieselbe Form und Größe wie Hoch/Runter; nur die Eimer-Rune unterscheidet die Funktion. */
+#zeit .zeit-loesch-rune-5619{
+  border-radius:8px!important;
+  background-color:transparent!important;
+  background-image:url("../assets/rune-loeschen-5620.svg")!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  background-size:21px 21px!important;
+  border:1px solid #9d6b31!important;
+  box-shadow:inset 0 1px rgba(255,245,210,.42)!important;
+}
+#zeit .zeit-init-actions-54 .zeit-loesch-rune-5619{
+  width:32px!important;min-width:32px!important;height:36px!important;min-height:36px!important;
+  background-color:#d5a75f!important;
+}
+/* Platzhalter auf den transparenten Feldern mit höherem Kontrast. */
+#zeit input::placeholder,#zeit textarea::placeholder{
+  color:rgba(62,42,27,.78)!important;
+  opacity:1!important;
+}
+@media(max-width:620px){
+  #zeit .zeit-runde-hero-5620{min-height:145px!important;padding-top:25px!important;}
+  #zeit .zeit-sanduhr-5620{left:clamp(4px,3vw,18px)!important;top:13px!important;width:min(105px,25%)!important;height:122px!important;max-height:122px!important;}
+  #zeit .zeit-runde-aktionen-54{grid-template-columns:.8fr 1.2fr .8fr!important;gap:5px!important;}
+  #zeit #btnZeitVorherigeRunde,#zeit #btnZeitReset{min-height:36px!important;font-size:.68rem!important;padding:5px 3px!important;}
+  #zeit #btnZeitNaechsteRunde{min-height:48px!important;font-size:.82rem!important;}
+  #zeit .zeit-init-actions-54 .zeit-loesch-rune-5619{width:32px!important;min-width:32px!important;height:36px!important;min-height:36px!important;background-size:20px 20px!important;}
+}
+@media(max-width:390px){
+  #zeit .zeit-sanduhr-5620{left:2px!important;width:92px!important;height:112px!important;max-height:112px!important;}
+  #zeit .zeit-init-actions-54 .zeit-loesch-rune-5619{width:29px!important;min-width:29px!important;height:34px!important;min-height:34px!important;background-size:18px 18px!important;}
+}
