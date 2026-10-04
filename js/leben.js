@@ -505,11 +505,11 @@
       const label = document.createElement("label");
       label.className = "energie-schaden-label-5626";
       label.htmlFor = `energieSchaden-${typ}`;
-      const bildnamen = {Elektro:"Elektro.png",Feuer:"Feuer.png",Kälte:"Frost.png",Säure:"Säure.png",Schall:"Schall.png"};
+      const bildnamen = {Elektro:"elektro.png",Feuer:"feuer.png",Kälte:"kaelte.png",Säure:"saeure.png",Schall:"schall.png"};
       const bild = document.createElement("img");
-      bild.src = `assets/leben56/${bildnamen[typ]}`;
+      bild.src = `assets/leben57/${bildnamen[typ]}`;
       bild.alt = "";
-      bild.className = "energie-schaden-grafik-5626" + (typ === "Kälte" ? "" : " leben-grafik-multiply");
+      bild.className = "energie-schaden-grafik-5626";
       const text = document.createElement("span");
       text.textContent = typ;
       label.append(bild, text);
