@@ -249,3 +249,13 @@
 - Aktivierungs-Checkboxen von Steinhaut, Energien widerstehen und Schutz vor Energien durch dunkle runde Statusschalter ersetzt; aktive Energie leuchtet in ihrer jeweiligen Farbe.
 - Energieschaden-Notiz leer einzeilig und bei Texteingabe automatisch wachsend.
 - Vertikale Abstände zwischen Energieschaden-Notiz, Steinhaut, Energien widerstehen und Schutz vor Energien deutlich reduziert.
+
+
+## v0.56.30 – Globales Pergament erneuert
+- Auf allen App-Seiten wurden die bisherigen drei Pergamentgrafiken durch die neuen, ruhigeren Varianten ersetzt.
+- Pergament 1 bildet weiterhin den oberen Seitenanfang.
+- Pergament 2 ergänzt lange Seiten als wiederholbarer Mittelteil.
+- Pergament 3 bildet weiterhin den unteren Abschluss.
+- Alle drei Grafiken werden proportional auf die jeweilige Dokument-/Bildschirmbreite skaliert.
+- Die Höhenberechnung des oberen und unteren Pergamentsegments wurde an das neue Seitenverhältnis 841 px Breite angepasst.
+- Bestehende Seiteninhalte und Funktionen bleiben unverändert.
