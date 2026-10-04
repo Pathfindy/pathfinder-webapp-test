@@ -1055,3 +1055,58 @@ body[data-artefakt-seite="vermoegen"] #vermoegen::after{display:none!important;c
  #leben .energie-anwenden{width:42px!important;min-width:42px!important}
 }
 @media(max-width:390px){#leben.page.active{padding-left:32px!important;padding-right:32px!important}}
+
+/* ==========================================================
+   v0.56.28 – Leben: finaler Pergament-Innenrahmen + Grafiken
+   ========================================================== */
+#leben.page.active{
+  box-sizing:border-box!important;
+  padding:28px clamp(46px,7vw,72px) 60px!important;
+  overflow:visible!important;
+}
+#leben .tp-bereich,#leben .energie-bereich{
+  box-sizing:border-box!important;width:100%!important;max-width:100%!important;
+  margin-left:0!important;margin-right:0!important;min-width:0!important;
+}
+#leben .tp-bereich>h3,#leben .energie-bereich>h3,#leben .energie-schaden-kompakt>h4{
+  margin-left:0!important;color:#2b1609!important;
+}
+#leben .tp-aktionen.tp-aktionen-kompakt{gap:24px!important}
+#leben .tp-aktion{display:grid!important;grid-template-columns:104px minmax(0,1fr)!important;grid-template-rows:auto auto!important;column-gap:12px!important;align-items:center!important;min-width:0!important}
+#leben .leben-aktionskopf{grid-column:1/-1!important;display:grid!important;grid-template-columns:104px minmax(0,1fr)!important;align-items:center!important;gap:12px!important;margin:0!important}
+#leben .leben-aktionsgrafik{grid-row:1/3!important;width:94px!important;height:94px!important;object-fit:contain!important;mix-blend-mode:normal!important}
+#leben .tp-aktionszeile{grid-column:2!important;grid-row:2!important;min-width:0!important}
+#leben .energie-schaden-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px 24px!important}
+#leben .energie-schaden-zeile,#leben .energie-schaden-zeile:last-child{
+  display:grid!important;grid-template-columns:92px minmax(0,1fr)!important;grid-template-rows:auto auto!important;
+  column-gap:10px!important;align-items:center!important;grid-column:auto!important;max-width:none!important;min-width:0!important;
+}
+#leben .energie-schaden-label-5626{grid-column:1/-1!important;display:grid!important;grid-template-columns:92px minmax(0,1fr)!important;gap:10px!important;align-items:center!important;margin:0!important}
+#leben .energie-schaden-grafik-5626{grid-row:1/3!important;width:82px!important;height:82px!important;object-fit:contain!important;mix-blend-mode:normal!important}
+#leben .energie-schaden-eingabe{grid-column:2!important;grid-row:2!important;min-width:0!important}
+#leben .energie-schaden-notiz-53{display:block!important;width:100%!important;min-height:88px!important;margin:24px 0 0!important;padding:12px!important}
+#leben input,#leben select,#leben textarea,#leben output,#leben .energie-restwert{
+  background-color:rgba(255,241,207,.15)!important;border-radius:12px!important;
+}
+@media(max-width:620px){
+ #leben.page.active{padding:24px 34px 52px!important}
+ #leben .tp-bereich>h3{font-size:1.75rem!important;margin-bottom:14px!important}
+ #leben .tp-werte{gap:6px!important;margin-bottom:18px!important}
+ #leben .tp-aktionen.tp-aktionen-kompakt{gap:12px!important;padding:24px 0!important}
+ #leben .tp-aktion{grid-template-columns:58px minmax(0,1fr)!important;column-gap:7px!important}
+ #leben .leben-aktionskopf{grid-template-columns:58px minmax(0,1fr)!important;gap:7px!important;font-size:1rem!important}
+ #leben .leben-aktionsgrafik{width:54px!important;height:54px!important}
+ #leben .tp-aktionszeile{grid-template-columns:minmax(0,1fr) 42px!important;gap:5px!important}
+ #leben .energie-schaden-kompakt{padding:24px 0!important}
+ #leben .energie-schaden-kompakt h4{font-size:1.55rem!important;margin-bottom:12px!important}
+ #leben .energie-schaden-grid{gap:12px 10px!important}
+ #leben .energie-schaden-zeile,#leben .energie-schaden-zeile:last-child{grid-template-columns:52px minmax(0,1fr)!important;column-gap:5px!important}
+ #leben .energie-schaden-label-5626{grid-template-columns:52px minmax(0,1fr)!important;gap:5px!important;font-size:.92rem!important}
+ #leben .energie-schaden-grafik-5626{width:48px!important;height:48px!important}
+ #leben .energie-schaden-eingabe{grid-template-columns:minmax(0,1fr) 40px!important;gap:4px!important}
+ #leben .energie-schaden-eingabe input,#leben .energie-anwenden{min-height:42px!important}
+ #leben .energie-anwenden{width:40px!important;min-width:40px!important}
+ #leben .energie-schaden-notiz-53{min-height:76px!important;margin-top:18px!important}
+ #leben .energie-bereich{padding-left:0!important;padding-right:0!important}
+}
+@media(max-width:390px){#leben.page.active{padding-left:30px!important;padding-right:30px!important}}
