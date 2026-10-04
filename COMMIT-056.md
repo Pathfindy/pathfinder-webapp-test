@@ -207,3 +207,12 @@
 - Initiativewerte sind fett und zentriert.
 - Die Löschaktion nutzt nun eine stilisierte Eimer-Rune in derselben rechteckigen Buttonform wie Hoch/Runter.
 - Platzhaltertexte in transparenten Eingabefeldern haben höheren Kontrast.
+
+
+## v0.56.25 – Leben: Gestaltung wie Vermögen und Zeit
+- Lebensseite nutzt denselben sicheren Innenabstand auf dem globalen Pergament.
+- Weiße Kartenflächen von Trefferpunkten, Steinhaut und Energieschutz wurden zugunsten offener Pergamentabschnitte entfernt.
+- Abschnitte werden mit den bekannten ornamentalen ◆-Trennern gegliedert.
+- Helle Eingabe-, Auswahl-, Ausgabe- und Notizfelder sind auf ca. 15 % Füllung reduziert; Platzhalter bleiben kontrastreich.
+- Aktionsbuttons verwenden die braun-goldene Gestaltung der Referenzseiten.
+- Bestehende TP-, Schadens-, Heilungs-, Steinhaut- und Energielogik bleibt unverändert.
