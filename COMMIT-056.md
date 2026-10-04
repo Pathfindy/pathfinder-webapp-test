@@ -199,3 +199,11 @@
 - Vermögen: gleicher sicherer horizontaler Innenrahmen für den Inhaltsbereich.
 - Vermögen: Münz-, Rechner-, Teiler- und Notizfelder erhalten ebenfalls ca. 15 % helle Füllung.
 - Globaler Pergament-Hintergrund bleibt unverändert.
+
+
+## v0.56.24 – Zeit: Rundenkopf und Initiative
+- „Aktuelle Runde“ sitzt unabhängig von der Sanduhr exakt mittig; die Sanduhr wurde leicht nach links versetzt und in der Höhe verkleinert.
+- „Nächste Runde“ bleibt die dominante Hauptaktion; „nochmal zurück“ und „Kampf beendet“ sind kleiner und nutzen den hellen Stil der Initiative-Navigation.
+- Initiativewerte sind fett und zentriert.
+- Die Löschaktion nutzt nun eine stilisierte Eimer-Rune in derselben rechteckigen Buttonform wie Hoch/Runter.
+- Platzhaltertexte in transparenten Eingabefeldern haben höheren Kontrast.
