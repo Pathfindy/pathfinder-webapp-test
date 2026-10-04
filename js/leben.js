@@ -315,6 +315,7 @@
       aktiv.type = "checkbox";
       aktiv.checked = daten.aktiv;
       aktiv.setAttribute("aria-label", `${typ}: Energiewiderstand aktiv`);
+      aktiv.className = `energie-aktivkreis energie-${typ.toLowerCase().replace("ä","ae")}`;
       aktiv.addEventListener("change", () => {
         daten.aktiv = aktiv.checked;
         aktualisiereReduktionsMarkierung(reduktion, reduktionFrei, daten);
@@ -380,6 +381,7 @@
       aktiv.type = "checkbox";
       aktiv.checked = daten.aktiv;
       aktiv.setAttribute("aria-label", `${typ}: Schutz vor Energien aktiv`);
+      aktiv.className = `energie-aktivkreis energie-${typ.toLowerCase().replace("ä","ae")}`;
       aktiv.addEventListener("change", () => {
         daten.aktiv = aktiv.checked;
         aktualisiereRestMarkierung();
@@ -438,6 +440,7 @@
     aktiv.type = "checkbox";
     aktiv.checked = daten.aktiv;
     aktiv.setAttribute("aria-label", "Steinhaut aktiv");
+    aktiv.className = "energie-aktivkreis energie-steinhaut";
     aktiv.addEventListener("change", () => {
       daten.aktiv = aktiv.checked;
       speichereCharaktere();
