@@ -216,3 +216,11 @@
 - Helle Eingabe-, Auswahl-, Ausgabe- und Notizfelder sind auf ca. 15 % Füllung reduziert; Platzhalter bleiben kontrastreich.
 - Aktionsbuttons verwenden die braun-goldene Gestaltung der Referenzseiten.
 - Bestehende TP-, Schadens-, Heilungs-, Steinhaut- und Energielogik bleibt unverändert.
+
+
+## v0.56.26 – Leben: Innenrahmen und Zustandsgrafiken
+- Inhalte der Lebensseite weiter von den zerrissenen Pergamentkanten eingerückt.
+- Eingabe-, Auswahl- und Ausgabefelder analog zu Vermögen und Zeit stärker abgerundet.
+- Schaden und Heilung erhalten eigene Grafiken; Heilung nutzt den Heiltrank.
+- Energieschaden zeigt passende Grafiken für Elektro, Feuer, Kälte/Frost, Säure und Schall.
+- Bestehende TP-, Heilungs-, Schadens- und Energielogik bleibt unverändert.
