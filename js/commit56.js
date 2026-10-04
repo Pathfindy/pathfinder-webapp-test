@@ -52,7 +52,7 @@
   });
   // Startseite: eindeutige App-Zuordnung und live gepflegte Version als echtes HTML.
   if(start && !start.querySelector(".start-meta-563")){
-    const m=document.createElement("div");m.className="start-meta-563";m.innerHTML='<span class="start-version-563">v0.56.28</span><strong>App created by Raubritter</strong>';start.querySelector(".startseite-panel-56")?.appendChild(m);
+    const m=document.createElement("div");m.className="start-meta-563";m.innerHTML='<span class="start-version-563">v0.56.30</span><strong>App created by Raubritter</strong>';start.querySelector(".startseite-panel-56")?.appendChild(m);
   }
   // v0.56.21: globaler Seitenhintergrund aus Pergament 1/2/3.
   const main=document.querySelector("main");
@@ -65,7 +65,7 @@
     const mitte=bg.querySelector(".pf-pergament-global-bg__mitte");
     const setzePergament=()=>{
       const breite=main.clientWidth||570;
-      const oben=breite*(1061/570), unten=breite*(232/570), overlap=Math.max(12,breite*.035);
+      const oben=breite*(1650/841), unten=breite*(325/841), overlap=Math.max(12,breite*.035);
       mitte.style.top=`${Math.max(0,oben-overlap)}px`;
       mitte.style.bottom=`${Math.max(0,unten-overlap)}px`;
     };
