@@ -503,8 +503,16 @@
       zeile.className = "energie-schaden-zeile";
 
       const label = document.createElement("label");
-      label.textContent = typ;
+      label.className = "energie-schaden-label-5626";
       label.htmlFor = `energieSchaden-${typ}`;
+      const bildnamen = {Elektro:"Elektro.png",Feuer:"Feuer.png",Kälte:"Frost.png",Säure:"Säure.png",Schall:"Schall.png"};
+      const bild = document.createElement("img");
+      bild.src = `assets/leben56/${bildnamen[typ]}`;
+      bild.alt = "";
+      bild.className = "energie-schaden-grafik-5626" + (typ === "Kälte" ? "" : " leben-grafik-multiply");
+      const text = document.createElement("span");
+      text.textContent = typ;
+      label.append(bild, text);
 
       const gruppe = document.createElement("div");
       gruppe.className = "energie-schaden-eingabe";
