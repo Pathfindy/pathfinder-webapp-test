@@ -507,7 +507,7 @@
       label.htmlFor = `energieSchaden-${typ}`;
       const bildnamen = {Elektro:"elektro.png",Feuer:"feuer.png",Kälte:"kaelte.png",Säure:"saeure.png",Schall:"schall.png"};
       const bild = document.createElement("img");
-      bild.src = `assets/leben57/${bildnamen[typ]}`;
+      bild.src = `assets/leben58/${bildnamen[typ]}`;
       bild.alt = "";
       bild.className = "energie-schaden-grafik-5626";
       const text = document.createElement("span");
