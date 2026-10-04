@@ -224,3 +224,10 @@
 - Schaden und Heilung erhalten eigene Grafiken; Heilung nutzt den Heiltrank.
 - Energieschaden zeigt passende Grafiken für Elektro, Feuer, Kälte/Frost, Säure und Schall.
 - Bestehende TP-, Heilungs-, Schadens- und Energielogik bleibt unverändert.
+
+
+## v0.56.27 – Leben nach Referenzlayout
+- Die Lebensseite nutzt nun denselben sicheren Pergament-Innenbereich wie Zeit und Vermögen.
+- Trefferpunkte bleiben kompakt in einer Viererzeile. Schaden und Heilung sowie die Energieschäden sind als grafisch integrierte Bediengruppen aufgebaut.
+- Schaden, Heilung, Elektro, Feuer, Kälte, Säure und Schall verwenden neue PNG-Assets mit echter Transparenz und einheitlicher Symbolgröße.
+- Eingaben und Aktionsbuttons sind abgerundet und bleiben funktional unverändert.
