@@ -231,3 +231,12 @@
 - Trefferpunkte bleiben kompakt in einer Viererzeile. Schaden und Heilung sowie die Energieschäden sind als grafisch integrierte Bediengruppen aufgebaut.
 - Schaden, Heilung, Elektro, Feuer, Kälte, Säure und Schall verwenden neue PNG-Assets mit echter Transparenz und einheitlicher Symbolgröße.
 - Eingaben und Aktionsbuttons sind abgerundet und bleiben funktional unverändert.
+
+## v0.56.28 – Leben: Referenzlayout und finale Grafiken
+- Leben-Inhalte erhalten einen durchgehenden sicheren Innenabstand auf dem Pergament.
+- Schaden und Heilung werden kompakt mit den finalen transparenten Grafiken, Eingabefeld und Anwenden-Button dargestellt.
+- Energieschaden bleibt zweispaltig; Elektro, Feuer, Kälte, Säure und Schall verwenden die finalen transparenten Grafiken.
+- Grafiken werden klein und als Bestandteil der jeweiligen Bediengruppe eingebunden, nicht als Hintergrundbilder.
+- Notizfeld und nachfolgende Energie-Bereiche bleiben innerhalb derselben Pergament-Innenkante.
+- Helle Eingabe-, Auswahl- und Ausgabefelder behalten die transparente 15%-Füllung und abgerundete Ecken.
+- Lebens-, Schadens-, Heilungs-, Steinhaut-, Widerstands- und Schutzlogik bleibt unverändert.
