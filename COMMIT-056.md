@@ -240,3 +240,12 @@
 - Notizfeld und nachfolgende Energie-Bereiche bleiben innerhalb derselben Pergament-Innenkante.
 - Helle Eingabe-, Auswahl- und Ausgabefelder behalten die transparente 15%-Füllung und abgerundete Ecken.
 - Lebens-, Schadens-, Heilungs-, Steinhaut-, Widerstands- und Schutzlogik bleibt unverändert.
+
+
+## v0.56.29 – Leben: mobile Feinausrichtung
+- Überschriften und Trefferpunkte weiter in das Pergament eingerückt.
+- Aktuelle TP/Schaden mit 40 %, Max TP/Temp TP mit 25 % transparenter Feldfläche und runden Ecken.
+- Rechte Aktionsspalte nach links gerückt; Grafiken stehen rechts oberhalb der Bestätigungsbuttons.
+- Aktivierungs-Checkboxen von Steinhaut, Energien widerstehen und Schutz vor Energien durch dunkle runde Statusschalter ersetzt; aktive Energie leuchtet in ihrer jeweiligen Farbe.
+- Energieschaden-Notiz leer einzeilig und bei Texteingabe automatisch wachsend.
+- Vertikale Abstände zwischen Energieschaden-Notiz, Steinhaut, Energien widerstehen und Schutz vor Energien deutlich reduziert.
