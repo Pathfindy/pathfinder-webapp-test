@@ -259,3 +259,10 @@
 - Alle drei Grafiken werden proportional auf die jeweilige Dokument-/Bildschirmbreite skaliert.
 - Die Höhenberechnung des oberen und unteren Pergamentsegments wurde an das neue Seitenverhältnis 841 px Breite angepasst.
 - Bestehende Seiteninhalte und Funktionen bleiben unverändert.
+
+
+## v0.56.31 – Pergamentgrundlage & Leben
+- Global nur noch „Pergament Grundlage 2“; auf Seitenbreite skaliert und bei langen Seiten mit 10 px Überlappung wiederholt.
+- Leben erhält einen sicheren Innenrahmen; Eingabefelder bleiben vollständig innerhalb des Pergaments.
+- Schaden, Heilung und Energieschaden: Beschriftungen näher links an den jeweiligen Grafiken.
+- Aktivierungselemente: inaktiv leerer dunkelbrauner Kreis; Energieeffekte aktiv in Energiefarbe, neutrale Aktivierungen im Steinhaut-Bronzeton mit Glühen.
