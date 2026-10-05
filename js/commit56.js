@@ -52,7 +52,7 @@
   });
   // Startseite: eindeutige App-Zuordnung und live gepflegte Version als echtes HTML.
   if(start && !start.querySelector(".start-meta-563")){
-    const m=document.createElement("div");m.className="start-meta-563";m.innerHTML='<span class="start-version-563">v0.56.30</span><strong>App created by Raubritter</strong>';start.querySelector(".startseite-panel-56")?.appendChild(m);
+    const m=document.createElement("div");m.className="start-meta-563";m.innerHTML='<span class="start-version-563">v0.56.31</span><strong>App created by Raubritter</strong>';start.querySelector(".startseite-panel-56")?.appendChild(m);
   }
   // v0.56.21: globaler Seitenhintergrund aus Pergament 1/2/3.
   const main=document.querySelector("main");
@@ -60,14 +60,15 @@
     const bg=document.createElement("div");
     bg.className="pf-pergament-global-bg";
     bg.setAttribute("aria-hidden","true");
-    bg.innerHTML='<img class="pf-pergament-global-bg__oben" src="assets/pergament-global-oben.png" alt=""><div class="pf-pergament-global-bg__mitte"></div><img class="pf-pergament-global-bg__unten" src="assets/pergament-global-unten.png" alt="">';
+    bg.innerHTML='<div class="pf-pergament-global-bg__mitte"></div>';
     main.prepend(bg);
     const mitte=bg.querySelector(".pf-pergament-global-bg__mitte");
     const setzePergament=()=>{
-      const breite=main.clientWidth||570;
-      const oben=breite*(1650/841), unten=breite*(325/841), overlap=Math.max(12,breite*.035);
-      mitte.style.top=`${Math.max(0,oben-overlap)}px`;
-      mitte.style.bottom=`${Math.max(0,unten-overlap)}px`;
+      const breite=main.clientWidth||841;
+      const bildHoehe=breite*(1754/841);
+      mitte.style.backgroundSize=`100% ${Math.max(1,bildHoehe-10)}px`;
+      mitte.style.top="0px";
+      mitte.style.bottom="0px";
     };
     setzePergament();
     if(window.ResizeObserver)new ResizeObserver(setzePergament).observe(main);
