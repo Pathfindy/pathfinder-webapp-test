@@ -1,0 +1,10 @@
+/* Rune theme: v0.55.13 functionality retained */
+@import url('https://fonts.googleapis.com/css2?family=Forum&display=swap');
+html, body, body *, button, input, select, textarea, option, table, th, td, dialog { font-family: 'Forum', Georgia, serif !important; }
+nav { align-items: center; justify-content: center; gap: clamp(2px, .8vw, 12px); flex-wrap: nowrap; overflow-x: auto; }
+nav button.rune-nav { flex: 1 1 0; min-width: 0; max-width: 112px; padding: 5px 3px; border: 1px solid transparent; background: transparent; box-shadow: none; transition: background .2s, box-shadow .2s, transform .2s; }
+nav button.rune-nav img { display: block; width: 100%; height: clamp(40px, 7vw, 78px); object-fit: contain; filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); transition: filter .2s; }
+nav button.rune-nav:hover, nav button.rune-nav:focus-visible { background: rgba(15, 115, 154, .12); transform: translateY(-2px); }
+nav button.rune-nav.active { background: radial-gradient(ellipse, rgba(35,205,255,.35), rgba(15,115,154,.12) 65%, transparent); border-color: #cda447; box-shadow: 0 0 13px 3px rgba(19,195,250,.55), inset 0 0 12px rgba(19,195,250,.25); }
+nav button.rune-nav.active img { filter: drop-shadow(0 0 5px #40dfff) drop-shadow(0 0 12px #05b9ff) brightness(1.23); }
+@media (max-width: 520px) { nav { padding: 5px 3px; gap: 2px; } nav button.rune-nav { padding: 3px 1px; } nav button.rune-nav img { height: 42px; } }
