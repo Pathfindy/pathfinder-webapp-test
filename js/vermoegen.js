@@ -4,10 +4,10 @@
 
   const KUPFER_PRO_GOLD = 100;
   const MUENZEN = [
-    { key: "platin", label: "Platinmünzen", kurz: "PM", kupfer: 1000 },
-    { key: "gold", label: "Goldmünzen", kurz: "GM", kupfer: 100 },
-    { key: "silber", label: "Silbermünzen", kurz: "SM", kupfer: 10 },
-    { key: "kupfer", label: "Kupfermünzen", kurz: "KM", kupfer: 1 }
+    { key: "platin", label: "Platinmünzen", kupfer: 1000 },
+    { key: "gold", label: "Goldmünzen", kupfer: 100 },
+    { key: "silber", label: "Silbermünzen", kupfer: 10 },
+    { key: "kupfer", label: "Kupfermünzen", kupfer: 1 }
   ];
 
   function ganzzahl(wert, minimum = 0, maximum = 999999999) {
@@ -101,18 +101,23 @@
     const zeile = document.createElement("div");
     zeile.className = "vermoegen-rechner-zeile";
     zeile.innerHTML = `
-      <select class="vermoegen-rechner-operator" aria-label="Rechenart">
-        <option value="+">+</option>
-        <option value="-">−</option>
+      <select aria-label="Rechenart">
+        <option value="1">+</option>
+        <option value="-1">−</option>
       </select>
       <input type="number" min="0" step="1" inputmode="numeric" placeholder="Betrag">
-      <select class="vermoegen-rechner-muenze" aria-label="Münzart">
-        ${MUENZEN.map(m => `<option value="${m.key}" title="${m.label}">${m.kurz}</option>`).join("")}
+      <select aria-label="Münzart">
+        ${MUENZEN.map(m => `<option value="${m.key}">${m.label}</option>`).join("")}
       </select>
+      <button type="button" class="vermoegen-rechner-entfernen" aria-label="Zeile entfernen">×</button>
     `;
+    zeile.querySelector("select").value = String(wert.richtung || 1);
     zeile.querySelector("input").value = wert.anzahl || "";
-    zeile.querySelector(".vermoegen-rechner-operator").value = wert.operator || "+";
-    zeile.querySelector(".vermoegen-rechner-muenze").value = wert.muenze || "gold";
+    zeile.querySelectorAll("select")[1].value = wert.muenze || "gold";
+    zeile.querySelector("button").addEventListener("click", () => {
+      zeile.remove();
+      aktualisiereRechner();
+    });
     zeile.querySelectorAll("input,select").forEach(element => element.addEventListener("input", aktualisiereRechner));
     return zeile;
   }
@@ -121,10 +126,11 @@
     const container = document.getElementById("vermoegenRechnerZeilen");
     if (!container) return 0;
     return [...container.querySelectorAll(".vermoegen-rechner-zeile")].reduce((summe, zeile) => {
+      const selects = zeile.querySelectorAll("select");
+      const richtung = Number(selects[0]?.value) || 1;
       const anzahl = ganzzahl(zeile.querySelector("input")?.value, 0);
-      const muenze = MUENZEN.find(e => e.key === zeile.querySelector(".vermoegen-rechner-muenze")?.value) || MUENZEN[1];
-      const operator = zeile.querySelector(".vermoegen-rechner-operator")?.value === "-" ? -1 : 1;
-      return summe + operator * anzahl * muenze.kupfer;
+      const muenze = MUENZEN.find(e => e.key === selects[1]?.value) || MUENZEN[1];
+      return summe + richtung * anzahl * muenze.kupfer;
     }, 0);
   }
 
@@ -149,13 +155,6 @@
     vermoegen.kupferGesamt = Math.max(0, vermoegen.kupferGesamt + (richtung > 0 ? wert : -wert));
     speichere();
     aktualisiereAnzeige();
-    const zeilen = document.getElementById("vermoegenRechnerZeilen");
-    if (zeilen) {
-      zeilen.replaceChildren(rechnerZeile({muenze:"gold"}));
-    }
-    const teiler = document.getElementById("vermoegenRechnerTeiler");
-    if (teiler) teiler.value = "1";
-    aktualisiereRechner();
   }
 
   function initialisiere() {

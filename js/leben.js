@@ -315,7 +315,6 @@
       aktiv.type = "checkbox";
       aktiv.checked = daten.aktiv;
       aktiv.setAttribute("aria-label", `${typ}: Energiewiderstand aktiv`);
-      aktiv.className = `energie-aktivkreis energie-${typ.toLowerCase().replace("ä","ae")}`;
       aktiv.addEventListener("change", () => {
         daten.aktiv = aktiv.checked;
         aktualisiereReduktionsMarkierung(reduktion, reduktionFrei, daten);
@@ -381,7 +380,6 @@
       aktiv.type = "checkbox";
       aktiv.checked = daten.aktiv;
       aktiv.setAttribute("aria-label", `${typ}: Schutz vor Energien aktiv`);
-      aktiv.className = `energie-aktivkreis energie-${typ.toLowerCase().replace("ä","ae")}`;
       aktiv.addEventListener("change", () => {
         daten.aktiv = aktiv.checked;
         aktualisiereRestMarkierung();
@@ -440,7 +438,6 @@
     aktiv.type = "checkbox";
     aktiv.checked = daten.aktiv;
     aktiv.setAttribute("aria-label", "Steinhaut aktiv");
-    aktiv.className = "energie-aktivkreis energie-steinhaut";
     aktiv.addEventListener("change", () => {
       daten.aktiv = aktiv.checked;
       speichereCharaktere();
@@ -506,16 +503,8 @@
       zeile.className = "energie-schaden-zeile";
 
       const label = document.createElement("label");
-      label.className = "energie-schaden-label-5626";
+      label.textContent = typ;
       label.htmlFor = `energieSchaden-${typ}`;
-      const bildnamen = {Elektro:"elektro.png",Feuer:"feuer.png",Kälte:"kaelte.png",Säure:"saeure.png",Schall:"schall.png"};
-      const bild = document.createElement("img");
-      bild.src = `assets/leben58/${bildnamen[typ]}`;
-      bild.alt = "";
-      bild.className = "energie-schaden-grafik-5626";
-      const text = document.createElement("span");
-      text.textContent = typ;
-      label.append(bild, text);
 
       const gruppe = document.createElement("div");
       gruppe.className = "energie-schaden-eingabe";
