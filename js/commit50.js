@@ -312,7 +312,8 @@
       armorRune.alt = "";
       armorRune.setAttribute("aria-hidden", "true");
       armorRune.className = "rk-armor-rune-0574";
-      label.append(" ", armorRune);
+      icon.replaceChildren(armorRune);
+      label.prepend(icon);
     });
 
     // Rettungswurf-Zaubersterne
